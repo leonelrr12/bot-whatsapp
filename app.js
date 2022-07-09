@@ -181,7 +181,6 @@ const withOutSession = () => {
     });
 
     client.on('authenticated', (session) => {
-        console.log(session);
         // sessionData = session;
         // if(sessionData){
         //     fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
