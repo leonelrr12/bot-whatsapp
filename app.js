@@ -181,14 +181,15 @@ const withOutSession = () => {
     });
 
     client.on('authenticated', (session) => {
-        sessionData = session;
-        if(sessionData){
-            fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
-                if (err) {
-                    console.log(`Ocurrio un error con el archivo: `, err);
-                }
-            });
-        }
+        console.log(session);
+        // sessionData = session;
+        // if(sessionData){
+        //     fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
+        //         if (err) {
+        //             console.log(`Ocurrio un error con el archivo: `, err);
+        //         }
+        //     });
+        // }
     });
 
     client.initialize();
@@ -197,7 +198,10 @@ const withOutSession = () => {
 /**
  * Revisamos si existe archivo con credenciales!
  */
-(fs.existsSync(SESSION_FILE_PATH) && MULTI_DEVICE === 'false') ? withSession() : withOutSession();
+// (fs.existsSync(SESSION_FILE_PATH) && MULTI_DEVICE === 'false') ? withSession() : withOutSession();
+
+withOutSession();
+
 
 /**
  * Verificamos si tienes un gesto de db
