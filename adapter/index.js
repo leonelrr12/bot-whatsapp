@@ -28,7 +28,7 @@ const get = (message) => new Promise((resolve, reject) => {
 
 const reply = (step) => new Promise((resolve, reject) => {
     /**
-    * Si no estas usando un gesto de base de datos
+    * Si no estas usando un gestor de base de datos
     */
     if (process.env.DATABASE === 'none') {
         let resData = { replyMessage: '', media: null, trigger: null }

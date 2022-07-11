@@ -23,7 +23,9 @@ const server = require('http').Server(app)
 const port = process.env.PORT || 3000
 const SESSION_FILE_PATH = './session.json';
 var client;
-var sessionData;
+// var sessionData;
+var respuesta;
+var lastStep;
 
 app.use('/', require('./routes/web'))
 
@@ -42,6 +44,7 @@ const listenMessage = () => client.on('message', async msg => {
         return
     }
     message = body.toLowerCase();
+    respuesta = message;
     console.log('BODY',message)
     const number = cleanNumber(from)
     await readChat(number, message)
@@ -74,16 +77,40 @@ const listenMessage = () => client.on('message', async msg => {
     * a tu gusto!
     */
 
-    const lastStep = await lastTrigger(from) || null;
-    if (lastStep) {
-        const response = await responseMessages(lastStep)
-        await sendMessage(client, from, response.replyMessage);
-    }
+    // No se cual es la aplicacion de este codigo LLRR
+    // const lastStep = await lastTrigger(from) || null;
+    // if (lastStep) {
+    //     const response = await responseMessages(lastStep)
+    //     await sendMessage(client, from, response.replyMessage);
+    // }
 
     /**
      * Respondemos al primero paso si encuentra palabras clave
      */
-    const step = await getMessages(message);
+    let step = await getMessages(message);
+    switch (respuesta) {
+        case 'jubilado':
+            step = 'STEP_2_1';
+            break;
+        case 'temporal':
+        case 'servicio profesional':
+        case 'servicio':
+        case 'profesional':
+            step = 'STEP_4_2';
+            break;
+        case 'propia':
+        case 'familia':
+        case 'padres':
+            step = 'STEP_8';
+            break;            
+        case 'hipoteca':
+        case 'alquiler':
+            step = 'STEP_7_1';
+            break;
+        default:
+            break;
+    }
+    if(lastStep == 'STEP_7_1') step = 'STEP_8';
 
     if (step) {
         const response = await responseMessages(step);
@@ -92,11 +119,16 @@ const listenMessage = () => client.on('message', async msg => {
          * Si quieres enviar botones
          */
 
+        // console.log('XXXXXXXX', step, lastStep, response.replyMessage);
+
         await sendMessage(client, from, response.replyMessage, response.trigger);
 
+        console.log('AAAAAAAAAAAA')
         if(response.hasOwnProperty('actions')){
+            console.log('Lleva Botones', response.actions)
             const { actions } = response;
             await sendMessageButton(client, from, null, actions);
+            lastStep = step;
             return
         }
 
@@ -108,8 +140,10 @@ const listenMessage = () => client.on('message', async msg => {
                 sendMedia(client, from, response.media);
             }, response.delay)
         }
+        lastStep = step;
         return
     }
+    lastStep = step;
 
     //Si quieres tener un mensaje por defecto
     if (process.env.DEFAULT_MESSAGE === 'true') {
@@ -131,20 +165,20 @@ const listenMessage = () => client.on('message', async msg => {
  * Revisamos si tenemos credenciales guardadas para inciar sessio
  * este paso evita volver a escanear el QRCODE
  */
-const withSession = () => {
-    console.log(`Validando session con Whatsapp...`)
-    sessionData = require(SESSION_FILE_PATH);
-    client = new Client(createClient(sessionData,true));
+// const withSession = () => {
+//     console.log(`Validando session con Whatsapp...`)
+//     sessionData = require(SESSION_FILE_PATH);
+//     client = new Client(createClient(sessionData,true));
 
-    client.on('ready', () => {
-        connectionReady()
-        listenMessage()
-    });
+//     client.on('ready', () => {
+//         connectionReady()
+//         listenMessage()
+//     });
 
-    client.on('auth_failure', () => connectionLost())
+//     client.on('auth_failure', () => connectionLost())
 
-    client.initialize();
-}
+//     client.initialize();
+// }
 
 /**
  * Generamos un QRCODE para iniciar sesion

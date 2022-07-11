@@ -15,79 +15,74 @@
             "quisiera saber si venden",
             "necesito saber"
         ],
-        "key": "STEP_1"
+        "key": "STEP_1"  
     },
     {
         "keywords":  [
-            "cursos",
-            "info",
-            "curso"        ],
+            "Publico","publico","Público","público",
+            "Privado","privado","Pribado","pribado",
+            "Jubilado","jubilado","Juvilado","juvilado"
+        ],
         "key": "STEP_2"
     },
     {
         "keywords":  [
-            "angular"
-        ],
-        "key": "STEP_2_1"
-    },
-    {
-        "keywords":  [
-            "node"
-        ],
-        "key": "STEP_2_2"
-    },
-    {
-        "keywords":  [
-            "ngrx"
-        ],
-        "key": "STEP_2_3"
-    },
-    {
-        "keywords":  [
-            "aws"
-        ],
-        "key": "STEP_2_4"
-    },
-    {
-        "keywords":  [
-            "asesor",
-            "asesores",
-            "Vendedor",
-            "cobrador"
+            "Medico/Enfermera","medico","enfermera",
+            "Educador","educador",
+            "Administrativo","administrativo",
+            "ACP","acp","APC","apc",
+            "Seguridad Publica","seguridad publica","seguridad"
         ],
         "key": "STEP_3"
     },
     {
         "keywords":  [
-            "muchas gracias",
-            "ok",
-            "gracias",
-            "vale gracias"
+            "Temporal",
+            "temporal",
+            "Permanente",
+            "permanente",
+            "Servicio Profesional",
+            "Servicio profesional",
+            "servicio profesional",
+            "Servicio",
+            "Profesional"
         ],
         "key": "STEP_4"
     },
     {
         "keywords":  [
-            "youtube"
+            "12","24","60","61"
         ],
         "key": "STEP_5"
     },
     {
         "keywords":  [
-            "VER_CURSOS"
+            "si","Si","SI"
         ],
         "key": "STEP_6"
     },
     {
         "keywords":  [
-            "telegram"
+            "no","No","NO"
+        ],
+        "key": "STEP_5_1"
+    },
+    {
+        "keywords":  [
+            "30", "60"
         ],
         "key": "STEP_7"
     },
     {
         "keywords":  [
-            "audio"
+            "61", "arreglo", "demanda"
         ],
-        "key": "STEP_8"
+        "key": "STEP_6_1"
+    },
+    {
+        "keywords":  [
+           
+        ],
+        "key": "STEP_x"
     }
 ]

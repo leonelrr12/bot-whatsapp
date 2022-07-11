@@ -58,6 +58,8 @@ const sendMessage = async (client, number = null, text = null, trigger = null) =
  * @param {*} number 
  */
 const sendMessageButton = async (client, number = null, text = null, actionButtons) => {
+
+    console.log("Desntro de sendMessageButton", actionButtons)
     number = cleanNumber(number)
     const { title = null, message = null, footer = null, buttons = [] } = actionButtons;
     let button = new Buttons(message,[...buttons], title, footer);
