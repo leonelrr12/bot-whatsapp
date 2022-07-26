@@ -33,132 +33,204 @@ app.use('/', require('./routes/web'))
  * Escuchamos cuando entre un mensaje
  */
 const listenMessage = () => client.on('message', async msg => {
-    const { from, body, hasMedia } = msg;
+  const { from, body, hasMedia } = msg;
 
-    if(!isValidNumber(from)){
-        return
+  if (!isValidNumber(from)) {
+    return
+  }
+
+  // Este bug lo reporto Lucas Aldeco Brescia para evitar que se publiquen estados
+  if (from === 'status@broadcast') {
+    return
+  }
+  message = body.toLowerCase();
+  respuesta = message;
+  console.log('BODY', message)
+  const numero = cleanNumber(from)
+  await readChat(numero, message)
+
+  /**
+   * Guardamos el archivo multimedia que envia
+   */
+  if (process.env.SAVE_MEDIA && hasMedia) {
+    const media = await msg.downloadMedia();
+    saveMedia(media);
+  }
+
+  /**
+   * Si estas usando dialogflow solo manejamos una funcion todo es IA
+   */
+
+  if (process.env.DATABASE === 'dialogflow') {
+    if (!message.length) return;
+    const response = await bothResponse(message);
+    await sendMessage(client, from, response.replyMessage);
+    if (response.media) {
+      sendMedia(client, from, response.media);
     }
+    return
+  }
 
-    // Este bug lo reporto Lucas Aldeco Brescia para evitar que se publiquen estados
-    if (from === 'status@broadcast') {
-        return
-    }
-    message = body.toLowerCase();
-    respuesta = message;
-    console.log('BODY',message)
-    const number = cleanNumber(from)
-    await readChat(number, message)
+  /**
+  * Ver si viene de un paso anterior
+  * Aqui podemos ir agregando más pasos
+  * a tu gusto!
+  */
 
-    /**
-     * Guardamos el archivo multimedia que envia
-     */
-    if (process.env.SAVE_MEDIA && hasMedia) {
-        const media = await msg.downloadMedia();
-        saveMedia(media);
-    }
+  // No se cual es la aplicacion de este codigo LLRR
+  // const lastStep = await lastTrigger(from) || null;
+  // if (lastStep) {
+  //     const response = await responseMessages(lastStep)
+  //     await sendMessage(client, from, response.replyMessage);
+  // }
 
-    /**
-     * Si estas usando dialogflow solo manejamos una funcion todo es IA
-     */
+  /**
+   * Respondemos al primero paso si encuentra palabras clave
+   */
 
-    if (process.env.DATABASE === 'dialogflow') {
-        if(!message.length) return;
-        const response = await bothResponse(message);
-        await sendMessage(client, from, response.replyMessage);
-        if (response.media) {
-            sendMedia(client, from, response.media);
-        }
-        return
-    }
-
-    /**
-    * Ver si viene de un paso anterior
-    * Aqui podemos ir agregando más pasos
-    * a tu gusto!
-    */
-
-    // No se cual es la aplicacion de este codigo LLRR
-    // const lastStep = await lastTrigger(from) || null;
-    // if (lastStep) {
-    //     const response = await responseMessages(lastStep)
-    //     await sendMessage(client, from, response.replyMessage);
-    // }
-
-    /**
-     * Respondemos al primero paso si encuentra palabras clave
-     */
-    let step = await getMessages(message);
+  let step = await getMessages(message);
+  console.log('step, respuesta, numero', step, lastStep, respuesta, numero)
+  if (lastStep == 'STEP_1') {
     switch (respuesta) {
-        case 'jubilado':
-            step = 'STEP_2_1';
-            break;
-        case 'temporal':
-        case 'servicio profesional':
-        case 'servicio':
-        case 'profesional':
-            step = 'STEP_4_2';
-            break;
-        case 'propia':
-        case 'familia':
-        case 'padres':
-            step = 'STEP_8';
-            break;            
-        case 'hipoteca':
-        case 'alquiler':
-            step = 'STEP_7_1';
-            break;
-        default:
-            break;
+      case "1":
+        step = 'STEP_2';
+        break;
+      case "2":
+        step = 'STEP_2_1';
+        break;
+      case "3":
+        step = 'STEP_5';
+        break;
+      default:
+        step = 'STEP_1';
+        break;
     }
-    if(lastStep == 'STEP_7_1') step = 'STEP_8';
+  }
 
-    if (step) {
-        const response = await responseMessages(step);
+  if (lastStep == 'STEP_2' || lastStep == 'STEP_2_1') {
+    step = 'STEP_3';
+  }
 
-        /**
-         * Si quieres enviar botones
-         */
+  if (lastStep == 'STEP_3') {
+    switch (respuesta) {
+      case "2":
+        step = 'STEP_4';
+        break;
+      case "1":
+      case "3":
+        step = 'STEP_4_1';
+        break;
+      default:
+        step = 'STEP_3';
+        break;
+    }
+  }
 
-        // console.log('XXXXXXXX', step, lastStep, response.replyMessage);
+  if (lastStep == 'STEP_4') {
+    if (isNaN(respuesta)) {
+      step = 'STEP_4';
+    } else {
+      if (parseInt(respuesta) <= 0) step = 'STEP_4';
+      else step = 'STEP_5';
+      // Aqui se puede agregar mas logica para validadr cantidad de meses
+    }
+  }
 
-        await sendMessage(client, from, response.replyMessage, response.trigger);
+  if (lastStep == 'STEP_5') {
+    switch (respuesta) {
+      case "1":
+        step = 'STEP_6';
+        break;
+      case "2":
+        step = 'STEP_5_1';
+        break;
+      default:
+        step = 'STEP_5';
+        break;
+    }
+  }
 
-        console.log('AAAAAAAAAAAA')
-        if(response.hasOwnProperty('actions')){
-            console.log('Lleva Botones', response.actions)
-            const { actions } = response;
-            await sendMessageButton(client, from, null, actions);
-            lastStep = step;
-            return
-        }
+  if (lastStep == 'STEP_6') {
+    switch (respuesta) {
+      case "1":
+      case "2":
+        step = 'STEP_7';
+        break;
+      case "3":
+      case "4":
+      case "5":
+        step = 'STEP_6_1';
+        break;
+      default:
+        step = 'STEP_6';
+        break;
+    }
+  }
 
-        if (!response.delay && response.media) {
-            sendMedia(client, from, response.media);
-        }
-        if (response.delay && response.media) {
-            setTimeout(() => {
-                sendMedia(client, from, response.media);
-            }, response.delay)
-        }
-        lastStep = step;
-        return
+  if (lastStep == 'STEP_7') {
+    switch (respuesta) {
+      case "1":
+      case "2":
+        step = 'STEP_8';
+        break;
+      case "3":
+      case "4":
+        step = 'STEP_7_1';
+        break;
+      default:
+        step = 'STEP_7';
+        break;
+    }
+  }
+
+  if (lastStep == 'STEP_7_1') {
+    if (isNaN(respuesta)) {
+      step = 'STEP_7_1';
+    } else {
+      if (parseInt(respuesta) <= 0) step = 'STEP_7_1';
+      else step = 'STEP_8';
+    }
+  }
+
+  console.log(lastStep, step)
+  if (step) {
+    const response = await responseMessages(step);
+
+    await sendMessage(client, from, response.replyMessage, response.trigger);
+    if (response.hasOwnProperty('actions')) {
+      const { actions } = response;
+      await sendMessageButton(client, from, null, actions);
+      lastStep = step;
+      return
+    }
+
+    if (!response.delay && response.media) {
+      sendMedia(client, from, response.media);
+    }
+    if (response.delay && response.media) {
+      setTimeout(() => {
+        sendMedia(client, from, response.media);
+      }, response.delay)
     }
     lastStep = step;
+    return
+  }
+  lastStep = step;
 
-    //Si quieres tener un mensaje por defecto
-    if (process.env.DEFAULT_MESSAGE === 'true') {
-        const response = await responseMessages('DEFAULT')
-        await sendMessage(client, from, response.replyMessage, response.trigger);
+  //Si quieres tener un mensaje por defecto
+  if (process.env.DEFAULT_MESSAGE === 'true') {
+    const response = await responseMessages('DEFAULT')
+    await sendMessage(client, from, response.replyMessage, response.trigger);
 
-        /**
-         * Si quieres enviar botones
-         */
-        if(response.hasOwnProperty('actions')){
-            const { actions } = response;
-            await sendMessageButton(client, from, null, actions);
-        }
-        return
+    /**
+     * Si quieres enviar botones
+     */
+    if (response.hasOwnProperty('actions')) {
+      const { actions } = response;
+      await sendMessageButton(client, from, null, actions);
     }
+    return
+  }
 });
 
 /**
@@ -184,48 +256,48 @@ const listenMessage = () => client.on('message', async msg => {
  * Generamos un QRCODE para iniciar sesion
  */
 const withOutSession = () => {
-    console.log('No tenemos session guardada');
-    console.log([
-        '🙌 El core de whatsapp se esta actualizando',
-        '🙌 para proximamente dar paso al multi-device',
-        '🙌 falta poco si quieres estar al pendiente unete',
-        '🙌 http://t.me/leifermendez',
-        '🙌 Si estas usando el modo multi-device se generan 2 QR Code escanealos',
-        '🙌 Ten paciencia se esta generando el QR CODE',
-        '________________________',
-    ].join('\n'));
+  console.log('No tenemos session guardada');
+  console.log([
+    '🙌 El core de whatsapp se esta actualizando',
+    '🙌 para proximamente dar paso al multi-device',
+    '🙌 falta poco si quieres estar al pendiente unete',
+    '🙌 http://t.me/leifermendez',
+    '🙌 Si estas usando el modo multi-device se generan 2 QR Code escanealos',
+    '🙌 Ten paciencia se esta generando el QR CODE',
+    '________________________',
+  ].join('\n'));
 
-    client = new Client(createClient());
+  client = new Client(createClient());
 
-    client.on('qr', qr => generateImage(qr, () => {
-        qrcode.generate(qr, { small: true });
-        console.log(`Ver QR http://localhost:${port}/qr`)
-        socketEvents.sendQR(qr)
-    }))
+  client.on('qr', qr => generateImage(qr, () => {
+    qrcode.generate(qr, { small: true });
+    console.log(`Ver QR http://localhost:${port}/qr`)
+    socketEvents.sendQR(qr)
+  }))
 
-    client.on('ready', (a) => {
-        connectionReady()
-        listenMessage()
-        // socketEvents.sendStatus(client)
-    });
+  client.on('ready', (a) => {
+    connectionReady()
+    listenMessage()
+    // socketEvents.sendStatus(client)
+  });
 
-    client.on('auth_failure', (e) => {
-        // console.log(e)
-        // connectionLost()
-    });
+  client.on('auth_failure', (e) => {
+    // console.log(e)
+    // connectionLost()
+  });
 
-    client.on('authenticated', (session) => {
-        // sessionData = session;
-        // if(sessionData){
-        //     fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
-        //         if (err) {
-        //             console.log(`Ocurrio un error con el archivo: `, err);
-        //         }
-        //     });
-        // }
-    });
+  client.on('authenticated', (session) => {
+    // sessionData = session;
+    // if(sessionData){
+    //     fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
+    //         if (err) {
+    //             console.log(`Ocurrio un error con el archivo: `, err);
+    //         }
+    //     });
+    // }
+  });
 
-    client.initialize();
+  client.initialize();
 }
 
 /**
@@ -241,11 +313,11 @@ withOutSession();
  */
 
 if (process.env.DATABASE === 'mysql') {
-    mysqlConnection.connect()
+  mysqlConnection.connect()
 }
 
 server.listen(port, () => {
-    console.log(`El server esta listo por el puerto ${port}`);
+  console.log(`El server esta listo por el puerto ${port}`);
 })
 checkEnvFile();
 

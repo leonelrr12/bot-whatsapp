@@ -11,4 +11,4 @@ const connectionLost = (cb = () =>{}) => {
 }
 
 
-module.exports = {connectionReady, connectionLost}
+module.exports = { connectionReady, connectionLost }

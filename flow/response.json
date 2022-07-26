@@ -1,4 +1,4 @@
-{
+{ 
     "DEFAULT":{
         "replyMessage":[
             "*Esta respuesta es un respuesta default* cuando no se consigue una palabra clave \n",
@@ -14,10 +14,10 @@
     "STEP_1":{
         "replyMessage":[
             "¿Donde Laboras? Elije un sector: \n\n",
-            "Público \n",
-            "Privado \n",
-            "Jubilado \n\n",
-            "Escribe la palabra del tema que te interese \n"
+            "1. Público \n",
+            "2. Privado \n",
+            "3. Jubilado \n\n",
+            "Escribe una opcion: "
         ],
         "trigger":null,
         "actions":{
@@ -34,19 +34,23 @@
     "STEP_2":{
         "replyMessage":[
             "Perfecto, ahora dinos tu profesión: \n\n",
-            "Medico/Enfermera \n",
-            "Educador \n",
-            "Administrativo \n",
-            "ACP \n",
-            "Seguridad Publica \n\n",
-            "Escribe la palabra del tema que te interese"
+            "1. Medico/Enfermera \n",
+            "2. Educador \n",
+            "3. Administrativo \n",
+            "4. ACP \n",
+            "5. Seguridad Publica \n\n",
+            "Escribe una opcion: "
         ],
         "media":null,
         "trigger":null
     },
     "STEP_2_1":{
         "replyMessage":[
-            "Jubiladooooooooooooooooooooooooooo"
+            "Perfecto, ahora dinos tu profesión: \n\n",
+            "1. Medico/Enfermera \n",
+            "2. Educador \n",
+            "3. Empresa Privada \n\n",
+            "Escribe una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -54,10 +58,10 @@
     "STEP_3":{
         "replyMessage":[
             "Cual es tu situacion laboral: \n\n",
-            "Temporal \n",
-            "Permanente \n",
-            "Servicio Profesion \n\n",
-            "Escribe la palabra del tema que te interese"
+            "1. Temporal \n",
+            "2. Permanente \n",
+            "3. Servicio Profesional \n\n",
+            "Escribe una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -65,26 +69,16 @@
     "STEP_4":{
         "replyMessage":[
             "Cuantos meses en tu trabajo actual: \n\n",
-            "12 meses o menos \n",
-            "24 meses o menos \n",
-            "60 meses o menos \n",
-            "61 y mas \n",
-            "Escribe numero de meses (12,24,60 o 61)"
+            "Escribe cantidad de meses: "
         ],
         "media":null,
         "trigger":null
     },
+ 
     "STEP_4_1":{
         "replyMessage":[
-            "Lo sentimos.  Necesitamos un Hostorial de Créditos. \n",
+            "Lo sentimos.  Solo pueden aplicar Permanentes. \n",
             "https://finanservs.com \n"
-        ],
-        "media":null,
-        "trigger":null
-    },    
-    "STEP_4_2":{
-        "replyMessage":[
-            "Noooooooooo, solo pueden ser Permanentes"
         ],
         "media":null,
         "trigger":null
@@ -92,7 +86,17 @@
     "STEP_5":{
         "replyMessage":[
             "¿Tienes historial de Credito? \n\n",
-            "Escribe Si o No \n"
+            "1. Si \n",
+            "2. No \n\n",
+            "Escribe una opcion: "
+        ],
+        "media":null,
+        "trigger":null
+    },   
+    "STEP_5_1":{
+        "replyMessage":[
+            "Lo sentimos.  Necesitamos un Historial de Créditos. \n",
+            "https://finanservs.com \n"
         ],
         "media":null,
         "trigger":null
@@ -100,13 +104,12 @@
     "STEP_6":{
         "replyMessage":[
             "Sus pagos los realiza de: \n\n",
-            "0 a 30 dias \n",
-            "31 a 60 dias \n",
-            "61 a 90 dias \n",
-            "Arreglo de Pago \n",
-            "Demanda Judicial \n\n",
-   
-            "Escribe la palabra del tema (0, 31, 61, arreglo o demanda) \n"
+            "1. 0 a 30 dias \n",
+            "2. 31 a 60 dias \n",
+            "3. 61 a 90 dias \n",
+            "4. Arreglo de Pago \n",
+            "5. Demanda Judicial \n\n",
+            "Escribe una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -119,17 +122,16 @@
         "media":null,
         "trigger":null
     },
-    "STEP_7":{
+    "STEP_7":{ 
         "replyMessage":[
             "Donde vives: \n\n",
-            "Casa propia \n",
-            "Con padres o familia \n",
-            "Casa hipoteca \n",
-            "Casa de alquiler \n\n",
-   
-            "Escribe la palabra que se ajuste a tu respuesta \n"
+            "1. Casa propia \n",
+            "2. Con padres o familia \n",
+            "3. Casa hipoteca \n",
+            "4. Casa de alquiler \n\n",
+            "Escribe una opcion: "
         ],
-        "media":"nota-de-voz.mp3",
+        "media":null,
         "trigger":null
     },    
     "STEP_7_1":{
