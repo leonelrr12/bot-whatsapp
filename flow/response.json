@@ -145,17 +145,213 @@
     },   
     "STEP_8":{
         "replyMessage":[
-            "Nos quedamos hasta aqui: \n\n",
-            "11111 \n",
-            "22222 \n",
-            "33333 \n",
-            "44444 \n\n",
-   
-            "Escribe la palabra que se ajuste a tu respuesta \n"
+            "Datos personales: \n\n",
+            "ej.(7-245-7356) \n",
+            "Escribe tu Cédula o ID: \n"
         ],
         "media":null,
         "trigger":null
     },
+    "STEP_8_0":{
+        "replyMessage":[
+            "Primer nombre: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_1":{
+        "replyMessage":[
+            "Segundo nombre: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_2":{
+        "replyMessage":[
+            "Primer apellido: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_3":{
+        "replyMessage":[
+            "Segundo apellido: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_4":{
+        "replyMessage":[
+            "Email: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_5":{
+        "replyMessage":[
+            "Genero: \n\n",
+            "1. Mujer \n",
+            "2. Hombre \n\n",
+            "Escribe una opcion: "
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_6":{
+        "replyMessage":[
+            "Fecha Nacimiento: \n",
+            "ej. (dd/mm/aaaa) \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_7":{
+        "replyMessage":[
+            "Nacionalidad: \n\n",
+            "1. Panameño \n",
+            "2. Extranjero \n\n",
+            "Escribe una opcion: "
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_8":{
+        "replyMessage":[
+            "Tu peso en libras: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_9":{
+        "replyMessage":[
+            "Tu estatura en metros ej.(1.45): \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_9":{
+        "replyMessage":[
+            "Ingresos mensuales: \n\n",
+            "Salario fijo: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_9_1":{
+        "replyMessage":[
+            "Gastos representación: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_9_2":{
+        "replyMessage":[
+            "Viáticos: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_10":{
+        "replyMessage":[
+            "Felicidades!!! \n\n",
+            "Puede califica para un \n",
+            "préstamo personal por un \n",
+            "Monto máximo de: 9999 \n",
+            "Plazo en meses: 999 \n",
+            "Monto a recibir: 9999"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_11":{
+        "replyMessage":[
+            "Opciones: \n\n",
+            "1. Financomer \n",
+            "2. Panacredit \n",
+            "3. Banisi \n\n",
+            "Escribe una opcion: "
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_12":{
+        "replyMessage":[
+            "Propósitos del Préstamo: \n\n",
+            "1. Compra de Auto \n",
+            "2. Boda \n",
+            "3. RemodeColegioBanisi \n\n",
+            "4. Viaje \n\n",
+            "5. Quince Año \n\n",
+            "Escribe una opcion: "
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_13":{
+        "replyMessage":[
+            "Estado civil: \n\n",
+            "1. Casado \n",
+            "2. Soltero \n",
+            "3. Unido \n\n",
+            "4. Divorciado \n\n",
+            "5. Viudo \n\n",
+            "Escribe una opcion: "
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_14":{
+        "replyMessage":[
+            "Subir Documento Personal: \n\n",
+            "1. Cédula o ID \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_14_1":{
+        "replyMessage":[
+            "Subir Documento Personal: \n\n",
+            "2. Comprobante de Pago \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_14_2":{
+        "replyMessage":[
+            "Subir Documento Personal: \n\n",
+            "3. Fiche de Seguros Social \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_14_3":{
+        "replyMessage":[
+            "Subir Documento Personal: \n\n",
+            "4. Recibo de Servicio \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_14_4":{
+        "replyMessage":[
+            "Subir Documento Personal: \n\n",
+            "5. Carta de Trabajo \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_15":{
+        "replyMessage":[
+            "En las próximas horas \n",
+            "será contactado por un \n",
+            "ejecutivo para finiquitar \n",
+            "el trámite. \n\n",
+            "Hasta pronto."
+        ],
+        "media":null,
+        "trigger":null
+    },
+
     "STEP_98":{
         "replyMessage":[
             "Vente al telegram \n",

@@ -8,13 +8,16 @@ const getMessages = async (message) => {
 
 const responseMessages = async (step) => {
     const data = await reply(step)
+
+    // AQUI HACER EL INTERCAMBIO DEL MENSAJE CON INFORMACION DINAMICA O CALCULADA
+    // LLRR
     if(data && data.media){
         const file = checkIsUrl(data.media) ? await saveExternalFile(data.media) : data.media;
         return { ...data, ...{ media:file }}
     }
     return data
 }
-
+ 
 const bothResponse = async (message) => {
     const data = await getIA(message)
     if(data && data.media){

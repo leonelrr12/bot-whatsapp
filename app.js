@@ -192,6 +192,87 @@ const listenMessage = () => client.on('message', async msg => {
     }
   }
 
+  if (lastStep == 'STEP_8') {
+    step = 'STEP_8_1';
+  }
+
+  if (lastStep == 'STEP_8_1') {
+    step = 'STEP_8_2';
+  }
+
+  if (lastStep == 'STEP_8_21') {
+    step = 'STEP_8_3';
+  }
+
+  if (lastStep == 'STEP_8_3') {
+    step = 'STEP_8_4';
+  }
+
+  if (lastStep == 'STEP_8_41') {
+    step = 'STEP_8_5';
+  }
+
+  if (lastStep == 'STEP_8_51') {
+    step = 'STEP_8_6';
+  }
+
+  if (lastStep == 'STEP_8_6') {
+    step = 'STEP_8_7';
+  }
+  if (lastStep == 'STEP_8_7') {
+    step = 'STEP_8_8';
+  }
+  if (lastStep == 'STEP_8_8') {
+    step = 'STEP_8_9';
+  }
+  if (lastStep == 'STEP_8_9') {
+    step = 'STEP_9';
+  }
+
+  if (lastStep == 'STEP_9_1') {
+    step = 'STEP_9_2';
+  }
+
+  if (lastStep == 'STEP_9_2') {
+    step = 'STEP_10';
+  }
+
+  if (lastStep == 'STEP_10') {
+    step = 'STEP_11';
+  }
+
+  if (lastStep == 'STEP_11') {
+    step = 'STEP_12';
+  }
+
+  if (lastStep == 'STEP_12') {
+    step = 'STEP_13';
+  }
+
+  if (lastStep == 'STEP_13') {
+    step = 'STEP_14';
+  }
+
+  if (lastStep == 'STEP_14') {
+    step = 'STEP_14_1';
+  }
+
+  if (lastStep == 'STEP_14_1') {
+    step = 'STEP_14_2';
+  }
+
+  if (lastStep == 'STEP_14_2') {
+    step = 'STEP_14_3';
+  }
+
+  if (lastStep == 'STEP_14_3') {
+    step = 'STEP_14_4';
+  }
+
+  if (lastStep == 'STEP_14_4') {
+    step = 'STEP_15';
+  }
+
   console.log(lastStep, step)
   if (step) {
     const response = await responseMessages(step);
@@ -232,25 +313,6 @@ const listenMessage = () => client.on('message', async msg => {
     return
   }
 });
-
-/**
- * Revisamos si tenemos credenciales guardadas para inciar sessio
- * este paso evita volver a escanear el QRCODE
- */
-// const withSession = () => {
-//     console.log(`Validando session con Whatsapp...`)
-//     sessionData = require(SESSION_FILE_PATH);
-//     client = new Client(createClient(sessionData,true));
-
-//     client.on('ready', () => {
-//         connectionReady()
-//         listenMessage()
-//     });
-
-//     client.on('auth_failure', () => connectionLost())
-
-//     client.initialize();
-// }
 
 /**
  * Generamos un QRCODE para iniciar sesion

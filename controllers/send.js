@@ -30,12 +30,12 @@ const sendMedia = (client, number, fileName) => {
  * @param {*} fileName 
  */
 
- const sendMediaVoiceNote = (client, number, fileName) => {
+const sendMediaVoiceNote = (client, number, fileName) => {
     number = cleanNumber(number)
     const file = `${DIR_MEDIA}/${fileName}`;
     if (fs.existsSync(file)) {
         const media = MessageMedia.fromFilePath(file);
-        client.sendMessage(number, media ,{ sendAudioAsVoice: true });
+        client.sendMessage(number, media, { sendAudioAsVoice: true });
     }
 }
 
@@ -44,13 +44,13 @@ const sendMedia = (client, number, fileName) => {
  * @param {*} number 
  */
 const sendMessage = async (client, number = null, text = null, trigger = null) => {
-   setTimeout(async () => {
-    number = cleanNumber(number)
-    const message = text
-    client.sendMessage(number, message);
-    await readChat(number, message, trigger)
-    console.log(`⚡⚡⚡ Enviando mensajes....`);
-   },DELAY_TIME)
+    setTimeout(async () => {
+        number = cleanNumber(number)
+        const message = text
+        client.sendMessage(number, message);
+        await readChat(number, message, trigger)
+        console.log(`⚡⚡⚡ Enviando mensajes....`);
+    }, DELAY_TIME)
 }
 
 /**
@@ -59,10 +59,10 @@ const sendMessage = async (client, number = null, text = null, trigger = null) =
  */
 const sendMessageButton = async (client, number = null, text = null, actionButtons) => {
 
-    console.log("Desntro de sendMessageButton", actionButtons)
+    console.log("Dentro de sendMessageButton", actionButtons)
     number = cleanNumber(number)
     const { title = null, message = null, footer = null, buttons = [] } = actionButtons;
-    let button = new Buttons(message,[...buttons], title, footer);
+    let button = new Buttons(message, [...buttons], title, footer);
     client.sendMessage(number, button);
 
     console.log(`⚡⚡⚡ Enviando mensajes....`);
@@ -97,7 +97,7 @@ const lastTrigger = (number) => new Promise((resolve, reject) => {
  */
 const readChat = async (number, message, trigger = null) => {
     number = cleanNumber(number)
-    await saveMessage( message, trigger, number )
+    await saveMessage(message, trigger, number)
     console.log('Saved')
 }
 
