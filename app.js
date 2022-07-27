@@ -71,12 +71,6 @@ const listenMessage = () => client.on('message', async msg => {
     return
   }
 
-  /**
-  * Ver si viene de un paso anterior
-  * Aqui podemos ir agregando más pasos
-  * a tu gusto!
-  */
-
   // No se cual es la aplicacion de este codigo LLRR
   // const lastStep = await lastTrigger(from) || null;
   // if (lastStep) {
@@ -89,7 +83,6 @@ const listenMessage = () => client.on('message', async msg => {
    */
 
   let step = await getMessages(message);
-  console.log('step, respuesta, numero', step, lastStep, respuesta, numero)
   if (lastStep == 'STEP_1') {
     switch (respuesta) {
       case "1":
@@ -132,7 +125,7 @@ const listenMessage = () => client.on('message', async msg => {
     } else {
       if (parseInt(respuesta) <= 0) step = 'STEP_4';
       else step = 'STEP_5';
-      // Aqui se puede agregar mas logica para validadr cantidad de meses
+      // Aqui se puede agregar mas logica para validar cantidad de meses
     }
   }
 
@@ -193,6 +186,10 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_8') {
+    step = 'STEP_8_0';
+  }
+
+  if (lastStep == 'STEP_8_0') {
     step = 'STEP_8_1';
   }
 
@@ -200,7 +197,7 @@ const listenMessage = () => client.on('message', async msg => {
     step = 'STEP_8_2';
   }
 
-  if (lastStep == 'STEP_8_21') {
+  if (lastStep == 'STEP_8_2') {
     step = 'STEP_8_3';
   }
 
@@ -208,27 +205,33 @@ const listenMessage = () => client.on('message', async msg => {
     step = 'STEP_8_4';
   }
 
-  if (lastStep == 'STEP_8_41') {
+  if (lastStep == 'STEP_8_4') {
     step = 'STEP_8_5';
   }
 
-  if (lastStep == 'STEP_8_51') {
+  if (lastStep == 'STEP_8_5') {
     step = 'STEP_8_6';
   }
 
   if (lastStep == 'STEP_8_6') {
     step = 'STEP_8_7';
   }
+
   if (lastStep == 'STEP_8_7') {
     step = 'STEP_8_8';
   }
+
   if (lastStep == 'STEP_8_8') {
     step = 'STEP_8_9';
   }
+
   if (lastStep == 'STEP_8_9') {
     step = 'STEP_9';
   }
 
+  if (lastStep == 'STEP_9') {
+    step = 'STEP_9_1';
+  }
   if (lastStep == 'STEP_9_1') {
     step = 'STEP_9_2';
   }

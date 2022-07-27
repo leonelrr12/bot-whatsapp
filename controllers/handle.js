@@ -8,7 +8,7 @@ const MULTI_DEVICE = process.env.MULTI_DEVICE || 'true';
 
 const cleanNumber = (number) => {
     number = number.replace('@c.us', '');
-    // number = `${number}@c.us`;
+    number = `${number}@c.us`;
     return number
 }
 
