@@ -4,6 +4,7 @@ const axios = require('axios');
 const { getQr } = require('../controllers/web')
 
 router.use('/qr', getQr)
+router.get('/', getQr)
 
 router.get('/clientify-token', async (req, res) => {
   try {
