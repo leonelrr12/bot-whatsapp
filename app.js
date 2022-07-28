@@ -28,6 +28,7 @@ var client;
 var respuesta;
 var lastStep;
 var tokenClientify;
+var dataClient = {};
 
 app.use('/', require('./routes/web'))
 
@@ -86,6 +87,7 @@ const listenMessage = () => client.on('message', async msg => {
 
   let step = await getMessages(message);
   if (lastStep == 'STEP_1') {
+    dataClient.sector = respuesta
     switch (respuesta) {
       case "1":
         step = 'STEP_2';
@@ -103,10 +105,12 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_2' || lastStep == 'STEP_2_1') {
+    dataClient.profesion = respuesta
     step = 'STEP_3';
   }
 
   if (lastStep == 'STEP_3') {
+    dataClient.statusLaboral = respuesta
     switch (respuesta) {
       case "2":
         step = 'STEP_4';
@@ -126,7 +130,10 @@ const listenMessage = () => client.on('message', async msg => {
       step = 'STEP_4';
     } else {
       if (parseInt(respuesta) <= 0) step = 'STEP_4';
-      else step = 'STEP_5';
+      else {
+        step = 'STEP_5';
+        dataClient.mesesLaboral = respuesta
+      }
       // Aqui se puede agregar mas logica para validar cantidad de meses
     }
   }
@@ -146,6 +153,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_6') {
+    dataClient.historialCredito = respuesta
     switch (respuesta) {
       case "1":
       case "2":
@@ -163,6 +171,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_7') {
+    dataClient.tipoVivienda = respuesta
     switch (respuesta) {
       case "1":
       case "2":
@@ -183,62 +192,79 @@ const listenMessage = () => client.on('message', async msg => {
       step = 'STEP_7_1';
     } else {
       if (parseInt(respuesta) <= 0) step = 'STEP_7_1';
-      else step = 'STEP_8';
+      else {
+        step = 'STEP_8';
+        dataClient.mensualidadCasa = respuesta
+      }
     }
   }
 
   if (lastStep == 'STEP_8') {
+    dataClient.cedula = respuesta
     step = 'STEP_8_0';
   }
 
   if (lastStep == 'STEP_8_0') {
+    dataClient.nombre1 = respuesta
     step = 'STEP_8_1';
   }
 
   if (lastStep == 'STEP_8_1') {
+    dataClient.nombre2 = respuesta
     step = 'STEP_8_2';
   }
 
   if (lastStep == 'STEP_8_2') {
+    dataClient.apellido1 = respuesta
     step = 'STEP_8_3';
   }
 
   if (lastStep == 'STEP_8_3') {
+    dataClient.apellido2 = respuesta
     step = 'STEP_8_4';
   }
 
   if (lastStep == 'STEP_8_4') {
+    dataClient.email = respuesta
     step = 'STEP_8_5';
   }
 
   if (lastStep == 'STEP_8_5') {
+    dataClient.genero = respuesta == "1" ? "M" : "H"
     step = 'STEP_8_6';
   }
 
   if (lastStep == 'STEP_8_6') {
+    dataClient.fec_nac = respuesta
     step = 'STEP_8_7';
   }
 
   if (lastStep == 'STEP_8_7') {
+    dataClient.nacional = respuesta == "1" ? "Panameño" : "Extranjero"
     step = 'STEP_8_8';
   }
 
   if (lastStep == 'STEP_8_8') {
+    dataClient.peso = respuesta
     step = 'STEP_8_9';
   }
 
   if (lastStep == 'STEP_8_9') {
+    dataClient.estatura = respuesta
     step = 'STEP_9';
   }
 
   if (lastStep == 'STEP_9') {
+    dataClient.salario = respuesta
     step = 'STEP_9_1';
   }
   if (lastStep == 'STEP_9_1') {
+    dataClient.hProfesion = respuesta
     step = 'STEP_9_2';
   }
 
   if (lastStep == 'STEP_9_2') {
+    dataClient.viaticos = respuesta
     step = 'STEP_10';
   }
 
@@ -278,7 +304,7 @@ const listenMessage = () => client.on('message', async msg => {
     step = 'STEP_15';
   }
 
-  console.log(lastStep, step)
+  console.log(dataClient)
   if (step) {
     const response = await responseMessages(step);
 
@@ -302,7 +328,7 @@ const listenMessage = () => client.on('message', async msg => {
     return
   }
   lastStep = step;
-
+  
   //Si quieres tener un mensaje por defecto
   if (process.env.DEFAULT_MESSAGE === 'true') {
     const response = await responseMessages('DEFAULT')
@@ -371,8 +397,11 @@ const token = async () => {
     console.log(error)
   }
 }
-
 token();
+
+const trackClientify = () => {
+  
+}
 
 server.listen(port, () => {
   console.log(`El server esta listo por el puerto ${port}`);

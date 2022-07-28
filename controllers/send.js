@@ -98,7 +98,7 @@ const lastTrigger = (number) => new Promise((resolve, reject) => {
 const readChat = async (number, message, trigger = null) => {
     number = cleanNumber(number)
     await saveMessage(message, trigger, number)
-    console.log('Saved')
+    // console.log('Saved')
 }
 
 module.exports = { sendMessage, sendMedia, lastTrigger, sendMessageButton, readChat, sendMediaVoiceNote }

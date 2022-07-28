@@ -22,7 +22,7 @@
         "trigger":null,
         "actions":{
             "title":"¿Donde Laboras?",
-            "message":"Selecciona una sector:",
+            "message":"Elije un sector:",
             "footer":"Finanservs.com",
             "buttons":[
                 {"body":"Publico"},
