@@ -14,6 +14,7 @@ const { connectionReady, connectionLost } = require('./controllers/connection')
 const { saveMedia } = require('./controllers/save')
 const { getMessages, responseMessages, bothResponse } = require('./controllers/flows')
 const { sendMedia, sendMessage, lastTrigger, sendMessageButton, readChat } = require('./controllers/send')
+const axios = require('axios');
 const app = express();
 app.use(cors())
 app.use(express.json())
@@ -26,6 +27,7 @@ var client;
 // var sessionData;
 var respuesta;
 var lastStep;
+var tokenClientify;
 
 app.use('/', require('./routes/web'))
 
@@ -321,13 +323,7 @@ const listenMessage = () => client.on('message', async msg => {
  * Generamos un QRCODE para iniciar sesion
  */
 const withOutSession = () => {
-  console.log('No tenemos session guardada');
   console.log([
-    '🙌 El core de whatsapp se esta actualizando',
-    '🙌 para proximamente dar paso al multi-device',
-    '🙌 falta poco si quieres estar al pendiente unete',
-    '🙌 http://t.me/leifermendez',
-    '🙌 Si estas usando el modo multi-device se generan 2 QR Code escanealos',
     '🙌 Ten paciencia se esta generando el QR CODE',
     '________________________',
   ].join('\n'));
@@ -340,35 +336,14 @@ const withOutSession = () => {
     socketEvents.sendQR(qr)
   }))
 
-  client.on('ready', (a) => {
+  client.on('ready', async () => {
     connectionReady()
     listenMessage()
     // socketEvents.sendStatus(client)
   });
 
-  client.on('auth_failure', (e) => {
-    // console.log(e)
-    // connectionLost()
-  });
-
-  client.on('authenticated', (session) => {
-    // sessionData = session;
-    // if(sessionData){
-    //     fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
-    //         if (err) {
-    //             console.log(`Ocurrio un error con el archivo: `, err);
-    //         }
-    //     });
-    // }
-  });
-
   client.initialize();
 }
-
-/**
- * Revisamos si existe archivo con credenciales!
- */
-// (fs.existsSync(SESSION_FILE_PATH) && MULTI_DEVICE === 'false') ? withSession() : withOutSession();
 
 withOutSession();
 
@@ -380,6 +355,24 @@ withOutSession();
 if (process.env.DATABASE === 'mysql') {
   mysqlConnection.connect()
 }
+
+const token = async () => {
+  try {
+    await axios.get(`http://localhost:3000/clientify-token`)
+      .then(res => {
+        tokenClientify = res.data
+        console.log('tokenClientify1', tokenClientify)
+      }).catch((err) => {
+        tokenClientify = 'N/A'
+        console.log('tokenClientify2', err)
+      })
+    if (tokenClientify === undefined) tokenClientify = 'N/A'
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+token();
 
 server.listen(port, () => {
   console.log(`El server esta listo por el puerto ${port}`);

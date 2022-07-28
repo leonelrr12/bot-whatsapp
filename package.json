@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/dialogflow": "^4.7.0",
+    "axios": "^0.27.2",
     "cors": "^2.8.5",
     "dotenv": "^11.0.0",
     "exceljs": "^4.3.0",
