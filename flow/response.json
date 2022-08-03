@@ -279,9 +279,10 @@
             "Propósitos del Préstamo: \n\n",
             "1. Compra de Auto \n",
             "2. Boda \n",
-            "3. RemodeColegioBanisi \n\n",
-            "4. Viaje \n\n",
-            "5. Quince Año \n\n",
+            "3. Remodelación \n",
+            "4. Colegio \n",
+            "5. Viaje \n",
+            "6. Quince Año \n\n",
             "Escribe una opcion: "
         ],
         "media":null,
@@ -340,13 +341,179 @@
         "media":null,
         "trigger":null
     },
+
     "STEP_15":{
         "replyMessage":[
-            "En las próximas horas \n",
-            "será contactado por un \n",
-            "ejecutivo para finiquitar \n",
-            "el trámite. \n\n",
-            "Hasta pronto."
+            "Acerca de tu Residencia \n\n",
+            "Calle: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_15_1":{
+        "replyMessage":[
+            "Barriada o Nombre Edificio: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_15_2":{
+        "replyMessage":[
+            "No. Casa o Piso, Apto.: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_15_3":{
+        "replyMessage":[
+            "Teléfono residencial: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+
+    "STEP_16":{
+        "replyMessage":[
+            "Acerca de tu Trabajo \n\n",
+            "Lugar de trabajo: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_1":{
+        "replyMessage":[
+            "Cargo actual: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_2":{
+        "replyMessage":[
+            "Dirección de trabajo: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_3":{
+        "replyMessage":[
+            "Teléfono trabajo: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_4":{
+        "replyMessage":[
+            "Extensión: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_5":{
+        "replyMessage":[
+            "Empleo anterior: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_6":{
+        "replyMessage":[
+            "Salario mensual \n",
+            "empleo anterior: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+
+    "STEP_17":{
+        "replyMessage":[
+            "Referencia personal - Pariente \n\n",
+            "Nombres: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_17_1":{
+        "replyMessage":[
+            "Apellidos: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_17_2":{
+        "replyMessage":[
+            "Parentesco: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_17_3":{
+        "replyMessage":[
+            "Teléfono celular: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_17_4":{
+        "replyMessage":[
+            "Lugar de trabajo: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+   
+    "STEP_18":{
+        "replyMessage":[
+            "Referencia personal - Pariente \n\n",
+            "Nombres: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_18_1":{
+        "replyMessage":[
+            "Apellidos: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_18_2":{
+        "replyMessage":[
+            "Teléfono celular: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_18_3":{
+        "replyMessage":[
+            "Lugar de trabajo: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+   
+    "STEP_19":{
+        "replyMessage":[
+            "Firma aprobacion para \n",
+            "Oobtener referencias \n",
+            "bancarias de la APC: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+
+    "STEP_20":{
+        "replyMessage":[
+            "Mostrar Referencias \n",
+            "bancarias de la APC: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+
+    "STEP_21":{
+        "replyMessage":[
+            "Guardar datos en MySql \n",
+            "Enviar Email's: \n\n"
         ],
         "media":null,
         "trigger":null

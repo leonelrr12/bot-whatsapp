@@ -35,6 +35,9 @@ var dataClient = {};
 const validCedula = /^\d{1,2}(-|\s)\d{1,3}(-|\s)\d{1,4}$/
 const validDate = /^\d{1,2}(\/|\s)\d{1,2}(\/|\s)\d{2,4}$/
 const validEmail = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+const validPhone = /^\d{3}(-|\s)\d{4}$/
+const validCell = /^\d{4}(-|\s)\d{4}$/
+
 
 /**
  * Escuchamos cuando entre un mensaje
@@ -100,7 +103,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_2' || lastStep == 'STEP_2_1') {
-    let resp = '7'
+    let resp = '0'
     if (respuesta == '1') resp = '2'
     if (respuesta == '2') resp = '3'
     if (respuesta == '3' && lastStep == 'STEP_2') resp = '4'
@@ -345,6 +348,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_10') {
+    dataClient.viaticos = respuesta
     step = 'STEP_11';
   }
 
@@ -353,31 +357,225 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_12') {
-    step = 'STEP_13';
+    if (isNaN(respuesta)) {
+      step = 'STEP_12';
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 1 || resp > 6) step = 'STEP_12';
+      else {
+        let resp = '0'
+        if (respuesta == '1') resp = '0'
+        if (respuesta == '2') resp = '1'
+        if (respuesta == '3') resp = '2'
+        if (respuesta == '4') resp = '3'
+        if (respuesta == '5') resp = '4'
+        if (respuesta == '6') resp = '5'
+        dataClient.proposito = respuesta
+        step = 'STEP_13';
+      }
+    }
   }
 
   if (lastStep == 'STEP_13') {
-    step = 'STEP_14';
+    if (isNaN(respuesta)) {
+      step = 'STEP_13';
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 1 || resp > 5) step = 'STEP_13';
+      else {
+        dataClient.estadoCivil = respuesta
+        step = 'STEP_14';
+      }
+    }
   }
 
   if (lastStep == 'STEP_14') {
     step = 'STEP_14_1';
   }
-
   if (lastStep == 'STEP_14_1') {
     step = 'STEP_14_2';
   }
-
   if (lastStep == 'STEP_14_2') {
     step = 'STEP_14_3';
   }
-
   if (lastStep == 'STEP_14_3') {
     step = 'STEP_14_4';
   }
-
   if (lastStep == 'STEP_14_4') {
     step = 'STEP_15';
+  }
+
+  if (lastStep == 'STEP_15') {
+    if (respuesta.length > 2 && respuesta.length < 100) {
+      dataClient.calle = respuesta
+      step = 'STEP_15_1';
+    } else {
+      step = 'STEP_15';
+    }
+  }
+  if (lastStep == 'STEP_15_1') {
+    if (respuesta.length > 2 && respuesta.length < 60) {
+      dataClient.barriada = respuesta
+      step = 'STEP_15_2';
+    } else {
+      step = 'STEP_15_1';
+    }
+  }
+  if (lastStep == 'STEP_15_2') {
+    if (respuesta.length > 2 && respuesta.length < 20) {
+      dataClient.casaApto = respuesta
+      step = 'STEP_15_3';
+    } else {
+      step = 'STEP_15_2';
+    }
+  }
+  if (lastStep == 'STEP_15_3') {
+    if (validPhone.test(respuesta)) {
+      dataClient.telefonoCasa = respuesta
+      step = 'STEP_16';
+    } else {
+      step = 'STEP_15_3';
+    }
+  }
+
+  if (lastStep == 'STEP_16') {
+    if (respuesta.length > 2 && respuesta.length < 100) {
+      dataClient.lugarTrabajo = respuesta
+      step = 'STEP_16_1';
+    } else {
+      step = 'STEP_16';
+    }
+  }
+  if (lastStep == 'STEP_16_1') {
+    if (respuesta.length > 2 && respuesta.length < 60) {
+      dataClient.wrkCargo = respuesta
+      step = 'STEP_16_2';
+    } else {
+      step = 'STEP_16_1';
+    }
+  }
+  if (lastStep == 'STEP_16_2') {
+    if (respuesta.length > 2 && respuesta.length < 60) {
+      dataClient.wrkDireccion = respuesta
+      step = 'STEP_16_3';
+    } else {
+      step = 'STEP_16_2';
+    }
+  }
+  if (lastStep == 'STEP_16_3') {
+    if (validPhone.test(respuesta)) {
+      dataClient.wrkTelefono = respuesta
+      step = 'STEP_16_4';
+    } else {
+      step = 'STEP_16_3';
+    }
+  }
+  if (lastStep == 'STEP_16_4') {
+    dataClient.wrkTelefonoExt = respuesta
+    step = 'STEP_16_5';
+  }
+  if (lastStep == 'STEP_16_5') {
+    if (respuesta.length > 2 && respuesta.length < 60) {
+      dataClient.wrkEmpleoAnterior = respuesta
+      step = 'STEP_16_6';
+    } else {
+      step = 'STEP_16_5';
+    }
+  }
+  if (lastStep == 'STEP_16_6') {
+    if (isNaN(respuesta)) {
+      step = 'STEP_16_6';
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 1 || resp > 5) step = 'STEP_16_6';
+      else {
+        dataClient.wrkSalarioEA = respuesta
+        step = 'STEP_17';
+      }
+    }
+  }
+
+  if (lastStep == 'STEP_17') {
+    if (respuesta.length > 2 && respuesta.length < 61) {
+      dataClient.refPerFNombres = respuesta
+      step = 'STEP_17_1';
+    } else {
+      step = 'STEP_17';
+    }
+  }
+  if (lastStep == 'STEP_17_1') {
+    if (respuesta.length > 2 && respuesta.length < 61) {
+      dataClient.refPerFApellidos = respuesta
+      step = 'STEP_17_2';
+    } else {
+      step = 'STEP_17_1';
+    }
+  }
+  if (lastStep == 'STEP_17_2') {
+    if (respuesta.length > 2 && respuesta.length < 11) {
+      dataClient.refPerFParentesco = respuesta
+      step = 'STEP_17_3';
+    } else {
+      step = 'STEP_17_3';
+    }
+    step = 'STEP_17_2';
+  }
+  if (lastStep == 'STEP_17_3') {
+    if (validCell.test(respuesta)) {
+      dataClient.refPerFCell = respuesta
+      step = 'STEP_17_4';
+    } else {
+      step = 'STEP_17_3';
+    }
+  }
+  if (lastStep == 'STEP_17_4') {
+    if (respuesta.length > 2 && respuesta.length < 101) {
+      dataClient.refPerFTrabajo = respuesta
+      step = 'STEP_18';
+    } else {
+      step = 'STEP_17_4';
+    }
+  }
+
+  if (lastStep == 'STEP_18') {
+    if (respuesta.length > 2 && respuesta.length < 61) {
+      dataClient.refPerNFNombres = respuesta
+      step = 'STEP_18_1';
+    } else {
+      step = 'STEP_18';
+    }
+  }
+  if (lastStep == 'STEP_18_1') {
+    if (respuesta.length > 2 && respuesta.length < 61) {
+      dataClient.refPerNFApellidos = respuesta
+      step = 'STEP_18_2';
+    } else {
+      step = 'STEP_18_1';
+    }
+  }
+  if (lastStep == 'STEP_18_2') {
+    if (validCell.test(respuesta)) {
+      dataClient.refPerNFCell = respuesta
+      step = 'STEP_18_3';
+    } else {
+      step = 'STEP_18_2';
+    }
+  }
+  if (lastStep == 'STEP_18_3') {
+    if (respuesta.length > 2 && respuesta.length < 101) {
+      dataClient.refPerNFTrabajo = respuesta
+      step = 'STEP_19';
+    } else {
+      step = 'STEP_18_3';
+    }
+  }
+
+  if (lastStep == 'STEP_19') {
+    step = 'STEP_20';
+  }
+
+  if (lastStep == 'STEP_20') {
+    step = 'STEP_21';
   }
 
   if (step) {

@@ -115,7 +115,7 @@ router.post('/clientify', async (req, res) => {
       },
       { "field": "mensualidad_casa", "value": Number(mensualidad_casa) },
       { "field": "Cedula", "value": Cedula },
-      
+
       { "field": "contrato_laboral", "value": contrato_laboral },
       { "field": "meses_trabajo_actual", "value": Number(meses_trabajo_actual) },
       { "field": "meses_trabajo_anterior", "value": Number(meses_trabajo_anterior) },
@@ -125,6 +125,12 @@ router.post('/clientify', async (req, res) => {
       { "field": "Ocupacion", "value": wocup },
       { "field": "Genero", "value": Genero },
     ]
+
+    //   {"field": "entidad_seleccionada", "value": wbanco},
+    //   {"field": "Monto", "value": Monto},
+    //   {"field": "Letra", "value": Letra},
+    //   {"field": "Plazo", "value": Plazo},
+
     //   {"field": "img_cedula", "value": img_cedula},
     //   {"field": "img_servicio_publico", "value": img_servicio_publico},
     //   {"field": "img_ficha_css", "value": img_ficha_css},
@@ -133,13 +139,7 @@ router.post('/clientify', async (req, res) => {
     //   {"field": "img_autoriza_apc", "value": img_autoriza_apc},
     //   {"field": "img_referencias_apc2", "value": img_referencias_apc},
 
-
     //   {"field": "acepta_terminos_condiciones", "value": acepta_terminos_condiciones},
-
-    //   {"field": "entidad_seleccionada", "value": wbanco},
-    //   {"field": "Monto", "value": Monto},
-    //   {"field": "Letra", "value": Letra},
-    //   {"field": "Plazo", "value": Plazo},
     //   {"field": "Agente", "value": "0"}
   })
 
