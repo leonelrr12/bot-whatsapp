@@ -14,8 +14,8 @@
     "STEP_1":{
         "replyMessage":[
             "¿Donde Laboras? Elije un sector: \n\n",
-            "1. Público \n",
-            "2. Privado \n",
+            "1. Privado \n",
+            "2. Público \n",
             "3. Jubilado \n\n",
             "Escribe una opcion: "
         ],
