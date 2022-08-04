@@ -31,6 +31,9 @@ var lastStep;
 var idClientify = '';
 var tokenClientify;
 var dataClient = {};
+var refpf = {}
+var refnpf = {}
+
 
 const validCedula = /^\d{1,2}(-|\s)\d{1,3}(-|\s)\d{1,4}$/
 const validDate = /^\d{1,2}(\/|\s)\d{1,2}(\/|\s)\d{2,4}$/
@@ -85,6 +88,7 @@ const listenMessage = () => client.on('message', async msg => {
   let step = await getMessages(message);
   if (lastStep == 'STEP_1') {
     dataClient.Sector = respuesta == '1' ? 'Privada' : (respuesta == '2' ? 'Publico' : 'Jubilado')
+    dataClient.sector = respuesta
     switch (respuesta) {
       case "1":
         step = 'STEP_2_1';
@@ -104,13 +108,15 @@ const listenMessage = () => client.on('message', async msg => {
 
   if (lastStep == 'STEP_2' || lastStep == 'STEP_2_1') {
     let resp = '0'
-    if (respuesta == '1') resp = '2'
-    if (respuesta == '2') resp = '3'
-    if (respuesta == '3' && lastStep == 'STEP_2') resp = '4'
-    if (respuesta == '3' && lastStep == 'STEP_2_1') resp = '1'
-    if (respuesta == '4') resp = '5'
-    if (respuesta == '5') resp = '6'
-    dataClient.profesion = resp
+    let resp1 = ''
+    if (respuesta == '1') { resp = '2'; resp1 = 'Médicos Enfermeras' }
+    if (respuesta == '2') { resp = '3'; resp1 = 'Educador' }
+    if (respuesta == '3' && lastStep == 'STEP_2') { resp = '4'; resp1 = 'Administrativo' }
+    if (respuesta == '3' && lastStep == 'STEP_2_1') { resp = '1'; resp1 = 'EMpresa Privada' }
+    if (respuesta == '4') { resp = '5'; resp1 = 'ACP' }
+    if (respuesta == '5') { resp = '6'; resp1 = 'Seguridad Pública' }
+    dataClient.Profesion = resp;
+    dataClient.nameProfesion = resp1;
     step = 'STEP_3';
   }
 
@@ -144,6 +150,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_5') {
+    dataClient.historialCredito = respuesta
     switch (respuesta) {
       case "1":
         step = 'STEP_6';
@@ -158,7 +165,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_6') {
-    dataClient.historialCredito = respuesta
+    dataClient.frecuenciaPago = respuesta
     switch (respuesta) {
       case "1":
       case "2":
@@ -251,7 +258,7 @@ const listenMessage = () => client.on('message', async msg => {
       const resp = parseInt(respuesta)
       if (resp < 1 || resp > 2) step = 'STEP_8_5';
       else {
-        dataClient.Genero = respuesta == "1" ? "M" : "H"
+        dataClient.Genero = respuesta == "1" ? "Mujer" : "Hombre"
         trackClientify(dataClient);
         step = 'STEP_8_6';
       }
@@ -328,7 +335,7 @@ const listenMessage = () => client.on('message', async msg => {
       const resp = parseInt(respuesta)
       if (resp < 0) step = 'STEP_9_1';
       else {
-        dataClient.hProfesion = respuesta
+        dataClient.hProfesional = respuesta
         step = 'STEP_9_2';
       }
     }
@@ -440,7 +447,7 @@ const listenMessage = () => client.on('message', async msg => {
 
   if (lastStep == 'STEP_16') {
     if (respuesta.length > 2 && respuesta.length < 100) {
-      dataClient.lugarTrabajo = respuesta
+      dataClient.work_name = respuesta
       step = 'STEP_16_1';
     } else {
       step = 'STEP_16';
@@ -448,7 +455,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_16_1') {
     if (respuesta.length > 2 && respuesta.length < 60) {
-      dataClient.wrkCargo = respuesta
+      dataClient.work_cargo = respuesta
       step = 'STEP_16_2';
     } else {
       step = 'STEP_16_1';
@@ -456,7 +463,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_16_2') {
     if (respuesta.length > 2 && respuesta.length < 60) {
-      dataClient.wrkDireccion = respuesta
+      dataClient.work_address = respuesta
       step = 'STEP_16_3';
     } else {
       step = 'STEP_16_2';
@@ -464,19 +471,19 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_16_3') {
     if (validPhone.test(respuesta)) {
-      dataClient.wrkTelefono = respuesta
+      dataClient.work_phone = respuesta
       step = 'STEP_16_4';
     } else {
       step = 'STEP_16_3';
     }
   }
   if (lastStep == 'STEP_16_4') {
-    dataClient.wrkTelefonoExt = respuesta
+    dataClient.work_phone_ext = respuesta
     step = 'STEP_16_5';
   }
   if (lastStep == 'STEP_16_5') {
-    if (respuesta.length > 2 && respuesta.length < 60) {
-      dataClient.wrkEmpleoAnterior = respuesta
+    if (respuesta.length > 0 && respuesta.length < 60) {
+      dataClient.work_prev_name = respuesta
       step = 'STEP_16_6';
     } else {
       step = 'STEP_16_5';
@@ -487,9 +494,9 @@ const listenMessage = () => client.on('message', async msg => {
       step = 'STEP_16_6';
     } else {
       const resp = parseInt(respuesta)
-      if (resp < 1 || resp > 5) step = 'STEP_16_6';
+      if (resp < 0) step = 'STEP_16_6';
       else {
-        dataClient.wrkSalarioEA = respuesta
+        dataClient.work_prev_salary = respuesta
         step = 'STEP_17';
       }
     }
@@ -497,7 +504,7 @@ const listenMessage = () => client.on('message', async msg => {
 
   if (lastStep == 'STEP_17') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      dataClient.refPerFNombres = respuesta
+      refpf.name = respuesta
       step = 'STEP_17_1';
     } else {
       step = 'STEP_17';
@@ -505,7 +512,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_17_1') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      dataClient.refPerFApellidos = respuesta
+      refpf.apellido = respuesta
       step = 'STEP_17_2';
     } else {
       step = 'STEP_17_1';
@@ -513,16 +520,15 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_17_2') {
     if (respuesta.length > 2 && respuesta.length < 11) {
-      dataClient.refPerFParentesco = respuesta
+      refpf.parentesco = respuesta
       step = 'STEP_17_3';
     } else {
-      step = 'STEP_17_3';
+      step = 'STEP_17_2';
     }
-    step = 'STEP_17_2';
   }
   if (lastStep == 'STEP_17_3') {
     if (validCell.test(respuesta)) {
-      dataClient.refPerFCell = respuesta
+      refpf.cellphone = respuesta
       step = 'STEP_17_4';
     } else {
       step = 'STEP_17_3';
@@ -530,7 +536,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_17_4') {
     if (respuesta.length > 2 && respuesta.length < 101) {
-      dataClient.refPerFTrabajo = respuesta
+      refpf.work_name = respuesta
       step = 'STEP_18';
     } else {
       step = 'STEP_17_4';
@@ -539,7 +545,7 @@ const listenMessage = () => client.on('message', async msg => {
 
   if (lastStep == 'STEP_18') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      dataClient.refPerNFNombres = respuesta
+      refnpf.name = respuesta
       step = 'STEP_18_1';
     } else {
       step = 'STEP_18';
@@ -547,7 +553,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_18_1') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      dataClient.refPerNFApellidos = respuesta
+      refnpf.apellido = respuesta
       step = 'STEP_18_2';
     } else {
       step = 'STEP_18_1';
@@ -555,7 +561,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_18_2') {
     if (validCell.test(respuesta)) {
-      dataClient.refPerNFCell = respuesta
+      refnpf.cellphone = respuesta
       step = 'STEP_18_3';
     } else {
       step = 'STEP_18_2';
@@ -563,18 +569,22 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_18_3') {
     if (respuesta.length > 2 && respuesta.length < 101) {
-      dataClient.refPerNFTrabajo = respuesta
+      refnpf.work_name = respuesta
       step = 'STEP_19';
     } else {
       step = 'STEP_18_3';
     }
   }
+  dataClient.refpf = refpf;
+  dataClient.refnpf = refnpf;
+  console.log(dataClient)
 
   if (lastStep == 'STEP_19') {
     step = 'STEP_20';
   }
 
   if (lastStep == 'STEP_20') {
+    saveProspect(dataClient)
     step = 'STEP_21';
   }
 
@@ -646,7 +656,6 @@ const withOutSession = () => {
 
 withOutSession();
 
-
 /**
  * Verificamos si tienes un gesto de db
  */
@@ -686,6 +695,213 @@ const trackClientify = (data) => {
       console.log('Hola estoy por aqui-BBBB', error)
     });
 }
+
+//***************************************//
+//***************************************//
+//** Guarda Informacion del Prospecto  **//
+//***************************************//
+//***************************************//
+const saveProspect = async (data) => {
+
+  console.log('HHHH', data)
+  const { estadoCivil: maritalStatus, telefonoCasa: residentialNumber, province = 0, district = 0, prestAuto = 0, prestHip = 0, prestTC = 0 } = data
+  const { Cedula: id, county = 0, calle: street, accept: aceptaAPC = true } = data
+  const { barriada: barriada_edificio, casaApto: no_casa_piso_apto } = data
+  const { work_name, work_cargo, work_address, meses_trabajo_actual, entity_f,
+    work_phone, work_phone_ext = '' } = data
+  const { work_prev_name, work_prev_salary = 0 } = data
+  const { idUrl, socialSecurityProofUrl, publicGoodProofUrl, workLetterUrl, payStubUrl, apcReferencesUrl = 'N/A', apcLetterUrl = '' } = data
+
+  body = {
+    id_personal: id,
+    phoneNumber: residentialNumber,
+    civil_status: maritalStatus,
+    idUrl, socialSecurityProofUrl, publicGoodProofUrl, workLetterUrl, payStubUrl, apcReferencesUrl, apcLetterUrl,
+    province,
+    district,
+    county,
+    street,
+    barriada_edificio,
+    no_casa_piso_apto,
+
+    sign: '',
+    loanAuto: prestAuto,
+    loanTC: prestTC,
+    loanHip: prestHip,
+
+    work_name,
+    work_cargo,
+    work_address,
+    work_phone,
+    work_phone_ext,
+
+    work_prev_name,
+    work_prev_salary,
+
+    aceptaAPC
+  }
+
+  let email2 = '', telefono = '', monto = '', name = '', banco = ''
+
+  const { fec_nac: birthDate, contractType = 0, Genero, Sector, occupation = 0, profession = 0, institution = 0, retirement = 0 } = data
+  const { previousJobMonths: work_prev_month = 0, meses_trabajo_actual: work_month } = data
+  const { salario: wage , hProfesional: alloance = 0, viaticos: perDiem = 0 } = data
+  const { tipo_residencia: residenceType, mensualidad_casa: residenceMonthly = 0, historialCredito: creditHistory, frecuenciaPago:paymentFrecuency } = data
+  const { weight = 0, weightUnit = 'Libra', height = 0, heightUnit = 'Metro' } = data
+  const { bank, amount = 0, term = 0, reason = 0, cashOnHand = 0 } = data
+  const { email, first_name: fname, nombre2: fname_2 = '', last_name: lname, apellido2: lname_2 = '',
+    origin = '', idUser = '', cellphone = '' } = data
+  const { terms_cond, nacional: nationality } = data
+
+  monto = amount
+  telefono = cellphone
+  email2 = email
+  banco = bank
+
+  name = fname + ' '
+  if (fname_2) name += fname_2 + ' '
+  name += lname + ' ' + lname_2
+  let sponsor = "0"
+
+  body = {
+    ...body, estado: 1, email, name, lname, lname_2, fname, fname_2, origin_idUser: origin, entity_f,
+    gender: Genero, birthDate, contractType,
+    jobSector: Sector,
+    occupation, creditHistory, paymentFrecuency, profession, institution, retirement,
+    residenceType, residenceMonthly, idUser, cellphone,
+    loanPP: amount, cashOnHand, plazo: term, termConds: terms_cond ? 1 : 0, nationality,
+    salary: wage, honorarios: alloance, viaticos: perDiem,
+    weight, weightUnit, height, heightUnit,
+    work_prev_month, work_month, reason, sponsor
+  }
+
+  console.log(body)
+  return
+
+  try {
+    const result = await fetch(`https://finanservs.com/adm/prospects`, {
+      method: 'POST',
+      body: new URLSearchParams(body)
+    })
+    const data = await result.json()
+    const newId = data.newId
+
+    // Info de Referencias personales Familiares
+    body = {
+      tipo: 1,
+      id_prospect: newId,
+      name: data.refpf.name,
+      apellido: data.refpf.apellido,
+      parentesco: data.refpf.parentesco || "",
+      cellphone: data.refpf.cellphone,
+      phonenumber: data.refpf.phonenumber || "",
+      work_name: data.refpf.work_name || "",
+      work_phonenumber: data.refpf.work_phonenumber || "",
+      work_phone_ext: data.refpf.work_phone_ext || ""
+    }
+
+    fetch(`https://finanservs.com/adm/ref_personales`, {
+      method: 'POST',
+      body: new URLSearchParams(body)
+    })
+
+    // Info de Referencias personales NO Familiares
+    body = {
+      tipo: 0,
+      id_prospect: newId,
+      name: data.refpnf.name,
+      apellido: data.refpnf.apellido,
+      parentesco: data.refpnf.relatparentescoionship || "",
+      cellphone: data.refpnf.cellphone,
+      phonenumber: data.refpnf.phonenumber || "",
+      work_name: data.refpnf.work_name || "",
+      work_phonenumber: data.refpnf.work_phonenumber || "",
+      work_phone_ext: data.refpnf.work_phone_ext || ""
+    }
+
+    fetch(`https://finanservs.com/adm/ref_personales`, {
+      method: 'POST',
+      body: new URLSearchParams(body)
+    })
+
+    // Informacion para enviar correo electrónico
+    body = {
+      cedula: id,
+      email: email2,
+      asunto: "Solicitud de Préstamo de: >> " + name,
+      mensaje: "Solicitud de Préstamo desde www.Finanservs.com",
+      telefono: telefono,
+      monto: monto,
+      nombre: name,
+      banco: banco,
+    }
+
+    fetch(`https://finanservs.com/api/email`, {
+      method: 'POST',
+      body: new URLSearchParams(body)
+    })
+
+    // saveTracking("Finanlizado!")
+  } catch (err) {
+    console.log('Error: (Prospect)', err);
+  }
+}
+
+
+// saveProspect(
+//   {
+//     token: '0cfbe97a236f2c62a97db9fe50b2367c63c33d08',
+//     phone: '14132304211',
+//     refpf: {},
+//     refnpf: {},
+//     Sector: 'Privada',
+//     sector: '1',
+//     Profesion: '3',
+//     nameProfesion: 'Educador',
+//     contrato_laboral: '2',
+//     meses_trabajo_actual: '165',
+//     historialCredito: '1',
+//     frecuenciaPago: '2',
+//     tipo_residencia: '3',
+//     mensualidad_casa: '320',
+//     Cedula: '7-94-485',
+//     first_name: 'leonel',
+//     nombre2: 'l',
+//     last_name: 'rodríguez',
+//     apellido2: 'r',
+//     email: 'dddd12@gmail.com',
+//     Tracking: 'Ingresos',
+//     ID: 30375696,
+//     Genero: 'Hombre',
+//     fec_nac: '12/04/1965',
+//     nacional: 'Panameño',
+//     peso: '160',
+//     estatura: '1.78',
+//     salario: '1550',
+//     hProfesional: '0',
+//     viaticos: '.',
+//     proposito: '5',
+//     estadoCivil: '1',
+//     calle: 'aquilino tejeira',
+//     barriada: 'ciudad radial',
+//     casaApto: 'casa 17-1',
+//     telefonoCasa: '234-5756',
+//     work_name: 'mi casa',
+//     work_cargo: 'own',
+//     work_address: 'la gloria',
+//     work_phone: '345-1234',
+//     work_phone_ext: '.',
+//     work_prev_name: 'no tengo',
+//     work_prev_salary: '0',
+//     entity_f: '700',
+//     idUrl: 'N/A', 
+//     socialSecurityProofUrl: 'N/A', 
+//     publicGoodProofUrl: 'N/A', 
+//     workLetterUrl: 'N/A', 
+//     payStubUrl: 'N/A'
+//   }
+// )
+
 
 server.listen(port, () => {
   console.log(`El server esta listo por el puerto ${port}`);

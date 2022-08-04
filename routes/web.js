@@ -31,15 +31,15 @@ router.post('/clientify', async (req, res) => {
 
   console.log(body)
 
-  let { token, ID, Tracking, entidad_seleccionada = '700', prestamo_opciones,
+  let { token, ID, Tracking, entidad_seleccionada = '700', prestamo_opciones, acepta_terminos_condiciones,
     first_name, last_name, email, phone, fecha_nacimiento = '1900-01-01', contrato_laboral,
-    meses_trabajo_actual = 0, meses_trabajo_anterior = 0, Salario = 0, Sector, acepta_terminos_condiciones,
-    Institucion, Ocupacion, Profesion, Planilla, Genero = 'M', tipo_residencia = '1', mensualidad_casa = 0,
+    meses_trabajo_actual = 0, meses_trabajo_anterior = 0, Salario = 0, Sector, 
+    nameProfesion, Genero = 'x', tipo_residencia = '1', mensualidad_casa = 0,
 
     donde_trabaja = 'N/A', Puesto = 'N/A', Cedula = 'N/A',
     img_cedula = 'N/A', img_ficha_css = 'N/A', img_servicio_publico = 'N/A', img_carta_trabajo = 'N/A',
     img_comprobante_pago = 'N/A', img_autoriza_apc = 'N/A', img_referencias_apc = 'N/A',
-    province, district, county, street = 'N/A'
+    provincia='N/A', distrito = 'N/A', street = 'N/A'
   } = body
 
   const wDate = date => (date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate())
@@ -69,21 +69,13 @@ router.post('/clientify', async (req, res) => {
   // })
   // if(wbanco === undefined) wbanco = 'N/A'
 
-  let wprof = 'N/A'
-  // await axios.get(`https://finanservs.com/api/profesions/${Profesion}`)
-  // .then(res => {
-  //   const result = res.data
-  //   wprof = result[0].profesion
-  // }).catch(() => {
-  //   wprof = 'N/A'
-  // })
-  // if(wprof == undefined) wprof = 'N/A'
-
-  let wocup = 'N/A'
-  let wprov = 'N/A'
-  let wdist = 'N/A'
   if (!img_autoriza_apc) img_autoriza_apc = "N/A"
   if (!img_referencias_apc) img_referencias_apc = "N/A"
+  if (!img_cedula) img_cedula = "N/A"
+  if (!img_ficha_css) img_ficha_css = "N/A"
+  if (!img_servicio_publico) img_servicio_publico = "N/A"
+  if (!img_carta_trabajo) img_carta_trabajo = "N/A"
+  if (!img_comprobante_pago) img_comprobante_pago = "N/A"
 
   raw = JSON.stringify({
     first_name,
@@ -98,8 +90,8 @@ router.post('/clientify', async (req, res) => {
     "addresses": [
       {
         "street": street,
-        "city": (wdist || '').length > 3 ? wCapit(wdist) : "N/A",
-        "state": (wprov || '').length > 3 ? wCapit(wprov) : "N/A",
+        "city": distrito,
+        "state": provincia,
         "country": "Panamá",
         "type": 5
       }
@@ -121,9 +113,16 @@ router.post('/clientify', async (req, res) => {
       { "field": "meses_trabajo_anterior", "value": Number(meses_trabajo_anterior) },
       { "field": "Salario", "value": Number(Salario) },
       { "field": "Sector", "value": Sector },
-      { "field": "Profesion", "value": wprof },
-      { "field": "Ocupacion", "value": wocup },
+      { "field": "Profesion", "value": nameProfesion },
       { "field": "Genero", "value": Genero },
+
+      {"field": "img_cedula", "value": img_cedula},
+      {"field": "img_servicio_publico", "value": img_servicio_publico},
+      {"field": "img_ficha_css", "value": img_ficha_css},
+      {"field": "img_carta_trabajo", "value": img_carta_trabajo},
+      {"field": "img_comprobante_pago", "value": img_comprobante_pago},
+      {"field": "img_autoriza_apc", "value": img_autoriza_apc},
+      {"field": "img_referencias_apc2", "value": img_referencias_apc},
     ]
 
     //   {"field": "entidad_seleccionada", "value": wbanco},
@@ -131,13 +130,7 @@ router.post('/clientify', async (req, res) => {
     //   {"field": "Letra", "value": Letra},
     //   {"field": "Plazo", "value": Plazo},
 
-    //   {"field": "img_cedula", "value": img_cedula},
-    //   {"field": "img_servicio_publico", "value": img_servicio_publico},
-    //   {"field": "img_ficha_css", "value": img_ficha_css},
-    //   {"field": "img_carta_trabajo", "value": img_carta_trabajo},
-    //   {"field": "img_comprobante_pago", "value": img_comprobante_pago},
-    //   {"field": "img_autoriza_apc", "value": img_autoriza_apc},
-    //   {"field": "img_referencias_apc2", "value": img_referencias_apc},
+
 
     //   {"field": "acepta_terminos_condiciones", "value": acepta_terminos_condiciones},
     //   {"field": "Agente", "value": "0"}

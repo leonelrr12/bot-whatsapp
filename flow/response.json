@@ -293,8 +293,8 @@
             "Estado civil: \n\n",
             "1. Casado \n",
             "2. Soltero \n",
-            "3. Unido \n\n",
-            "4. Divorciado \n\n",
+            "3. Unido \n",
+            "4. Divorciado \n",
             "5. Viudo \n\n",
             "Escribe una opcion: "
         ],
@@ -320,7 +320,7 @@
     "STEP_14_2":{
         "replyMessage":[
             "Subir Documento Personal: \n\n",
-            "3. Fiche de Seguros Social \n"
+            "3. Ficha de Seguros Social \n"
         ],
         "media":null,
         "trigger":null
@@ -463,7 +463,7 @@
    
     "STEP_18":{
         "replyMessage":[
-            "Referencia personal - Pariente \n\n",
+            "Referencia personal - No Pariente \n\n",
             "Nombres: \n\n"
         ],
         "media":null,
