@@ -142,9 +142,7 @@ appRoutes.get('/clientify-token', async (req, res) => {
       //   {"field": "Monto", "value": Monto},
       //   {"field": "Letra", "value": Letra},
       //   {"field": "Plazo", "value": Plazo},
-  
-  
-  
+
       //   {"field": "acepta_terminos_condiciones", "value": acepta_terminos_condiciones},
       //   {"field": "Agente", "value": "0"}
     })
@@ -351,46 +349,5 @@ appRoutes.get('/clientify-token', async (req, res) => {
     }
   })
 
-  appRoutes.get('/laboral_sector_entity_f', (request, response) => {
-    let sql = "select id_ruta as ruta, id_sector, id_profesion,"
-    sql += " descto_ship as discount_capacity,"
-    sql += " descto_chip as discount_capacity_mortgage,"
-    sql += " deuda_ship as debt_capacity,"
-    sql += " deuda_chip as debt_capacity_mortgage,"
-    sql += " plazo_max,"
-    sql += " tasa,"
-    sql += " comision,"
-    sql += " salario_min,"
-    sql += " tasa_servicio,"
-    sql += " seg_vida,"
-    sql += " factor_SV,"
-    sql += " feci,"
-    sql += " itbms,"
-    sql += " notaria,"
-    sql += " factor,"
-    sql += " letraRetenida,"
-    sql += " gastoLegal,"
-    sql += " timbres,"
-    sql += " servicioDescto,"
-    sql += " d.type,"
-    sql += " mount_min,"
-    sql += " mount_max, min_antiguedad"
-    sql += " from entity_params a"
-    sql += " inner join entities_f d on d.id = a.id_entity_f"
-    sql += " inner join sector_profesion b on b.id=a.id_sector_profesion"
-    sql += " where d.is_active = 1"
-  
-    const params = [request.params.id,  request.params.id2, request.params.id3];
-  
-    connection.query(sql, params, (error, results) => {
-      if (error) throw error
-      if (results.length > 0) {
-        response.json(results)
-      } else {
-        response.send('Not results!')
-      }
-    })
-  })
-  
   
   module.exports = appRoutes

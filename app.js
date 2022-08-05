@@ -16,6 +16,7 @@ const { sendMedia, sendMessage, sendMessageButton, readChat } = require('./contr
 const axios = require('axios');
 const appRoutes = require('./routes/appRoutes');
 const fileRoutes = require('./routes/uploadFile');
+const Opciones = require('./helpers/Opciones');
 
 const app = express();
 app.use(cors())
@@ -844,60 +845,60 @@ const saveProspect = async (data) => {
     });
 }
 
-saveProspect(
-  {
-    token: '0cfbe97a236f2c62a97db9fe50b2367c63c33d08',
-    phone: '14132304211',
-    refpf: { 'name': 'Leonel', 'apellido': 'Rodriguez' },
-    refpnf: { 'name': 'nLeonel', 'apellido': 'nRodriguez' },
-    Sector: 'Privada',
-    sector: '1',
-    Profesion: '3',
-    nameProfesion: 'Educador',
-    contrato_laboral: '2',
-    meses_trabajo_actual: '165',
-    historialCredito: '1',
-    frecuenciaPago: '2',
-    tipo_residencia: '3',
-    mensualidad_casa: '320',
-    Cedula: '7-94-485',
-    first_name: 'leonel',
-    nombre2: 'l',
-    last_name: 'rodríguez',
-    apellido2: 'r',
-    email: 'dddd12@gmail.com',
-    Tracking: 'Ingresos',
-    ID: 30375696,
-    Genero: 'Hombre',
-    fec_nac: '12/04/1965',
-    nacional: 'Panameño',
-    peso: '160',
-    estatura: '1.78',
-    salario: '1550',
-    hProfesional: '0',
-    viaticos: '0',
-    proposito: '5',
-    estadoCivil: '1',
-    calle: 'aquilino tejeira',
-    barriada: 'ciudad radial',
-    casaApto: 'casa 17-1',
-    telefonoCasa: '234-5756',
-    work_name: 'mi casa',
-    work_cargo: 'own',
-    work_address: 'la gloria',
-    work_phone: '345-1234',
-    work_phone_ext: '.',
-    work_prev_name: 'no tengo',
-    work_prev_salary: '0',
-    entity_f: '700',
-    idUrl: 'N/A',
-    socialSecurityProofUrl: 'N/A',
-    publicGoodProofUrl: 'N/A',
-    workLetterUrl: 'N/A',
-    payStubUrl: 'N/A',
-    bank: '700'
-  }
-)
+// saveProspect(
+//   {
+//     token: '0cfbe97a236f2c62a97db9fe50b2367c63c33d08',
+//     phone: '14132304211',
+//     refpf: { 'name': 'Leonel', 'apellido': 'Rodriguez' },
+//     refpnf: { 'name': 'nLeonel', 'apellido': 'nRodriguez' },
+//     Sector: 'Privada',
+//     sector: '1',
+//     Profesion: '3',
+//     nameProfesion: 'Educador',
+//     contrato_laboral: '2',
+//     meses_trabajo_actual: '165',
+//     historialCredito: '1',
+//     frecuenciaPago: '2',
+//     tipo_residencia: '3',
+//     mensualidad_casa: '320',
+//     Cedula: '7-94-485',
+//     first_name: 'leonel',
+//     nombre2: 'l',
+//     last_name: 'rodríguez',
+//     apellido2: 'r',
+//     email: 'dddd12@gmail.com',
+//     Tracking: 'Ingresos',
+//     ID: 30375696,
+//     Genero: 'Hombre',
+//     fec_nac: '12/04/1965',
+//     nacional: 'Panameño',
+//     peso: '160',
+//     estatura: '1.78',
+//     salario: '1550',
+//     hProfesional: '0',
+//     viaticos: '0',
+//     proposito: '5',
+//     estadoCivil: '1',
+//     calle: 'aquilino tejeira',
+//     barriada: 'ciudad radial',
+//     casaApto: 'casa 17-1',
+//     telefonoCasa: '234-5756',
+//     work_name: 'mi casa',
+//     work_cargo: 'own',
+//     work_address: 'la gloria',
+//     work_phone: '345-1234',
+//     work_phone_ext: '.',
+//     work_prev_name: 'no tengo',
+//     work_prev_salary: '0',
+//     entity_f: '700',
+//     idUrl: 'N/A',
+//     socialSecurityProofUrl: 'N/A',
+//     publicGoodProofUrl: 'N/A',
+//     workLetterUrl: 'N/A',
+//     payStubUrl: 'N/A',
+//     bank: '700'
+//   }
+// )
 
 
 const enviarDatatoPdf = async (filename, id, ruta) => {
@@ -923,9 +924,19 @@ const enviarDatatoPdf = async (filename, id, ruta) => {
     })
 }
 
-const fileNamePath = `${__dirname}/media/1659133629434.jpeg`
-enviarDatatoPdf(fileNamePath, '7-94-485', '700')
+// const fileNamePath = `${__dirname}/media/1659133629434.jpeg`
+// enviarDatatoPdf(fileNamePath, '7-94-485', '700')
 
+Opciones({ 
+  jobSector: 'Pb', 
+  gender: 'male', 
+  birthDate: '12/04/1965',
+  profession: 3,
+  wage: 1250,
+  creditHistory: true, paymentFrecuency: 2,
+  Edad: 56,
+  currentJobMonths: 120
+})
 
 server.listen(port, () => {
   console.log(`El server esta listo por el puerto ${port}`);

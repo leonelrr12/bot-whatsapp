@@ -1,89 +1,37 @@
-// import React, { useEffect } from 'react';
+const axios = require('axios');
 
-// import { List, ListItem, ListItemIcon, ListItemText, Typography, Grid } from '@mui/material';
-// import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
-// import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-// import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutlined'
-// import { StarsBackgroundPath } from '../../../../../components/Images';
-// import STRINGS from '../../../../../strings';
-// import { TermLoan, LaboralSector, Subgrupo_inst } from './index';
-// import { Props as QuotationProps } from '../index';
-// import { PAYMENT_FRECUENCY, Loan, ICausaRechazo } from '../../types';
+const API_HOST = "https://finanservs.com"
 
-// import { IParamsCalcLoan, LaboralEntity } from '../../../../../interfaces';
-
-// import { makeStyles } from '@mui/styles';
-// import { Theme } from '@mui/material/styles';
+let Loans = []
+let tmpParams = []
+let loan = 0.00
+let deudaTotal = 0.00
+let letraTotal = 0.00
+let monto_max = 0.00
+let term_max = 0
+let cashOnHand_max = 0.00
 
 
-interface Props extends QuotationProps {
-  laboralEntitys: LaboralEntity[];
-  termsLoan: TermLoan[];
-  sectors: LaboralSector[];
-  subgrupo_inst: Subgrupo_inst[];
-};
-
-
-function Form() {
-
-  const { quotation, setQuotation, laboralEntitys, sectors, subgrupo_inst } = props;
-  const classes = useStyles();
+async function Opciones(data) {
 
   let { monthlyResidenceFee = 0.00, wage = 0.00, alloance = 0.00, perDiem = 0.00, previousJobMonths = 0,
     jobSector, profession = 0, occupation = 0, institution = 0, currentJobMonths = 0, contractType = "",
-    creditHistory, paymentFrecuency
-  } = quotation.borrower
+    creditHistory, paymentFrecuency = 0, Edad
+  } = data
 
+  const sectorsRes = await axios.get(`${API_HOST}/api/laboral_sector`)
+  const sectors = await sectorsRes.data
+  // console.log(sectors)
 
-  const idSectors = sectors.filter(st => st.sector === jobSector)
+  const leRes = await axios.get(`${API_HOST}/api/laboral_sector_entity_f`)
+  const laboralEntitys = await leRes.data
+  // console.log(laboralEntities)
+
+  const idSectors = sectors.filter(st => st.sector == jobSector)
   const idSector = idSectors[0].id_sector
 
-  let deudaTotal = 0.00
-  let letraTotal = 0.00
-
-  let Loans: Loan[] = []
-  let tmpParams: IParamsCalcLoan[] = []
-  let loan = 0.00
-  let CausasRechazo: ICausaRechazo[] = []
-
-  let monto_max = 0.00, term_max = 0, cashOnHand_max = 0.00
-
-  //  Status Laboral
-  //  0	Temporal	
-  //  1	Permanente	
-  //  2	Serv. Profesional	
-
-  let subgrupo = 0
-  // Sector Gobierno
-  if (institution !== 0 && idSector === 2) {
-    // Buscar subgrupo (1 o 2)
-    subgrupo = 1
-  }
-
-  // Sector Privado
-  if (profession === "1") { //} || profession === "2" || profession === "3") {
-    subgrupo = 10
-  }
-
-  // Sector ACP
-  if (profession === "5") {
-    subgrupo = 21
-    if (contractType === "0") subgrupo = 20
-  }
-
-  // Sector Especialistas
-  if ((profession === "2" || profession === "3")) { //} && idSector === 2) {
-    subgrupo = 30
-  }
-
-  // Sector Jubilados
-  if (profession === "7") {
-    subgrupo = 40
-  }
-
-  const subgrupo_inst_wrk = subgrupo_inst.filter(le => le.id === subgrupo)
-
-  let { gender, birthDate } = quotation.borrower;
+ 
+  let { gender, birthDate } = data;
   let salario = wage + alloance + perDiem
 
   const today = new Date(); //  Ver como traerla del servidor
@@ -121,30 +69,22 @@ function Form() {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fGovIni = new Date(y1.toString() + '-07-01')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fGovFin = new Date(y2.toString() + '-07-01')
 
   // LLRR cambiado para los calculos por cada entidad
   // Falta incluir filtro para la antiguedad minima en el empleo (meses) 22-nov-2021
   const wrkLaboralEntities = laboralEntitys.filter(
-    le => le.id_sector === idSector &&
-      le.id_profesion === Number(profession) &&
-      le.ruta !== "100" && le.ruta !== "810" &&
+    le => le.id_sector == idSector &&
+      le.id_profesion == Number(profession) &&
+      le.ruta != "100" && le.ruta != "810" &&
       le.salario_min <= salario &&
       le.min_antiguedad <= currentJobMonths
   )
   let laboralEntities = wrkLaboralEntities
-  if (occupation === 12) {  // Banco Nacional de Panama
-    laboralEntities = wrkLaboralEntities.filter(le => le.ruta === "800")
-  }
-  // if(contom!== "1") {  // Tiene malas referencias bancarias
-  //   laboralEntities = wrkLaboralEntities.filter(le => le.type !== 1)
-  // }
-  console.log(laboralEntities)
 
-  function handleCapacity(entity: LaboralEntity, deudaTotal: number, letraTotal: number) {
+
+  function handleCapacity(entity, deudaTotal, letraTotal) {
     let {
       ruta: bank = '',
       debt_capacity = 0,
@@ -182,47 +122,39 @@ function Form() {
     // Fecha de Jubilacion
     let fj = new Date(anioJub.toString() + '-' + m1.toString() + '-' + d1.toString())
 
-    const lessThanSixtyDays = (
-      PAYMENT_FRECUENCY.LESS_THAN_30_DAYS === paymentFrecuency ||
-      PAYMENT_FRECUENCY.LESS_THAN_60_DAYS === paymentFrecuency
-    )
-    if (!creditHistory || !lessThanSixtyDays) {
+    if (!creditHistory || paymentFrecuency > 2) {
       // TODO: aqui se debe colocar condiciones para entidades que menejen diferentes formas de Pago y si tienen o no historial.
-      CausasRechazo.push({ description: `Bank: ${bank} - No tiene historial de crédito o no cumple con el plan de pago.` })
+      // CausasRechazo.push({ description: `Bank: ${bank} - No tiene historial de crédito o no cumple con el plan de pago.` })
+      console.log({ description: `Bank: ${bank} - No tiene historial de crédito o no cumple con el plan de pago.` })
       return
     }
 
-    if (contractType === '0' && bank !== '600') {
+    if (contractType == '0' && bank != '600') {
       // TOTO: Solo se permite temporales para Financomer y en especial para empleados de ACP
-      CausasRechazo.push({ description: `Bank: ${bank} - Solo se adminten contratos de trabajo permanente.` })
+      // CausasRechazo.push({ description: `Bank: ${bank} - Solo se adminten contratos de trabajo permanente.` })
+      console.log({ description: `Bank: ${bank} - Solo se adminten contratos de trabajo permanente.` })
       return
     }
 
     if (bank === '600') {  // Financomer
       if (contractType === '0' && profession !== '5') {
-        CausasRechazo.push({ description: `Bank: ${bank} - Solo se adminten contratos de trabajo permanente.` })
+        // CausasRechazo.push({ description: `Bank: ${bank} - Solo se adminten contratos de trabajo permanente.` })
+        console.log({ description: `Bank: ${bank} - Solo se adminten contratos de trabajo permanente.` })
         return
       }
     }
 
-    if (bank === '700') {  // Panacredit
-      if (profession === '2') { // Medicos / Enfermeras
-        // TODO: Condiciones por TYPE   1. Princial y 2. Asistentes
-        // Ir a archivo pre¿ofesions_lw con la profesion y optener el TYPE
-        const typeProf = window.localStorage.getItem('typeProf')
-        if (typeProf === '2') mount_max = 45000
-      }
-      if (profession === '3') { // Educadores
-        // TODO: ??????
-
-      }
+    if (bank == '700') {  // Panacredit
       if (jobSector === 'P') {  // Sector Privado
         if (currentJobMonths < 24 && previousJobMonths < 12) {
           // TOTO: No puede seguir. Continuidad laboral exige 12 meses en trabajo actual y anterior
-          CausasRechazo.push({ description: `Bank: ${bank} - Continuidad laboral exige 12 meses en trabajo actual y anterior.` })
+          // CausasRechazo.push({ description: `Bank: ${bank} - Continuidad laboral exige 12 meses en trabajo actual y anterior.` })
+          console.log({ description: `Bank: ${bank} - Continuidad laboral exige 12 meses en trabajo actual y anterior.` })
           return
         }
       }
+      console.log('plazo_max 1',plazo_max)
+
       if (jobSector === 'Pb') { // Sector Público
         if (profession === '5') { // Condiciones especiales APC
           // Por parametros viene el Monto maximo a prestar y el Numero minimo de plazo en Meses
@@ -237,16 +169,9 @@ function Form() {
           else if (currentJobMonths <= 24) mount_max = 25000
           else mount_max = 100000 //salary * discount_capacity / 100.00
         }
-        if (profession === '4') { // Administrativos
-          // TODO: ?????
-
-        }
-      }
-      if (jobSector === 'J') { // Jubilados
-        // TOTO: ??????
-
       }
     }
+    console.log('plazo_max 2',plazo_max)
 
     if (bank === '800') {  // Banisi
       const yyxx = anioJub + 1
@@ -264,6 +189,7 @@ function Form() {
       const periodo = (anioJub - yyyy) * 12 + (mmToday - mm)
       if (periodo < plazo_max) plazo_max = periodo
     }
+    console.log('plazo_max 3',plazo_max, jobSector, anioJub, mmToday )
 
     let mortage = monthlyResidenceFee
 
@@ -292,6 +218,7 @@ function Form() {
     let term = 0
 
     let wrkV = calc_fvcto(plazo_max, pje_dscto, fj)
+ 
     if (jobSector === 'J') {
       wPlazo = wrkV.wpp
       plazoCalc = wPlazo + wrkV.wDic
@@ -319,11 +246,11 @@ function Form() {
     let factor = (1.00 - (1 + tasaMes) ** (-wPlazo)) / tasaMes
     // const reFactor = tasaMes/(1-(1+tasaMes)**(-wPlazo))
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let nota = ''
     loan = (factor * cap_discto_available) / (1.00 + (factor * segVida * factor_SV))
+    console.log('loan 1', loan, bank)
 
-    if (bank !== '600' && bank !== '700') {
+    if (bank != '600' && bank != '700') {
       const data = {
         entidad: '100',
         cap_discto: cap_discto,
@@ -350,9 +277,10 @@ function Form() {
       factor = (1 - (1 + tasaMes) ** (-wPlazo)) / tasaMes
       loan = (factor * cap_discto_available) / (1.00 + (factor * segVida * factor_SV))
     }
+    console.log('loan 2', loan)
 
     //** FORMULA ESPECIAL PANACREDIT **/
-    if (bank === '700') {
+    if (bank == '700') {
       loan = ((cap_discto_available * wPlazo) - 587.8) / (1.04815 + comision + (0.083333 * plazoCalc) * (tasa + feci) + Factor * plazoCalc * 0.00105)
 
       const data = {
@@ -374,37 +302,21 @@ function Form() {
       }
       tmpParams.push(data)
     }
+    console.log('loan 3', loan)
 
     //** FORMULA ESPECIAL FINANCOMER **/
-    if (bank === '600') {
+    if (bank == '600') {
 
-      const Edad = parseInt(window.localStorage.getItem('Edad') || '0');
-      const anios = subgrupo_inst_wrk[0].anios;
-      plazo_max = subgrupo_inst_wrk[0].plazo_maximo;
-
-      if (jobSector !== 'J') {
+      if (jobSector != 'J') {
         wrkV = calc_fvcto(plazo_max, pje_dscto, fj)
         wPlazo = plazo_max //wrkV.wpp 
         plazoCalc = wPlazo + wrkV.wDic
         term = wPlazo
       }
 
-      if (subgrupo === 40) { // Jubilados
-        if (Edad > anios) {
-          tasaMes = subgrupo_inst_wrk[0].tasa_mes_mayor
-        } else {
-          tasaMes = subgrupo_inst_wrk[0].tasa_mes_menor
-        }
-      } else {
-        if (currentJobMonths >= anios * 12) { // Resto
-          tasaMes = subgrupo_inst_wrk[0].tasa_mes_mayor
-        } else {
-          tasaMes = subgrupo_inst_wrk[0].tasa_mes_menor
-        }
-      }
-
       tasaMes = tasaMes / 100
       loan = ((wPlazo * cap_discto_available) - Notaria) / (1 + (plazoCalc * feci) + (0.00168 * plazoCalc) + (tasaMes * plazoCalc) + 0.2675)
+      console.log('loan 4', loan)
 
       const data = {
         entidad: '600',
@@ -433,6 +345,7 @@ function Form() {
       loan = mount_max
     }
     if (loan < mount_min) nota = '*** Monto del préstamo por debajo del mínimo. ***'
+    console.log('loan 5', loan)
 
 
     loan = Number(loan.toFixed(2))
@@ -467,7 +380,7 @@ function Form() {
     if (cashOnHand > cashOnHand_max) cashOnHand_max = cashOnHand
   }
 
-  const calc_fvcto = (plazoCalc: number, pje_dscto: number, fj: Date) => {
+  const calc_fvcto = (plazoCalc, pje_dscto, fj) => {
     const fcot = new Date()
     let yyyy = fcot.getFullYear()
     let mm = fcot.getMonth() + 1
@@ -545,30 +458,12 @@ function Form() {
     return { wpp: i, wDic, fcot, fvencto, wPlazo, ffpay, mesOut, logg }
   }
 
-  // : JSON.stringify(logg)
-  // console.log(Monto_Max,'Loans', Loans)
-  // window.localStorage.setItem('Loans', JSON.stringify(Loans));
-  // window.localStorage.setItem('Monto_Max', JSON.stringify(Monto_Max));
-
-  useEffect(() => {
-    if (laboralEntities?.length <= 0) {
-      setQuotation({
-        loan: { bank: undefined, amount: undefined, opciones: [], term: undefined, causasRechazo: [] },
-      })
-    } else {
-      laboralEntities.forEach((entity) => {
-        handleCapacity(entity, deudaTotal, letraTotal)
-      })
-      console.log(Loans)
-      setQuotation({
-        loan: { opciones: Loans, term: term_max, amount: monto_max, cashOnHand: cashOnHand_max, causasRechazo: CausasRechazo },
-      })
-      window.localStorage.setItem('params', JSON.stringify(tmpParams))
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  laboralEntities.forEach((entity) => {
+    handleCapacity(entity, deudaTotal, letraTotal)
+  })
+  console.log(Loans)
 
 };
 
-export default Form;
+
+module.exports = Opciones
