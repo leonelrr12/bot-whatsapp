@@ -14,17 +14,18 @@ const { saveMedia } = require('./controllers/save')
 const { getMessages, responseMessages, bothResponse } = require('./controllers/flows')
 const { sendMedia, sendMessage, sendMessageButton, readChat } = require('./controllers/send')
 const axios = require('axios');
+const fileRoutes = require('./routes/uploadFile');
+
 const app = express();
 app.use(cors())
 app.use(express.json())
 app.use('/', require('./routes/web'))
+app.use('/upload', fileRoutes)
 
-const MULTI_DEVICE = process.env.MULTI_DEVICE || 'true';
 const server = require('http').Server(app)
-
 const port = process.env.PORT || 3000
-const SESSION_FILE_PATH = './session.json';
 
+const API_HOST = "http://localhost:3000"
 var client;
 var respuesta;
 var lastStep;
@@ -32,7 +33,7 @@ var idClientify = '';
 var tokenClientify;
 var dataClient = {};
 var refpf = {}
-var refnpf = {}
+var refpnf = {}
 
 
 const validCedula = /^\d{1,2}(-|\s)\d{1,3}(-|\s)\d{1,4}$/
@@ -91,6 +92,7 @@ const listenMessage = () => client.on('message', async msg => {
     dataClient.sector = respuesta
     switch (respuesta) {
       case "1":
+        console.log(respuesta)
         step = 'STEP_2_1';
         break;
       case "2":
@@ -283,6 +285,7 @@ const listenMessage = () => client.on('message', async msg => {
       if (resp < 1 || resp > 2) step = 'STEP_8_7';
       else {
         dataClient.nacional = respuesta == "1" ? "Panameño" : "Extranjero"
+        dataClient.nationality = respuesta
         trackClientify(dataClient);
         step = 'STEP_8_8';
       }
@@ -397,6 +400,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_14') {
+    console.log(respuesta)
     step = 'STEP_14_1';
   }
   if (lastStep == 'STEP_14_1') {
@@ -545,7 +549,7 @@ const listenMessage = () => client.on('message', async msg => {
 
   if (lastStep == 'STEP_18') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      refnpf.name = respuesta
+      refpnf.name = respuesta
       step = 'STEP_18_1';
     } else {
       step = 'STEP_18';
@@ -553,7 +557,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_18_1') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      refnpf.apellido = respuesta
+      refpnf.apellido = respuesta
       step = 'STEP_18_2';
     } else {
       step = 'STEP_18_1';
@@ -561,7 +565,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_18_2') {
     if (validCell.test(respuesta)) {
-      refnpf.cellphone = respuesta
+      refpnf.cellphone = respuesta
       step = 'STEP_18_3';
     } else {
       step = 'STEP_18_2';
@@ -569,14 +573,14 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_18_3') {
     if (respuesta.length > 2 && respuesta.length < 101) {
-      refnpf.work_name = respuesta
+      refpnf.work_name = respuesta
       step = 'STEP_19';
     } else {
       step = 'STEP_18_3';
     }
   }
   dataClient.refpf = refpf;
-  dataClient.refnpf = refnpf;
+  dataClient.refpnf = refpnf;
   console.log(dataClient)
 
   if (lastStep == 'STEP_19') {
@@ -703,12 +707,10 @@ const trackClientify = (data) => {
 //***************************************//
 const saveProspect = async (data) => {
 
-  console.log('HHHH', data)
   const { estadoCivil: maritalStatus, telefonoCasa: residentialNumber, province = 0, district = 0, prestAuto = 0, prestHip = 0, prestTC = 0 } = data
   const { Cedula: id, county = 0, calle: street, accept: aceptaAPC = true } = data
   const { barriada: barriada_edificio, casaApto: no_casa_piso_apto } = data
-  const { work_name, work_cargo, work_address, meses_trabajo_actual, entity_f,
-    work_phone, work_phone_ext = '' } = data
+  const { work_name, work_cargo, work_address, meses_trabajo_actual, entity_f, work_phone, work_phone_ext = '' } = data
   const { work_prev_name, work_prev_salary = 0 } = data
   const { idUrl, socialSecurityProofUrl, publicGoodProofUrl, workLetterUrl, payStubUrl, apcReferencesUrl = 'N/A', apcLetterUrl = '' } = data
 
@@ -743,15 +745,14 @@ const saveProspect = async (data) => {
 
   let email2 = '', telefono = '', monto = '', name = '', banco = ''
 
-  const { fec_nac: birthDate, contractType = 0, Genero, Sector, occupation = 0, profession = 0, institution = 0, retirement = 0 } = data
+  const { fec_nac: birthDate, contractType = 0, Genero, Sector, sector, occupation = 0, profession = 0, institution = 0, retirement = 0 } = data
   const { previousJobMonths: work_prev_month = 0, meses_trabajo_actual: work_month } = data
-  const { salario: wage , hProfesional: alloance = 0, viaticos: perDiem = 0 } = data
-  const { tipo_residencia: residenceType, mensualidad_casa: residenceMonthly = 0, historialCredito: creditHistory, frecuenciaPago:paymentFrecuency } = data
+  const { salario: wage, hProfesional: alloance = 0, viaticos: perDiem = 0 } = data
+  const { tipo_residencia: residenceType, mensualidad_casa: residenceMonthly = 0, historialCredito: creditHistory, frecuenciaPago: paymentFrecuency } = data
   const { weight = 0, weightUnit = 'Libra', height = 0, heightUnit = 'Metro' } = data
   const { bank, amount = 0, term = 0, reason = 0, cashOnHand = 0 } = data
-  const { email, first_name: fname, nombre2: fname_2 = '', last_name: lname, apellido2: lname_2 = '',
-    origin = '', idUser = '', cellphone = '' } = data
-  const { terms_cond, nacional: nationality } = data
+  const { email, first_name: fname, nombre2: fname_2 = '', last_name: lname, apellido2: lname_2 = '', origin = '', idUser = '', cellphone = '' } = data
+  const { terms_cond, nacional, nationality, refpf, refpnf } = data
 
   monto = amount
   telefono = cellphone
@@ -766,141 +767,162 @@ const saveProspect = async (data) => {
   body = {
     ...body, estado: 1, email, name, lname, lname_2, fname, fname_2, origin_idUser: origin, entity_f,
     gender: Genero, birthDate, contractType,
-    jobSector: Sector,
+    jobSector: sector,
     occupation, creditHistory, paymentFrecuency, profession, institution, retirement,
     residenceType, residenceMonthly, idUser, cellphone,
     loanPP: amount, cashOnHand, plazo: term, termConds: terms_cond ? 1 : 0, nationality,
     salary: wage, honorarios: alloance, viaticos: perDiem,
     weight, weightUnit, height, heightUnit,
-    work_prev_month, work_month, reason, sponsor
+    work_prev_month, work_month, agente: '0', reason, sponsor
   }
 
-  console.log(body)
-  return
+
+  axios.post(`${API_HOST}/prospects`, body)
+    .then(async (res) => {
+      const result = res.data
+      console.log('Hola estoy por aqui-AAAAA', result.newId)
+      newId = result.newId
+
+      if (Object.keys(refpf).length) {
+
+        // Info de Referencias personales Familiares
+        body = {
+          tipo: 1,
+          id_prospect: newId,
+          name: refpf.name || "",
+          apellido: refpf.lastName || "",
+          parentesco: refpf.relationship || "",
+          cellphone: refpf.phoneNumber || "",
+          phonenumber: refpf.residenceNumber || "",
+          work_name: refpf.company || "",
+          work_phonenumber: refpf.companyPhoneNumber || "",
+          work_phone_ext: refpf.companyPhoneExtension || ""
+        }
+
+        axios.post(`${API_HOST}/ref_personales`, body)
+      }
+
+      if (Object.keys(refpnf).length) {
+
+        // Info de Referencias personales NO Familiares
+        body = {
+          tipo: 0,
+          id_prospect: newId,
+          name: refpnf.name || "",
+          apellido: refpnf.lastName || "",
+          parentesco: refpf.relationship || "",
+          cellphone: refpnf.phoneNumber || "",
+          phonenumber: refpnf.residenceNumber || "",
+          work_name: refpnf.company || "",
+          work_phonenumber: refpnf.companyPhoneNumber || "",
+          work_phone_ext: refpnf.companyPhoneExtension || ""
+        }
+
+        axios.post(`${API_HOST}/ref_personales`, body)
+      }
+
+      // Informacion para enviar correo electrónico
+      body = {
+        cedula: id,
+        email: email2,
+        asunto: "Solicitud de Préstamo de: >> " + name,
+        mensaje: "Solicitud de Préstamo desde www.Finanservs.com",
+        telefono: telefono,
+        monto: monto,
+        nombre: name,
+        banco: banco,
+      }
+
+      axios.post(`${API_HOST}/email`, body)
+
+      // saveTracking("Finanlizado!")
+    }).catch(error => {
+      console.log('Hola estoy por aqui-BBBB', error)
+    });
+}
+
+saveProspect(
+  {
+    token: '0cfbe97a236f2c62a97db9fe50b2367c63c33d08',
+    phone: '14132304211',
+    refpf: { 'name': 'Leonel', 'apellido': 'Rodriguez' },
+    refpnf: { 'name': 'nLeonel', 'apellido': 'nRodriguez' },
+    Sector: 'Privada',
+    sector: '1',
+    Profesion: '3',
+    nameProfesion: 'Educador',
+    contrato_laboral: '2',
+    meses_trabajo_actual: '165',
+    historialCredito: '1',
+    frecuenciaPago: '2',
+    tipo_residencia: '3',
+    mensualidad_casa: '320',
+    Cedula: '7-94-485',
+    first_name: 'leonel',
+    nombre2: 'l',
+    last_name: 'rodríguez',
+    apellido2: 'r',
+    email: 'dddd12@gmail.com',
+    Tracking: 'Ingresos',
+    ID: 30375696,
+    Genero: 'Hombre',
+    fec_nac: '12/04/1965',
+    nacional: 'Panameño',
+    peso: '160',
+    estatura: '1.78',
+    salario: '1550',
+    hProfesional: '0',
+    viaticos: '0',
+    proposito: '5',
+    estadoCivil: '1',
+    calle: 'aquilino tejeira',
+    barriada: 'ciudad radial',
+    casaApto: 'casa 17-1',
+    telefonoCasa: '234-5756',
+    work_name: 'mi casa',
+    work_cargo: 'own',
+    work_address: 'la gloria',
+    work_phone: '345-1234',
+    work_phone_ext: '.',
+    work_prev_name: 'no tengo',
+    work_prev_salary: '0',
+    entity_f: '700',
+    idUrl: 'N/A',
+    socialSecurityProofUrl: 'N/A',
+    publicGoodProofUrl: 'N/A',
+    workLetterUrl: 'N/A',
+    payStubUrl: 'N/A',
+    bank: '700'
+  }
+)
+
+
+const enviarDatatoPdf = async (filename, id, ruta) => {
+
+  let ext = 'jpeg'
+  const extSplit = filename.split('.')
+  if (extSplit.length) ext = extSplit.pop()
+
+  const raw = {
+    "fileName": filename,
+    "entity_f": ruta,
+    "prospect": id + "." + ext,
+    "nameImage": "REFERENCIA-APC"
+  }
 
   try {
-    const result = await fetch(`https://finanservs.com/adm/prospects`, {
-      method: 'POST',
-      body: new URLSearchParams(body)
-    })
-    const data = await result.json()
-    const newId = data.newId
-
-    // Info de Referencias personales Familiares
-    body = {
-      tipo: 1,
-      id_prospect: newId,
-      name: data.refpf.name,
-      apellido: data.refpf.apellido,
-      parentesco: data.refpf.parentesco || "",
-      cellphone: data.refpf.cellphone,
-      phonenumber: data.refpf.phonenumber || "",
-      work_name: data.refpf.work_name || "",
-      work_phonenumber: data.refpf.work_phonenumber || "",
-      work_phone_ext: data.refpf.work_phone_ext || ""
-    }
-
-    fetch(`https://finanservs.com/adm/ref_personales`, {
-      method: 'POST',
-      body: new URLSearchParams(body)
-    })
-
-    // Info de Referencias personales NO Familiares
-    body = {
-      tipo: 0,
-      id_prospect: newId,
-      name: data.refpnf.name,
-      apellido: data.refpnf.apellido,
-      parentesco: data.refpnf.relatparentescoionship || "",
-      cellphone: data.refpnf.cellphone,
-      phonenumber: data.refpnf.phonenumber || "",
-      work_name: data.refpnf.work_name || "",
-      work_phonenumber: data.refpnf.work_phonenumber || "",
-      work_phone_ext: data.refpnf.work_phone_ext || ""
-    }
-
-    fetch(`https://finanservs.com/adm/ref_personales`, {
-      method: 'POST',
-      body: new URLSearchParams(body)
-    })
-
-    // Informacion para enviar correo electrónico
-    body = {
-      cedula: id,
-      email: email2,
-      asunto: "Solicitud de Préstamo de: >> " + name,
-      mensaje: "Solicitud de Préstamo desde www.Finanservs.com",
-      telefono: telefono,
-      monto: monto,
-      nombre: name,
-      banco: banco,
-    }
-
-    fetch(`https://finanservs.com/api/email`, {
-      method: 'POST',
-      body: new URLSearchParams(body)
-    })
-
-    // saveTracking("Finanlizado!")
-  } catch (err) {
-    console.log('Error: (Prospect)', err);
+    axios.post(`http://localhost:3000/upload/file2a`, raw)
+      .then(async (res) => {
+        const result = res.data
+        console.log(result.Location)
+      })
+  } catch (e) {
+    console.error(e);
   }
 }
 
-
-// saveProspect(
-//   {
-//     token: '0cfbe97a236f2c62a97db9fe50b2367c63c33d08',
-//     phone: '14132304211',
-//     refpf: {},
-//     refnpf: {},
-//     Sector: 'Privada',
-//     sector: '1',
-//     Profesion: '3',
-//     nameProfesion: 'Educador',
-//     contrato_laboral: '2',
-//     meses_trabajo_actual: '165',
-//     historialCredito: '1',
-//     frecuenciaPago: '2',
-//     tipo_residencia: '3',
-//     mensualidad_casa: '320',
-//     Cedula: '7-94-485',
-//     first_name: 'leonel',
-//     nombre2: 'l',
-//     last_name: 'rodríguez',
-//     apellido2: 'r',
-//     email: 'dddd12@gmail.com',
-//     Tracking: 'Ingresos',
-//     ID: 30375696,
-//     Genero: 'Hombre',
-//     fec_nac: '12/04/1965',
-//     nacional: 'Panameño',
-//     peso: '160',
-//     estatura: '1.78',
-//     salario: '1550',
-//     hProfesional: '0',
-//     viaticos: '.',
-//     proposito: '5',
-//     estadoCivil: '1',
-//     calle: 'aquilino tejeira',
-//     barriada: 'ciudad radial',
-//     casaApto: 'casa 17-1',
-//     telefonoCasa: '234-5756',
-//     work_name: 'mi casa',
-//     work_cargo: 'own',
-//     work_address: 'la gloria',
-//     work_phone: '345-1234',
-//     work_phone_ext: '.',
-//     work_prev_name: 'no tengo',
-//     work_prev_salary: '0',
-//     entity_f: '700',
-//     idUrl: 'N/A', 
-//     socialSecurityProofUrl: 'N/A', 
-//     publicGoodProofUrl: 'N/A', 
-//     workLetterUrl: 'N/A', 
-//     payStubUrl: 'N/A'
-//   }
-// )
+const fileNamePath = `${__dirname}/media/1659133629434.jpeg`
+enviarDatatoPdf(fileNamePath, '7-94-485', '700')
 
 
 server.listen(port, () => {
