@@ -15,8 +15,8 @@ let cashOnHand_max = 0.00
 async function Opciones(data) {
 
   let { monthlyResidenceFee = 0.00, wage = 0.00, alloance = 0.00, perDiem = 0.00, previousJobMonths = 0,
-    jobSector, profession = 0, occupation = 0, institution = 0, currentJobMonths = 0, contractType = "",
-    creditHistory, paymentFrecuency = 0, Edad
+    jobSector, profession = 0, currentJobMonths = 0, contractType = "",
+    creditHistory, paymentFrecuency = 0, gender, birthDate
   } = data
 
   const sectorsRes = await axios.get(`${API_HOST}/api/laboral_sector`)
@@ -29,9 +29,7 @@ async function Opciones(data) {
 
   const idSectors = sectors.filter(st => st.sector == jobSector)
   const idSector = idSectors[0].id_sector
-
  
-  let { gender, birthDate } = data;
   let salario = wage + alloance + perDiem
 
   const today = new Date(); //  Ver como traerla del servidor
@@ -117,7 +115,6 @@ async function Opciones(data) {
     servicioDescto = servicioDescto / 100
 
     const anioJub = birth.getFullYear() + (gender === 'male' ? 62 : 57)
-    let salary = wage + alloance + perDiem
 
     // Fecha de Jubilacion
     let fj = new Date(anioJub.toString() + '-' + m1.toString() + '-' + d1.toString())
@@ -153,7 +150,7 @@ async function Opciones(data) {
           return
         }
       }
-      console.log('plazo_max 1',plazo_max)
+      // console.log('plazo_max 1',plazo_max)
 
       if (jobSector === 'Pb') { // Sector Público
         if (profession === '5') { // Condiciones especiales APC
@@ -167,11 +164,11 @@ async function Opciones(data) {
         if (profession === '6') {  // Seguridad publica
           if (currentJobMonths <= 12) mount_max = 10000
           else if (currentJobMonths <= 24) mount_max = 25000
-          else mount_max = 100000 //salary * discount_capacity / 100.00
+          else mount_max = 100000 //salario * discount_capacity / 100.00
         }
       }
     }
-    console.log('plazo_max 2',plazo_max)
+    // console.log('plazo_max 2',plazo_max)
 
     if (bank === '800') {  // Banisi
       const yyxx = anioJub + 1
@@ -189,7 +186,7 @@ async function Opciones(data) {
       const periodo = (anioJub - yyyy) * 12 + (mmToday - mm)
       if (periodo < plazo_max) plazo_max = periodo
     }
-    console.log('plazo_max 3',plazo_max, jobSector, anioJub, mmToday )
+    // console.log('plazo_max 3',plazo_max, jobSector, anioJub, mmToday )
 
     let mortage = monthlyResidenceFee
 
@@ -198,8 +195,8 @@ async function Opciones(data) {
     let pje_debt = debt_capacity
     if (mortage > 0) pje_debt = debt_capacity_mortgage
 
-    const cap_discto = salary * pje_dscto / 100.00
-    const cap_debt = salary * pje_debt / 100.00
+    const cap_discto = salario * pje_dscto / 100.00
+    const cap_debt = salario * pje_debt / 100.00
 
     const cap_debt_available = cap_debt - mortage
     let cap_discto_available = cap_debt_available < cap_discto ? cap_debt_available : cap_discto
@@ -248,7 +245,7 @@ async function Opciones(data) {
 
     let nota = ''
     loan = (factor * cap_discto_available) / (1.00 + (factor * segVida * factor_SV))
-    console.log('loan 1', loan, bank)
+    // console.log('loan 1', loan, bank)
 
     if (bank != '600' && bank != '700') {
       const data = {
@@ -277,7 +274,7 @@ async function Opciones(data) {
       factor = (1 - (1 + tasaMes) ** (-wPlazo)) / tasaMes
       loan = (factor * cap_discto_available) / (1.00 + (factor * segVida * factor_SV))
     }
-    console.log('loan 2', loan)
+    // console.log('loan 2', loan)
 
     //** FORMULA ESPECIAL PANACREDIT **/
     if (bank == '700') {
@@ -302,7 +299,7 @@ async function Opciones(data) {
       }
       tmpParams.push(data)
     }
-    console.log('loan 3', loan)
+    // console.log('loan 3', loan)
 
     //** FORMULA ESPECIAL FINANCOMER **/
     if (bank == '600') {
@@ -316,7 +313,7 @@ async function Opciones(data) {
 
       tasaMes = tasaMes / 100
       loan = ((wPlazo * cap_discto_available) - Notaria) / (1 + (plazoCalc * feci) + (0.00168 * plazoCalc) + (tasaMes * plazoCalc) + 0.2675)
-      console.log('loan 4', loan)
+      // console.log('loan 4', loan)
 
       const data = {
         entidad: '600',
@@ -345,7 +342,7 @@ async function Opciones(data) {
       loan = mount_max
     }
     if (loan < mount_min) nota = '*** Monto del préstamo por debajo del mínimo. ***'
-    console.log('loan 5', loan)
+    // console.log('loan 5', loan)
 
 
     loan = Number(loan.toFixed(2))
@@ -461,8 +458,8 @@ async function Opciones(data) {
   laboralEntities.forEach((entity) => {
     handleCapacity(entity, deudaTotal, letraTotal)
   })
-  console.log(Loans)
-
+  // console.log({ Loans, monto_max,  term_max,  cashOnHand_max })
+  return { Loans, monto_max,  term_max,  cashOnHand_max }
 };
 
 

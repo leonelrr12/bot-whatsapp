@@ -25,7 +25,7 @@ const get = (message) => new Promise((resolve, reject) => {
 
 })
 
-const reply = (step) => new Promise((resolve, reject) => {
+const reply = (step, data='') => new Promise((resolve, reject) => {
     /**
     * Si no estas usando un gestor de base de datos
     */
@@ -34,14 +34,14 @@ const reply = (step) => new Promise((resolve, reject) => {
         const responseFind = stepsReponse[step] || {};
         if (step == 'STEP_10') {
             // Buscar calculos en el Backend
-
+            const { monto_max, term_max, cashOnHand_max } = data
             responseFind.replyMessage = [
-                'Felicidades!!! \n\n',
-                'Puede califica para un \n',
-                'préstamo personal por un \n',
-                'Monto máximo de: 888888 \n',
-                'Plazo en meses: 888 \n',
-                'Monto a recibir: 77777'
+                `Felicidades!!! \n
+                Puede calificar para un
+                préstamo personal por un
+                Monto máximo de: ${monto_max}
+                Plazo en meses: ${term_max}
+                Monto a recibir: ${cashOnHand_max}`
             ]
         }
         if (step == 'STEP_11') {

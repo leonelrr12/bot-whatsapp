@@ -38,7 +38,7 @@ var tokenClientify;
 var dataClient = {};
 var refpf = {}
 var refpnf = {}
-
+var opciones = {}
 
 const validCedula = /^\d{1,2}(-|\s)\d{1,3}(-|\s)\d{1,4}$/
 const validDate = /^\d{1,2}(\/|\s)\d{1,2}(\/|\s)\d{2,4}$/
@@ -265,6 +265,7 @@ const listenMessage = () => client.on('message', async msg => {
       if (resp < 1 || resp > 2) step = 'STEP_8_5';
       else {
         dataClient.Genero = respuesta == "1" ? "Mujer" : "Hombre"
+        dataClient.genero = respuesta == "1" ? "female" : "male"
         trackClientify(dataClient);
         step = 'STEP_8_6';
       }
@@ -356,12 +357,26 @@ const listenMessage = () => client.on('message', async msg => {
       if (resp < 0) step = 'STEP_9_2';
       else {
         dataClient.viaticos = respuesta
+
+        opciones = await Opciones({
+          jobSector: 'Pb',
+          gender: 'male',
+          birthDate: '12/04/1965',
+          profession: 3,
+          wage: 1250,
+          creditHistory: true, paymentFrecuency: 2,
+          Edad: 56,
+          currentJobMonths: 120
+        })
+        console.log(opciones)
+    
         step = 'STEP_10';
       }
     }
   }
 
   if (lastStep == 'STEP_10') {
+
     dataClient.viaticos = respuesta
     step = 'STEP_11';
   }
@@ -597,7 +612,10 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (step) {
-    const response = await responseMessages(step);
+    let response = ''
+    if (step == 'STEP_10' || step == 'STEP_11')
+      response = await responseMessages(step, opciones);
+    else response = await responseMessages(step);
 
     await sendMessage(client, from, response.replyMessage, response.trigger);
     if (response.hasOwnProperty('actions')) {
@@ -927,16 +945,20 @@ const enviarDatatoPdf = async (filename, id, ruta) => {
 // const fileNamePath = `${__dirname}/media/1659133629434.jpeg`
 // enviarDatatoPdf(fileNamePath, '7-94-485', '700')
 
-Opciones({ 
-  jobSector: 'Pb', 
-  gender: 'male', 
-  birthDate: '12/04/1965',
-  profession: 3,
-  wage: 1250,
-  creditHistory: true, paymentFrecuency: 2,
-  Edad: 56,
-  currentJobMonths: 120
-})
+// async function xxx(data) {
+//   const opciones = await Opciones(data)
+//   console.log(opciones)
+// }
+// xxx({
+//   jobSector: 'Pb',
+//   gender: 'male',
+//   birthDate: '12/04/1965',
+//   profession: 3,
+//   wage: 1250,
+//   creditHistory: true, paymentFrecuency: 2,
+//   Edad: 56,
+//   currentJobMonths: 120
+// })
 
 server.listen(port, () => {
   console.log(`El server esta listo por el puerto ${port}`);
