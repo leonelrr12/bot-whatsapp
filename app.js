@@ -14,18 +14,21 @@ const { saveMedia } = require('./controllers/save')
 const { getMessages, responseMessages, bothResponse } = require('./controllers/flows')
 const { sendMedia, sendMessage, sendMessageButton, readChat } = require('./controllers/send')
 const axios = require('axios');
+const appRoutes = require('./routes/appRoutes');
 const fileRoutes = require('./routes/uploadFile');
 
 const app = express();
 app.use(cors())
 app.use(express.json())
 app.use('/', require('./routes/web'))
+app.use('/api', appRoutes)
 app.use('/upload', fileRoutes)
 
 const server = require('http').Server(app)
 const port = process.env.PORT || 3000
 
 const API_HOST = "http://localhost:3000"
+
 var client;
 var respuesta;
 var lastStep;
@@ -670,7 +673,7 @@ if (process.env.DATABASE === 'mysql') {
 
 const token = async () => {
   try {
-    await axios.get(`http://localhost:3000/clientify-token`)
+    await axios.get(`${API_HOST}/api/clientify-token`)
       .then(res => {
         tokenClientify = res.data
         console.log('tokenClientify', tokenClientify)
@@ -688,7 +691,7 @@ token();
 
 const trackClientify = (data) => {
   data.ID = idClientify
-  const URL = "http://localhost:3000/clientify"
+  const URL = `${API_HOST}/api/clientify`
 
   axios.post(URL, data)
     .then(async (res) => {
@@ -776,8 +779,7 @@ const saveProspect = async (data) => {
     work_prev_month, work_month, agente: '0', reason, sponsor
   }
 
-
-  axios.post(`${API_HOST}/prospects`, body)
+  axios.post(`${API_HOST}/api/prospects`, body)
     .then(async (res) => {
       const result = res.data
       console.log('Hola estoy por aqui-AAAAA', result.newId)
@@ -799,7 +801,7 @@ const saveProspect = async (data) => {
           work_phone_ext: refpf.companyPhoneExtension || ""
         }
 
-        axios.post(`${API_HOST}/ref_personales`, body)
+        axios.post(`${API_HOST}/api/ref_personales`, body)
       }
 
       if (Object.keys(refpnf).length) {
@@ -818,7 +820,7 @@ const saveProspect = async (data) => {
           work_phone_ext: refpnf.companyPhoneExtension || ""
         }
 
-        axios.post(`${API_HOST}/ref_personales`, body)
+        axios.post(`${API_HOST}/api/ref_personales`, body)
       }
 
       // Informacion para enviar correo electrónico
@@ -833,10 +835,11 @@ const saveProspect = async (data) => {
         banco: banco,
       }
 
-      axios.post(`${API_HOST}/email`, body)
+      axios.post(`${API_HOST}/api/email`, body)
 
       // saveTracking("Finanlizado!")
-    }).catch(error => {
+    })
+    .catch(error => {
       console.log('Hola estoy por aqui-BBBB', error)
     });
 }
@@ -910,15 +913,14 @@ const enviarDatatoPdf = async (filename, id, ruta) => {
     "nameImage": "REFERENCIA-APC"
   }
 
-  try {
-    axios.post(`http://localhost:3000/upload/file2a`, raw)
-      .then(async (res) => {
-        const result = res.data
-        console.log(result.Location)
-      })
-  } catch (e) {
-    console.error(e);
-  }
+  axios.post(`${API_HOST}/upload/file2a`, raw)
+    .then(async (res) => {
+      const result = res.data
+      console.log(result.Location)
+    })
+    .catch((e) => {
+      console.error(e);
+    })
 }
 
 const fileNamePath = `${__dirname}/media/1659133629434.jpeg`
