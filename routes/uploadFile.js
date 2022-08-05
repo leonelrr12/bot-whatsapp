@@ -14,6 +14,7 @@ const fs = require('fs')
 const path = require('path');
 
 const AWS = require('aws-sdk')
+const separator = require('../helpers/separator')
 
 fileRoutes.get('/prueba', async (req, res) => {
   res.sendFile(path.join(__dirname+'/upload.html'))
@@ -70,16 +71,16 @@ fileRoutes.post('/file2a', upload2.single('idUrl'), async (req, res) => {
 })
 
 
-const separator = (numb) => {
-  var str = numb.toString().split(".");
-  if(str.length > 1) {
-    str[1] = str[1].padEnd(2, '0')
-  } else {
-    str[1]='00'
-  }
-  str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return str.join(".");
-}
+// const separator = (numb) => {
+//   var str = numb.toString().split(".");
+//   if(str.length > 1) {
+//     str[1] = str[1].padEnd(2, '0')
+//   } else {
+//     str[1]='00'
+//   }
+//   str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+//   return str.join(".");
+// }
 
 fileRoutes.post('/createPDF', async (req, res) => {
 

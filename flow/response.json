@@ -17,7 +17,7 @@
             "1. Privado \n",
             "2. Público \n",
             "3. Jubilado \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "trigger":null,
         "actions":{
@@ -39,7 +39,7 @@
             "3. Administrativo \n",
             "4. ACP \n",
             "5. Seguridad Publica \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -50,7 +50,7 @@
             "1. Medico/Enfermera \n",
             "2. Educador \n",
             "3. Empresa Privada \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -61,7 +61,7 @@
             "1. Temporal \n",
             "2. Permanente \n",
             "3. Servicio Profesional \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -88,7 +88,7 @@
             "¿Tienes historial de Credito? \n\n",
             "1. Si \n",
             "2. No \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -109,7 +109,7 @@
             "3. 61 a 90 dias \n",
             "4. Arreglo de Pago \n",
             "5. Demanda Judicial \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -129,7 +129,7 @@
             "2. Con padres o familia \n",
             "3. Casa hipoteca \n",
             "4. Casa de alquiler \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -192,7 +192,7 @@
             "Genero: \n\n",
             "1. Mujer \n",
             "2. Hombre \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -210,7 +210,7 @@
             "Nacionalidad: \n\n",
             "1. Panameño \n",
             "2. Extranjero \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -269,7 +269,7 @@
             "1. Financomer \n",
             "2. Panacredit \n",
             "3. Banisi \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -283,7 +283,7 @@
             "4. Colegio \n",
             "5. Viaje \n",
             "6. Quince Año \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -296,7 +296,7 @@
             "3. Unido \n",
             "4. Divorciado \n",
             "5. Viudo \n\n",
-            "Escribe una opcion: "
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null

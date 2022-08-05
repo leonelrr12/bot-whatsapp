@@ -28,7 +28,7 @@ app.use('/upload', fileRoutes)
 const server = require('http').Server(app)
 const port = process.env.PORT || 3000
 
-const API_HOST = "http://localhost:3000"
+const API_HOST = `http://localhost:${port}`
 
 var client;
 var respuesta;
@@ -96,15 +96,18 @@ const listenMessage = () => client.on('message', async msg => {
     dataClient.sector = respuesta
     switch (respuesta) {
       case "1":
+        dataClient.sectorAb = 'P'
         console.log(respuesta)
         step = 'STEP_2_1';
         break;
       case "2":
+        dataClient.sectorAb = 'Pb'
         step = 'STEP_2';
         break;
       case "3":
-        step = 'STEP_5';
+        dataClient.sectorAb = 'J'
         dataClient.profesion = '7';
+        step = 'STEP_5';
         break;
       default:
         step = 'STEP_1';
@@ -121,7 +124,7 @@ const listenMessage = () => client.on('message', async msg => {
     if (respuesta == '3' && lastStep == 'STEP_2_1') { resp = '1'; resp1 = 'EMpresa Privada' }
     if (respuesta == '4') { resp = '5'; resp1 = 'ACP' }
     if (respuesta == '5') { resp = '6'; resp1 = 'Seguridad Pública' }
-    dataClient.Profesion = resp;
+    dataClient.profesion = resp;
     dataClient.nameProfesion = resp1;
     step = 'STEP_3';
   }
@@ -156,7 +159,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_5') {
-    dataClient.historialCredito = respuesta
+    dataClient.historialCredito = respuesta == "1" ? true : false
     switch (respuesta) {
       case "1":
         step = 'STEP_6';
@@ -357,16 +360,18 @@ const listenMessage = () => client.on('message', async msg => {
       if (resp < 0) step = 'STEP_9_2';
       else {
         dataClient.viaticos = respuesta
+        const { sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual } = dataClient
+        console.log(sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
 
         opciones = await Opciones({
-          jobSector: 'Pb',
-          gender: 'male',
-          birthDate: '12/04/1965',
-          profession: 3,
-          wage: 1250,
-          creditHistory: true, paymentFrecuency: 2,
-          Edad: 56,
-          currentJobMonths: 120
+          jobSector: sectorAb,
+          gender: genero,
+          birthDate: fec_nac,
+          profession: profesion,
+          wage: parseFloat(salario),
+          creditHistory: historialCredito, 
+          paymentFrecuency: parseInt(frecuenciaPago),
+          currentJobMonths: parseInt(meses_trabajo_actual)
         })
         console.log(opciones)
     
@@ -770,7 +775,7 @@ const saveProspect = async (data) => {
   const { fec_nac: birthDate, contractType = 0, Genero, Sector, sector, occupation = 0, profession = 0, institution = 0, retirement = 0 } = data
   const { previousJobMonths: work_prev_month = 0, meses_trabajo_actual: work_month } = data
   const { salario: wage, hProfesional: alloance = 0, viaticos: perDiem = 0 } = data
-  const { tipo_residencia: residenceType, mensualidad_casa: residenceMonthly = 0, historialCredito: creditHistory, frecuenciaPago: paymentFrecuency } = data
+  const { tipo_residencia: residenceType, mensualidad_casa: residenceMonthly = 0, frecuenciaPago: paymentFrecuency } = data
   const { weight = 0, weightUnit = 'Libra', height = 0, heightUnit = 'Metro' } = data
   const { bank, amount = 0, term = 0, reason = 0, cashOnHand = 0 } = data
   const { email, first_name: fname, nombre2: fname_2 = '', last_name: lname, apellido2: lname_2 = '', origin = '', idUser = '', cellphone = '' } = data
@@ -790,7 +795,7 @@ const saveProspect = async (data) => {
     ...body, estado: 1, email, name, lname, lname_2, fname, fname_2, origin_idUser: origin, entity_f,
     gender: Genero, birthDate, contractType,
     jobSector: sector,
-    occupation, creditHistory, paymentFrecuency, profession, institution, retirement,
+    occupation, paymentFrecuency, profession, institution, retirement,
     residenceType, residenceMonthly, idUser, cellphone,
     loanPP: amount, cashOnHand, plazo: term, termConds: terms_cond ? 1 : 0, nationality,
     salary: wage, honorarios: alloance, viaticos: perDiem,
@@ -875,7 +880,6 @@ const saveProspect = async (data) => {
 //     nameProfesion: 'Educador',
 //     contrato_laboral: '2',
 //     meses_trabajo_actual: '165',
-//     historialCredito: '1',
 //     frecuenciaPago: '2',
 //     tipo_residencia: '3',
 //     mensualidad_casa: '320',
