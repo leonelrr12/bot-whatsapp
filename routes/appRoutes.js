@@ -203,6 +203,7 @@ appRoutes.post('/prospects', (req, res) => {
 appRoutes.post('/ref_personales', (req, res) => {
   const { body } = req;
 
+  console.log('REF:',body)
   let { tipo, name, id_prospect, apellido, parentesco, cellphone, phonenumber, work_name, work_phonenumber, work_phone_ext } = body
 
   let sql = "INSERT INTO ref_person_family ("
@@ -216,6 +217,8 @@ appRoutes.post('/ref_personales', (req, res) => {
     name, id_prospect, apellido, parentesco, cellphone, phonenumber, work_name, work_phonenumber, work_phone_ext
   ]
 
+  console.log(sql, params)
+  
   connection.query(sql, params, (error, results, next) => {
     if (error) {
       console.log('Error SQL:', error.sqlMessage)
