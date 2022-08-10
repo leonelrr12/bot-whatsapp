@@ -16,7 +16,7 @@
             "3. Jubilado \n\n",
             "Escoge una opcion: "
         ],
-        "media":null,
+        "media":"Autorizacion APC ACsoraT.pdf",
         "trigger":null
     },
     "STEP_2":{
@@ -159,21 +159,35 @@
     },
     "STEP_8_0":{
         "replyMessage":[
-            "Nombre: \n"
+            "Primer nombre: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_1":{
+        "replyMessage":[
+            "Segundo nombre: \n"
         ],
         "media":null,
         "trigger":null
     },
     "STEP_8_2":{
         "replyMessage":[
-            "Apellido: \n"
+            "Primer apellido: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_3":{
+        "replyMessage":[
+            "Segundo apellido: \n"
         ],
         "media":null,
         "trigger":null
     },
     "STEP_8_4":{
         "replyMessage":[
-            "E-mail: \n"
+            "Email: \n"
         ],
         "media":null,
         "trigger":null
@@ -196,10 +210,48 @@
         "media":null,
         "trigger":null
     },
+    "STEP_8_7":{
+        "replyMessage":[
+            "Nacionalidad: \n\n",
+            "1. Panameño \n",
+            "2. Extranjero \n\n",
+            "Escoge una opcion: "
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_8":{
+        "replyMessage":[
+            "Tu peso en libras: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_8_9":{
+        "replyMessage":[
+            "Tu estatura en metros ej.(1.45): \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
     "STEP_9":{
         "replyMessage":[
             "Ingresos mensuales: \n\n",
             "Salario fijo: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_9_1":{
+        "replyMessage":[
+            "Gastos representación: \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_9_2":{
+        "replyMessage":[
+            "Viáticos: \n"
         ],
         "media":null,
         "trigger":null
@@ -212,6 +264,17 @@
             "Monto máximo de: 9999 \n",
             "Plazo en meses: 999 \n",
             "Monto a recibir: 9999"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_11":{
+        "replyMessage":[
+            "Opciones: \n\n",
+            "1. Financomer \n",
+            "2. Panacredit \n",
+            "3. Banisi \n\n",
+            "Escoge una opcion: "
         ],
         "media":null,
         "trigger":null
@@ -288,6 +351,89 @@
         "media":null,
         "trigger":null
     },
+
+    "STEP_15":{
+        "replyMessage":[
+            "Acerca de tu Residencia \n\n",
+            "Calle: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_15_1":{
+        "replyMessage":[
+            "Barriada o Nombre Edificio: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_15_2":{
+        "replyMessage":[
+            "No. Casa o Piso, Apto.: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_15_3":{
+        "replyMessage":[
+            "Teléfono residencial: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+
+    "STEP_16":{
+        "replyMessage":[
+            "Acerca de tu Trabajo \n\n",
+            "Lugar de trabajo: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_1":{
+        "replyMessage":[
+            "Cargo actual: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_2":{
+        "replyMessage":[
+            "Dirección de trabajo: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_3":{
+        "replyMessage":[
+            "Teléfono trabajo: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_4":{
+        "replyMessage":[
+            "Extensión: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_5":{
+        "replyMessage":[
+            "Empleo anterior: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_16_6":{
+        "replyMessage":[
+            "Salario mensual \n",
+            "empleo anterior: \n\n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+
     "STEP_17":{
         "replyMessage":[
             "Referencia personal - Pariente \n\n",

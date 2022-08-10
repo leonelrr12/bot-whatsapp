@@ -10,6 +10,7 @@ let letraTotal = 0.00
 let monto_max = 0.00
 let term_max = 0
 let cashOnHand_max = 0.00
+let monthlyFee_max = 0.00
 
 
 async function Opciones(data) {
@@ -372,9 +373,12 @@ async function Opciones(data) {
     }
 
     Loans.push(xx)
-    if (loan > monto_max) monto_max = loan
-    if (term > term_max) term_max = term
-    if (cashOnHand > cashOnHand_max) cashOnHand_max = cashOnHand
+    if (loan > monto_max) {
+      monto_max = loan
+      term_max = term
+      cashOnHand_max = cashOnHand
+      monthlyFee_max = monthlyFee
+    }
   }
 
   const calc_fvcto = (plazoCalc, pje_dscto, fj) => {
@@ -459,7 +463,7 @@ async function Opciones(data) {
     handleCapacity(entity, deudaTotal, letraTotal)
   })
   // console.log({ Loans, monto_max,  term_max,  cashOnHand_max })
-  return { Loans, monto_max,  term_max,  cashOnHand_max }
+  return { Loans, monto_max,  term_max,  cashOnHand_max, monthlyFee_max }
 };
 
 

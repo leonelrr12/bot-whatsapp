@@ -128,9 +128,6 @@ const listenMessage = () => client.on('message', async msg => {
     if (respuesta == '5') { resp = '6'; resp1 = 'Seguridad Pública' }
     dataClient.profesion = resp;
     dataClient.nameProfesion = resp1;
-
-    dataClient.historialCredito = true;
-    dataClient.frecuenciaPago = "2";
     step = 'STEP_3';
   }
 
@@ -164,6 +161,68 @@ const listenMessage = () => client.on('message', async msg => {
     }
   }
 
+  if (lastStep == 'STEP_5') {
+    dataClient.historialCredito = respuesta == "1" ? true : false
+    switch (respuesta) {
+      case "1":
+        step = 'STEP_6';
+        break;
+      case "2":
+        step = 'STEP_5_1';
+        break;
+      default:
+        step = 'STEP_5';
+        break;
+    }
+  }
+
+  if (lastStep == 'STEP_6') {
+    dataClient.frecuenciaPago = respuesta
+    switch (respuesta) {
+      case "1":
+      case "2":
+        step = 'STEP_7';
+        break;
+      case "3":
+      case "4":
+      case "5":
+        step = 'STEP_6_1';
+        break;
+      default:
+        step = 'STEP_6';
+        break;
+    }
+  }
+
+  if (lastStep == 'STEP_7') {
+    dataClient.tipo_residencia = respuesta
+    switch (respuesta) {
+      case "1":
+      case "2":
+        step = 'STEP_8';
+        break;
+      case "3":
+      case "4":
+        step = 'STEP_7_1';
+        break;
+      default:
+        step = 'STEP_7';
+        break;
+    }
+  }
+
+  if (lastStep == 'STEP_7_1') {
+    if (isNaN(respuesta)) {
+      step = 'STEP_7_1';
+    } else {
+      if (parseInt(respuesta) <= 0) step = 'STEP_7_1';
+      else {
+        step = 'STEP_8';
+        dataClient.mensualidad_casa = respuesta
+      }
+    }
+  }
+
   if (lastStep == 'STEP_8a') {
     if (isNaN(respuesta)) {
       step = 'STEP_8a';
@@ -172,11 +231,9 @@ const listenMessage = () => client.on('message', async msg => {
       if (resp < 1 || resp > 2) step = 'STEP_8a';
       else {
         dataClient.termConds = respuesta == "1" ? "Si" : "No"
-        if(respuesta == "1") {
-          dataClient.Tracking = "BOT-Terminos y Condiciones"
-          trackClientify(dataClient);
-          step = 'STEP_8'
-        } else step = 'STEP_8b'
+        console.log(dataClient)
+        trackClientify(dataClient);
+        step = respuesta == "1" ? 'STEP_8' : 'STEP_8b';
       }
     }
   }
@@ -191,18 +248,29 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_8_0') {
-    dataClient.first_name = respuesta[0].toUpperCase() + respuesta.substr(1)
+    dataClient.first_name = respuesta
     step = 'STEP_8_2';
   }
+
+  if (lastStep == 'STEP_8_1') {
+    dataClient.nombre2 = respuesta
+    step = 'STEP_8_2';
+  }
+
   if (lastStep == 'STEP_8_2') {
-    dataClient.last_name = respuesta[0].toUpperCase() + respuesta.substr(1)
+    dataClient.last_name = respuesta
+    step = 'STEP_8_4';
+  }
+
+  if (lastStep == 'STEP_8_3') {
+    dataClient.apellido2 = respuesta
     step = 'STEP_8_4';
   }
 
   if (lastStep == 'STEP_8_4') {
     if (validEmail.test(respuesta)) {
       dataClient.email = respuesta
-      dataClient.Tracking = 'BOT-Datos Cliente'
+      dataClient.Tracking = 'Datos Cliente'
       trackClientify(dataClient);
       step = 'STEP_8_5';
     } else {
@@ -236,6 +304,47 @@ const listenMessage = () => client.on('message', async msg => {
     }
   }
 
+  if (lastStep == 'STEP_8_7') {
+    if (isNaN(respuesta)) {
+      step = 'STEP_8_7';
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 1 || resp > 2) step = 'STEP_8_7';
+      else {
+        dataClient.nacional = respuesta == "1" ? "Panameño" : "Extranjero"
+        dataClient.nationality = respuesta
+        trackClientify(dataClient);
+        step = 'STEP_8_8';
+      }
+    }
+  }
+
+  if (lastStep == 'STEP_8_8') {
+    if (isNaN(respuesta)) {
+      step = 'STEP_8_8';
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 1) step = 'STEP_8_8';
+      else {
+        dataClient.peso = respuesta
+        step = 'STEP_8_9';
+      }
+    }
+  }
+
+  if (lastStep == 'STEP_8_9') {
+    if (isNaN(respuesta)) {
+      step = 'STEP_8_9';
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 1) step = 'STEP_8_9';
+      else {
+        dataClient.estatura = respuesta
+        step = 'STEP_9';
+      }
+    }
+  }
+
   if (lastStep == 'STEP_9') {
     if (isNaN(respuesta)) {
       step = 'STEP_9';
@@ -243,10 +352,11 @@ const listenMessage = () => client.on('message', async msg => {
       const resp = parseInt(respuesta)
       if (resp < 1) step = 'STEP_9';
       else {
+        dataClient.Tracking = 'Ingresos'
         dataClient.salario = respuesta
 
         const { sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual } = dataClient
-        consoole.log(sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
+        console.log(sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
 
         opciones = await Opciones({
           jobSector: sectorAb,
@@ -260,16 +370,41 @@ const listenMessage = () => client.on('message', async msg => {
         })
         console.log(opciones)
 
-        dataClient.Tracking = 'BOT-Opciones Disponibles'
-        dataClient.prestamo_opciones = opciones
-        trackClientify(dataClient);
         // step = 'STEP_9_1';
+        step = 'STEP_10';
+      }
+    }
+  }
+  if (lastStep == 'STEP_9_1') {
+    if (isNaN(respuesta)) {
+      step = 'STEP_9_1';
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 0) step = 'STEP_9_1';
+      else {
+        dataClient.hProfesional = respuesta
+        step = 'STEP_9_2';
+      }
+    }
+  }
+  if (lastStep == 'STEP_9_2') {
+    if (isNaN(respuesta)) {
+      step = 'STEP_9_2';
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 0) step = 'STEP_9_2';
+      else {
+        dataClient.viaticos = respuesta
         step = 'STEP_10';
       }
     }
   }
 
   if (lastStep == 'STEP_10') {
+    step = 'STEP_11';
+  }
+
+  if (lastStep == 'STEP_11') {
     step = 'STEP_12';
   }
 
@@ -307,8 +442,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_14') {
-    dataClient.Tracking = 'BOT-Subir Documentos'
-    trackClientify(dataClient);
+    console.log(respuesta)
     step = 'STEP_14_1';
   }
   if (lastStep == 'STEP_14_1') {
@@ -325,12 +459,100 @@ const listenMessage = () => client.on('message', async msg => {
     step = 'STEP_17';
   }
 
+  if (lastStep == 'STEP_15') {
+    if (respuesta.length > 2 && respuesta.length < 100) {
+      dataClient.calle = respuesta
+      step = 'STEP_15_1';
+    } else {
+      step = 'STEP_15';
+    }
+  }
+  if (lastStep == 'STEP_15_1') {
+    if (respuesta.length > 2 && respuesta.length < 60) {
+      dataClient.barriada = respuesta
+      step = 'STEP_15_2';
+    } else {
+      step = 'STEP_15_1';
+    }
+  }
+  if (lastStep == 'STEP_15_2') {
+    if (respuesta.length > 2 && respuesta.length < 20) {
+      dataClient.casaApto = respuesta
+      step = 'STEP_15_3';
+    } else {
+      step = 'STEP_15_2';
+    }
+  }
+  if (lastStep == 'STEP_15_3') {
+    if (validPhone.test(respuesta)) {
+      dataClient.telefonoCasa = respuesta
+      step = 'STEP_16';
+    } else {
+      step = 'STEP_15_3';
+    }
+  }
+
+  if (lastStep == 'STEP_16') {
+    if (respuesta.length > 2 && respuesta.length < 100) {
+      dataClient.work_name = respuesta
+      step = 'STEP_16_1';
+    } else {
+      step = 'STEP_16';
+    }
+  }
+  if (lastStep == 'STEP_16_1') {
+    if (respuesta.length > 2 && respuesta.length < 60) {
+      dataClient.work_cargo = respuesta
+      step = 'STEP_16_2';
+    } else {
+      step = 'STEP_16_1';
+    }
+  }
+  if (lastStep == 'STEP_16_2') {
+    if (respuesta.length > 2 && respuesta.length < 60) {
+      dataClient.work_address = respuesta
+      step = 'STEP_16_3';
+    } else {
+      step = 'STEP_16_2';
+    }
+  }
+  if (lastStep == 'STEP_16_3') {
+    if (validPhone.test(respuesta)) {
+      dataClient.work_phone = respuesta
+      step = 'STEP_16_4';
+    } else {
+      step = 'STEP_16_3';
+    }
+  }
+  if (lastStep == 'STEP_16_4') {
+    dataClient.work_phone_ext = respuesta
+    step = 'STEP_16_5';
+  }
+  if (lastStep == 'STEP_16_5') {
+    if (respuesta.length > 0 && respuesta.length < 60) {
+      dataClient.work_prev_name = respuesta
+      step = 'STEP_16_6';
+    } else {
+      step = 'STEP_16_5';
+    }
+  }
+  if (lastStep == 'STEP_16_6') {
+    if (isNaN(respuesta)) {
+      step = 'STEP_16_6';
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 0) step = 'STEP_16_6';
+      else {
+        dataClient.work_prev_salary = respuesta
+        step = 'STEP_17';
+      }
+    }
+  }
+
   if (lastStep == 'STEP_17') {
     if (respuesta.length > 2 && respuesta.length < 61) {
       refpf.name = respuesta
       step = 'STEP_17_1';
-      dataClient.Tracking = 'BOT-Referencias Personales'
-      trackClientify(dataClient);
     } else {
       step = 'STEP_17';
     }
@@ -411,8 +633,6 @@ const listenMessage = () => client.on('message', async msg => {
   if (lastStep == 'STEP_20') {
     // TODO: MANDAR A GUARDAR LA INFORMACION DEL PROSPECTO.
     saveProspect(dataClient)
-    dataClient.Tracking = 'BOT-Proceso Terminado'
-    trackClientify(dataClient);
     step = 'STEP_21';
   }
 
