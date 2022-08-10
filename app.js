@@ -95,6 +95,7 @@ const listenMessage = () => client.on('message', async msg => {
   dataClient.publicGoodProofUrl = 'N/A'
   dataClient.workLetterUrl = 'N/A'
   dataClient.payStubUrl = 'N'
+  dataClient.proposito = '0'
 
   /**
    * Guardamos el archivo multimedia que envia
@@ -297,27 +298,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_10') {
-    step = 'STEP_12';
-  }
-
-  if (lastStep == 'STEP_12') {
-    if (isNaN(respuesta)) {
-      step = 'STEP_12';
-    } else {
-      const resp = parseInt(respuesta)
-      if (resp < 1 || resp > 6) step = 'STEP_12';
-      else {
-        let resp = '0'
-        if (respuesta == '1') resp = '0'
-        if (respuesta == '2') resp = '1'
-        if (respuesta == '3') resp = '2'
-        if (respuesta == '4') resp = '3'
-        if (respuesta == '5') resp = '4'
-        if (respuesta == '6') resp = '5'
-        dataClient.proposito = respuesta
-        step = 'STEP_13';
-      }
-    }
+    step = 'STEP_13';
   }
 
   if (lastStep == 'STEP_13') {
@@ -381,17 +362,10 @@ const listenMessage = () => client.on('message', async msg => {
   if (lastStep == 'STEP_17_3') {
     if (validCell.test(respuesta)) {
       refpf.cellphone = respuesta
-      step = 'STEP_17_4';
-    } else {
-      step = 'STEP_17_3';
-    }
-  }
-  if (lastStep == 'STEP_17_4') {
-    if (respuesta.length > 2 && respuesta.length < 101) {
-      refpf.work_name = respuesta.toUpperCase()
+      refpf.work_name = 'N/A'
       step = 'STEP_18';
     } else {
-      step = 'STEP_17_4';
+      step = 'STEP_17_3';
     }
   }
 
@@ -414,19 +388,13 @@ const listenMessage = () => client.on('message', async msg => {
   if (lastStep == 'STEP_18_2') {
     if (validCell.test(respuesta)) {
       refpnf.cellphone = respuesta
-      step = 'STEP_18_3';
+      refpnf.work_name = 'N/A'
+      step = 'STEP_19';
     } else {
       step = 'STEP_18_2';
     }
   }
-  if (lastStep == 'STEP_18_3') {
-    if (respuesta.length > 2 && respuesta.length < 101) {
-      refpnf.work_name = respuesta.toUpperCase()
-      step = 'STEP_19';
-    } else {
-      step = 'STEP_18_3';
-    }
-  }
+
   dataClient.refpf = refpf;
   dataClient.refpnf = refpnf;
 

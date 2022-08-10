@@ -213,8 +213,7 @@ appRoutes.post('/ref_personales', (req, res) => {
   sql += ") VALUES (?,?,?,?,?,?,?,?,?)"
 
   const params = [
-    name, id_prospect, apellido, parentesco, cellphone,
-    phonenumber, work_name, work_phonenumber, work_phone_ext
+    name, id_prospect, apellido, parentesco, cellphone, phonenumber, work_name, work_phonenumber, work_phone_ext
   ]
 
   connection.query(sql, params, (error, results, next) => {
@@ -222,7 +221,7 @@ appRoutes.post('/ref_personales', (req, res) => {
       console.log('Error SQL:', error.sqlMessage)
       res.status(500)
     }
-    // console.log('results',results)
+    console.log('results',results)
     res.send('Ok!')
   })
 })

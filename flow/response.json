@@ -69,67 +69,7 @@
         ],
         "media":null,
         "trigger":null
-    },     
-    "STEP_5":{
-        "replyMessage":[
-            "¿Tienes historial de Credito? \n\n",
-            "1. Si \n",
-            "2. No \n\n",
-            "Escoge una opcion: "
-        ],
-        "media":null,
-        "trigger":null
-    },   
-    "STEP_5_1":{
-        "replyMessage":[
-            "Lo sentimos.  Necesitamos un Historial de Créditos. \n",
-            "https://finanservs.com \n"
-        ],
-        "media":null,
-        "trigger":null
-    },   
-    "STEP_6":{
-        "replyMessage":[
-            "Sus pagos los realiza de: \n\n",
-            "1. 0 a 30 dias \n",
-            "2. 31 a 60 dias \n",
-            "3. 61 a 90 dias \n",
-            "4. Arreglo de Pago \n",
-            "5. Demanda Judicial \n\n",
-            "Escoge una opcion: "
-        ],
-        "media":null,
-        "trigger":null
-    },
-    "STEP_6_1":{
-        "replyMessage":[
-            "Lo sentimos.  Es muy importante mantener al dia sus pagos. \n",
-            "https://finanservs.com \n"
-        ],
-        "media":null,
-        "trigger":null
-    },
-    "STEP_7":{ 
-        "replyMessage":[
-            "Donde vives: \n\n",
-            "1. Casa propia \n",
-            "2. Con padres o familia \n",
-            "3. Casa hipoteca \n",
-            "4. Casa de alquiler \n\n",
-            "Escoge una opcion: "
-        ],
-        "media":null,
-        "trigger":null
-    },    
-    "STEP_7_1":{
-        "replyMessage":[
-            "Cuanto pagas mensualmente: \n\n",
-   
-            "Escribe el monto en Balboas \n"
-        ],
-        "media":null,
-        "trigger":null
-    },   
+    },      
     "STEP_8a":{
         "replyMessage":[
             "¿Acepta nuestra politica de privacidad? \n\n",
