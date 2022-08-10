@@ -38,11 +38,13 @@ const reply = (step, data = '') => new Promise((resolve, reject) => {
       const { monto_max, term_max, cashOnHand_max } = data
       responseFind.replyMessage = [
         `Felicidades!!! \n
-                Puede calificar para un
-                préstamo personal por un
-                Monto máximo de: ${separator(monto_max)}
-                Plazo en meses: ${term_max}
-                Monto a recibir: ${separator(cashOnHand_max)}`
+          Puede calificar para un
+          préstamo personal por un
+          Monto máximo de: ${separator(monto_max)}
+          Plazo en meses: ${term_max}
+          Monto a recibir: ${separator(cashOnHand_max)}
+          \nok, para continuar
+        `
       ]
     }
     if (step == 'STEP_11') {

@@ -62,13 +62,39 @@ const listenMessage = () => client.on('message', async msg => {
   if (from === 'status@broadcast') {
     return
   }
-  // message = body.toLowerCase();
-  message = body;
+  message = body.toLowerCase();
+  // message = body;
   respuesta = message;
   console.log('BODY', message)
   const numero = cleanNumber(from)
   await readChat(numero, message)
   dataClient.phone = numero.split('@')[0] //.slice(3)
+
+  // VALORES POR DEFECTO QUE NO SERAN CAPTURADOS
+  dataClient.tipo_residencia = '0'
+  dataClient.mensualidad_casa = '0'
+  dataClient.nacional = 'N/A'
+  dataClient.peso = '0'
+  dataClient.estatura = '0'
+  dataClient.hProfesional = '0'
+  dataClient.viaticos = '0'
+  dataClient.calle = 'N/A'
+  dataClient.barriada = 'N/A'
+  dataClient.casaApto = 'N/A'
+  dataClient.telefonoCasa = 'N/A'
+  dataClient.work_name = 'N/A'
+  dataClient.work_cargo = 'N/A'
+  dataClient.work_address = 'N/A'
+  dataClient.work_phone = 'N/A'
+  dataClient.work_phone_ext = 'N/A'
+  dataClient.work_prev_name = 'N/A'
+  dataClient.work_prev_salary = '0'
+  dataClient.entity_f = '100'
+  dataClient.idUrl = 'N/A'
+  dataClient.socialSecurityProofUrl = 'N/A'
+  dataClient.publicGoodProofUrl = 'N/A'
+  dataClient.workLetterUrl = 'N/A'
+  dataClient.payStubUrl = 'N'
 
   /**
    * Guardamos el archivo multimedia que envia
@@ -172,8 +198,9 @@ const listenMessage = () => client.on('message', async msg => {
       if (resp < 1 || resp > 2) step = 'STEP_8a';
       else {
         dataClient.termConds = respuesta == "1" ? "Si" : "No"
-        if(respuesta == "1") {
+        if (respuesta == "1") {
           dataClient.Tracking = "BOT-Terminos y Condiciones"
+          dataClient.prestamo_opciones = {}
           trackClientify(dataClient);
           step = 'STEP_8'
         } else step = 'STEP_8b'
@@ -191,11 +218,11 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (lastStep == 'STEP_8_0') {
-    dataClient.first_name = respuesta[0].toUpperCase() + respuesta.substr(1)
+    dataClient.first_name = respuesta.toUpperCase()
     step = 'STEP_8_2';
   }
   if (lastStep == 'STEP_8_2') {
-    dataClient.last_name = respuesta[0].toUpperCase() + respuesta.substr(1)
+    dataClient.last_name = respuesta.toUpperCase()
     step = 'STEP_8_4';
   }
 
@@ -246,7 +273,7 @@ const listenMessage = () => client.on('message', async msg => {
         dataClient.salario = respuesta
 
         const { sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual } = dataClient
-        consoole.log(sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
+        // console.log(sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
 
         opciones = await Opciones({
           jobSector: sectorAb,
@@ -254,11 +281,11 @@ const listenMessage = () => client.on('message', async msg => {
           birthDate: fec_nac,
           profession: profesion,
           wage: parseFloat(salario),
-          creditHistory: historialCredito, 
+          creditHistory: historialCredito,
           paymentFrecuency: parseInt(frecuenciaPago),
           currentJobMonths: parseInt(meses_trabajo_actual)
         })
-        console.log(opciones)
+        // console.log(opciones)
 
         dataClient.Tracking = 'BOT-Opciones Disponibles'
         dataClient.prestamo_opciones = opciones
@@ -327,7 +354,7 @@ const listenMessage = () => client.on('message', async msg => {
 
   if (lastStep == 'STEP_17') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      refpf.name = respuesta
+      refpf.name = respuesta.toUpperCase()
       step = 'STEP_17_1';
       dataClient.Tracking = 'BOT-Referencias Personales'
       trackClientify(dataClient);
@@ -337,7 +364,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_17_1') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      refpf.apellido = respuesta
+      refpf.apellido = respuesta.toUpperCase()
       step = 'STEP_17_2';
     } else {
       step = 'STEP_17_1';
@@ -345,7 +372,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_17_2') {
     if (respuesta.length > 2 && respuesta.length < 11) {
-      refpf.parentesco = respuesta
+      refpf.parentesco = respuesta.toUpperCase()
       step = 'STEP_17_3';
     } else {
       step = 'STEP_17_2';
@@ -361,7 +388,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_17_4') {
     if (respuesta.length > 2 && respuesta.length < 101) {
-      refpf.work_name = respuesta
+      refpf.work_name = respuesta.toUpperCase()
       step = 'STEP_18';
     } else {
       step = 'STEP_17_4';
@@ -370,7 +397,7 @@ const listenMessage = () => client.on('message', async msg => {
 
   if (lastStep == 'STEP_18') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      refpnf.name = respuesta
+      refpnf.name = respuesta.toUpperCase()
       step = 'STEP_18_1';
     } else {
       step = 'STEP_18';
@@ -378,7 +405,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_18_1') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      refpnf.apellido = respuesta
+      refpnf.apellido = respuesta.toUpperCase()
       step = 'STEP_18_2';
     } else {
       step = 'STEP_18_1';
@@ -394,7 +421,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (lastStep == 'STEP_18_3') {
     if (respuesta.length > 2 && respuesta.length < 101) {
-      refpnf.work_name = respuesta
+      refpnf.work_name = respuesta.toUpperCase()
       step = 'STEP_19';
     } else {
       step = 'STEP_18_3';
@@ -402,18 +429,16 @@ const listenMessage = () => client.on('message', async msg => {
   }
   dataClient.refpf = refpf;
   dataClient.refpnf = refpnf;
-  console.log(dataClient)
 
   if (lastStep == 'STEP_19') {
-    step = 'STEP_20';
-  }
-  
-  if (lastStep == 'STEP_20') {
-    // TODO: MANDAR A GUARDAR LA INFORMACION DEL PROSPECTO.
     saveProspect(dataClient)
     dataClient.Tracking = 'BOT-Proceso Terminado'
     trackClientify(dataClient);
-    step = 'STEP_21';
+    step = 'STEP_20';
+  }
+
+  if (lastStep == 'STEP_20') {
+
   }
 
   if (step) {
@@ -534,12 +559,22 @@ const trackClientify = (data) => {
 //***************************************//
 const saveProspect = async (data) => {
 
+  console.log('DATA', data)
+
   const { estadoCivil: maritalStatus, telefonoCasa: residentialNumber, province = 0, district = 0, prestAuto = 0, prestHip = 0, prestTC = 0 } = data
   const { Cedula: id, county = 0, calle: street, accept: aceptaAPC = true } = data
   const { barriada: barriada_edificio, casaApto: no_casa_piso_apto } = data
-  const { work_name, work_cargo, work_address, meses_trabajo_actual, entity_f, work_phone, work_phone_ext = '' } = data
+  const { work_name, work_cargo, work_address, entity_f, work_phone, work_phone_ext = '' } = data
   const { work_prev_name, work_prev_salary = 0 } = data
   const { idUrl, socialSecurityProofUrl, publicGoodProofUrl, workLetterUrl, payStubUrl, apcReferencesUrl = 'N/A', apcLetterUrl = '' } = data
+  const { fec_nac: birthDate, contractType = 0, genero, sector, occupation = 0, profesion: profession = 0, institution = 0, retirement = 0 } = data
+  const { previousJobMonths: work_prev_month = 0, meses_trabajo_actual: work_month } = data
+  const { salario: wage, hProfesional: alloance = 0, viaticos: perDiem = 0 } = data
+  const { tipo_residencia: residenceType, mensualidad_casa: residenceMonthly = 0, frecuenciaPago: paymentFrecuency } = data
+  const { weight = 0, weightUnit = 'lb', height = 0, heightUnit = 'mts' } = data
+  const { bank, proposito: reason = 0 } = data
+  const { email, first_name: fname, nombre2: fname_2 = '', last_name: lname, apellido2: lname_2 = '', origin = 'bot', idUser = '', phone: cellphone = '' } = data
+  const { termConds, nationality, refpf, refpnf, prestamo_opciones } = data
 
   body = {
     id_personal: id,
@@ -570,18 +605,11 @@ const saveProspect = async (data) => {
     aceptaAPC
   }
 
-  let email2 = '', telefono = '', monto = '', name = '', banco = ''
+  let email2 = '', telefono = '', name = '', banco = ''
+  let { monto_max: monto = 0, term_max2: term = 0, cashOnHand_max2: cashOnHand = 0, monthlyFee_max: monthlyPay = 0, Loans = [] } = prestamo_opciones
+  let amount = monto
+  monto = 0
 
-  const { fec_nac: birthDate, contractType = 0, Genero, Sector, sector, occupation = 0, profession = 0, institution = 0, retirement = 0 } = data
-  const { previousJobMonths: work_prev_month = 0, meses_trabajo_actual: work_month } = data
-  const { salario: wage, hProfesional: alloance = 0, viaticos: perDiem = 0 } = data
-  const { tipo_residencia: residenceType, mensualidad_casa: residenceMonthly = 0, frecuenciaPago: paymentFrecuency } = data
-  const { weight = 0, weightUnit = 'Libra', height = 0, heightUnit = 'Metro' } = data
-  const { bank, amount = 0, term = 0, reason = 0, cashOnHand = 0 } = data
-  const { email, first_name: fname, nombre2: fname_2 = '', last_name: lname, apellido2: lname_2 = '', origin = '', idUser = '', cellphone = '' } = data
-  const { terms_cond, nacional, nationality, refpf, refpnf } = data
-
-  monto = amount
   telefono = cellphone
   email2 = email
   banco = bank
@@ -593,14 +621,14 @@ const saveProspect = async (data) => {
 
   body = {
     ...body, estado: 1, email, name, lname, lname_2, fname, fname_2, origin_idUser: origin, entity_f,
-    gender: Genero, birthDate, contractType,
+    gender: genero, birthDate, contractType,
     jobSector: sector,
     occupation, paymentFrecuency, profession, institution, retirement,
-    residenceType, residenceMonthly, idUser, cellphone,
-    loanPP: amount, cashOnHand, plazo: term, termConds: terms_cond ? 1 : 0, nationality,
+    residenceType, residenceMonthly, idUser, cellphone, termConds: termConds ? 1 : 0, nationality,
+    loanPP: monto, cashOnHand, plazo: term, monthlyPay,
     salary: wage, honorarios: alloance, viaticos: perDiem,
     weight, weightUnit, height, heightUnit,
-    work_prev_month, work_month, agente: '0', reason, sponsor
+    work_prev_month, work_month, agente: '0', reason, sponsor, Loans
   }
 
   axios.post(`${API_HOST}/api/prospects`, body)
@@ -652,11 +680,11 @@ const saveProspect = async (data) => {
         cedula: id,
         email: email2,
         asunto: "Solicitud de Préstamo de: >> " + name,
-        mensaje: "Solicitud de Préstamo desde www.Finanservs.com",
-        telefono: telefono,
-        monto: monto,
+        mensaje: "Solicitud de Préstamo desde www.Finanservs.com\n\n\t***NOTA:*** Estos son MONTOS aproximados.",
+        telefono,
+        monto: amount,
         nombre: name,
-        banco: banco,
+        banco,
       }
 
       axios.post(`${API_HOST}/api/email`, body)
@@ -701,6 +729,7 @@ const saveProspect = async (data) => {
 //     viaticos: '0',
 //     proposito: '5',
 //     estadoCivil: '1',
+
 //     calle: 'aquilino tejeira',
 //     barriada: 'ciudad radial',
 //     casaApto: 'casa 17-1',

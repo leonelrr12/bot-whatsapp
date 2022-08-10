@@ -211,7 +211,8 @@
             "préstamo personal por un \n",
             "Monto máximo de: 9999 \n",
             "Plazo en meses: 999 \n",
-            "Monto a recibir: 9999"
+            "Monto a recibir: 9999 \n\n",
+            "ok, para continuar"
         ],
         "media":null,
         "trigger":null
@@ -312,7 +313,8 @@
     },
     "STEP_17_3":{
         "replyMessage":[
-            "Teléfono celular: \n\n"
+            "Teléfono celular: \n",
+            "####-#### \n\n"
         ],
         "media":null,
         "trigger":null
@@ -327,7 +329,7 @@
    
     "STEP_18":{
         "replyMessage":[
-            "Referencia personal - No Pariente \n\n",
+            "Referencia personal - NO Pariente \n\n",
             "Nombres: \n\n"
         ],
         "media":null,
@@ -342,7 +344,8 @@
     },
     "STEP_18_2":{
         "replyMessage":[
-            "Teléfono celular: \n\n"
+            "Teléfono celular: \n",
+            "####-#### \n\n"
         ],
         "media":null,
         "trigger":null

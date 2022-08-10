@@ -44,7 +44,7 @@ appRoutes.get('/clientify-token', async (req, res) => {
 appRoutes.post('/clientify', async (req, res) => {
   const { body } = req
 
-  let { token, ID, Tracking, entidad_seleccionada = '700', prestamo_opciones, termConds,
+  let { token, ID, Tracking, prestamo_opciones, termConds,
     first_name, last_name, email, phone, fecha_nacimiento = '1900-01-01', contrato_laboral,
     meses_trabajo_actual = 0, meses_trabajo_anterior = 0, Salario = 0, Sector,
     nameProfesion, Genero = 'x', tipo_residencia = '1', mensualidad_casa = 0,
@@ -92,7 +92,8 @@ appRoutes.post('/clientify', async (req, res) => {
       {
         "field": "tipo_residencia", "value": tipo_residencia === '1' ? "Casa Propia" :
           tipo_residencia === '2' ? "Padres o Familiares" :
-          tipo_residencia === '3' ? "Casa Hipotecada" : "Casa Alquilada"
+          tipo_residencia === '3' ? "Casa Hipotecada" : 
+          tipo_residencia === '4' ? "Casa Alquilada" : "N/A"
       },
       { "field": "mensualidad_casa", "value": Number(mensualidad_casa) },
       { "field": "Cedula", "value": Cedula },
@@ -148,44 +149,44 @@ appRoutes.post('/prospects', (req, res) => {
   sql += " id_personal,id_referido,idUser,name,fname,fname_2,lname,lname_2,"
   sql += " entity_f,estado,email,cellphone,phoneNumber,idUrl,socialSecurityProofUrl,"
   sql += " publicGoodProofUrl,workLetterUrl,payStubUrl,origin_idUser,gender,birthDate,"
-  sql += " contractType,jobSector,occupation,paymentFrecuency,profession,"
-  sql += " civil_status,province,district,county,sign,"
-  sql += " loanPP,loanAuto,loanTC,loanHip,cashOnHand,plazo,apcReferenceUrl,apcLetterUrl,"
-
+  sql += " contractType,jobSector,occupation,profession,"
+  sql += " paymentFrecuency,civil_status,province,district,county,sign,"
+  sql += " loanPP,loanAuto,loanTC,loanHip,cashOnHand,plazo,monthlyPay,apcReferenceUrl,apcLetterUrl,"
   sql += " residenceType,residenceMonthly,work_name,work_cargo,work_address,work_phone,work_phone_ext,work_month,"
   sql += " work_prev_name,work_prev_month,work_prev_salary,"
   sql += " salary,honorarios,viaticos,termConds,"
   sql += " weight, weightUnit, height, heightUnit, aceptaApc, nationality,"
-  sql += " calle, barriada_edificio,no_casa_piso_apto,id_agente,reason"
+  sql += " calle, barriada_edificio,no_casa_piso_apto,id_agente,reason,quotation"
 
-  sql += ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
-  sql += "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+  sql += ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
+  sql += "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
   let { id_personal, idUser, apcReferencesUrl, apcLetterUrl, sponsor, name, fname, fname_2, lname, lname_2 } = body
   let { entity_f, email, cellphone, phoneNumber, idUrl, socialSecurityProofUrl, publicGoodProofUrl } = body
-  let { workLetterUrl, payStubUrl, origin_idUser, gender, birthDate: BDH, contractType, jobSector, occupation, paymentFrecuency } = body
-  let { profession, civil_status, province, district, county, sign } = body
+  let { workLetterUrl, payStubUrl, origin_idUser, gender, birthDate: BDH, contractType, jobSector, occupation, profession } = body
+  let { paymentFrecuency, civil_status, province, district, county, sign } = body
   let { street: calle, barriada_edificio, no_casa_piso_apto } = body
-  let { loanPP, loanAuto, loanTC, loanHip, cashOnHand, plazo, reason } = body
-
+  let { loanPP, loanAuto, loanTC, loanHip, cashOnHand, plazo, monthlyPay, reason } = body
   let { residenceType, residenceMonthly, work_name, work_cargo, work_address = '', work_phone = '', work_phone_ext = '', work_month = 0 } = body
   let { work_prev_name = 'N/A', work_prev_month = 0, work_prev_salary = 0 } = body
   let { salary, honorarios = 0, viaticos = 0, termConds, nationality = 0 } = body
-  let { weight, weightUnit, height, heightUnit, aceptaAPC: aceptaApc, agente } = body
+  let { weight, weightUnit, height, heightUnit, aceptaAPC: aceptaApc, agente, Loans } = body
 
-  estado = 1 // Nuevo registro queda con estatus de nuevo
+  estado = 7 // Nuevo registro desde BOT
 
   const birthDate = BDH.split('/')[2] + '-' + BDH.split('/')[1] + '-' + BDH.split('/')[0]
+  let quotation = JSON.stringify(Loans)
+
   const params = [
     id_personal, sponsor, idUser, name, fname, fname_2, lname, lname_2, entity_f, estado, email, cellphone,
     phoneNumber, idUrl, socialSecurityProofUrl, publicGoodProofUrl, workLetterUrl, payStubUrl, origin_idUser, gender,
     birthDate, contractType, jobSector, occupation, paymentFrecuency, profession, civil_status, province,
-    district, county, sign, loanPP, loanAuto, loanTC, loanHip, cashOnHand, plazo, apcReferencesUrl, apcLetterUrl,
+    district, county, sign, loanPP, loanAuto, loanTC, loanHip, cashOnHand, plazo, monthlyPay, apcReferencesUrl, apcLetterUrl,
     residenceType, residenceMonthly, work_name, work_cargo, work_address, work_phone, work_phone_ext, work_month,
     work_prev_name, work_prev_month, work_prev_salary,
     salary, honorarios, viaticos, termConds,
     weight, weightUnit, height, heightUnit, aceptaApc, nationality,
-    calle, barriada_edificio, no_casa_piso_apto, agente, reason
+    calle, barriada_edificio, no_casa_piso_apto, agente, reason, quotation
   ]
 
   connection.query(sql, params, (error, results, next) => {
@@ -193,7 +194,7 @@ appRoutes.post('/prospects', (req, res) => {
       console.log('Error SQL:', error.sqlMessage)
       res.status(500)
     }
-    // console.log('results', results, results.insertId)
+    console.log('results', results, results.insertId)
     // console.log({ newId: results.insertId })
     res.json({ newId: results.insertId })
   })
@@ -232,29 +233,30 @@ appRoutes.post('/email', async (req, res) => {
   console.log('mail', body);
   const { email: euser, asunto, mensaje, telefono, monto, nombre, banco, cedula } = body
 
-  let emails = null
-  await axios.get(`https://finanservs.com/api/entities_f/${banco}`)
-    .then(res => {
-      const result = res.data
-      emails = result[0].emails
-    }).catch(() => {
-      emails = null
-    })
+  // let emails = null
+  // await axios.get(`https://finanservs.com/api/entities_f/${banco}`)
+  //   .then(res => {
+  //     const result = res.data
+  //     emails = result[0].emails
+  //   }).catch(() => {
+  //     emails = null
+  //   })
 
-  if (emails === undefined) emails = null
-  if (!emails) {
-    console.log("Debe configurar lista de Emails en la Entidad Financiera.")
-    return
-  }
-  emails += ", rsanchez2565@gmail.com, guasimo01@gmail.com"
+  // if (emails === undefined) emails = null
+  // if (!emails) {
+  //   console.log("Debe configurar lista de Emails en la Entidad Financiera.")
+  //   return
+  // }
+  // emails += ", rsanchez2565@gmail.com, guasimo01@gmail.com"
 
+  let emails = ", rsanchez2565@gmail.com, guasimo01@gmail.com"
   let fileAtach = ""
   try {
     if (banco === '800')   // Banisi
       fileAtach = await solicPrestBanisi(cedula)
 
     const htmlEmail = `
-        <h3>Nuevo Prospecto desde Finanservs.com</h3>
+        <h3>Nuevo Prospecto desde **** BOT Whatsapp ****</h3>
         <ul>
           <li>Email: ${euser}</li>
           <li>Nombre: ${nombre}</li>
