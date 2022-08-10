@@ -259,13 +259,6 @@
         "media":null,
         "trigger":null
     },
-    "STEP_17_4":{
-        "replyMessage":[
-            "Lugar de trabajo: \n\n"
-        ],
-        "media":null,
-        "trigger":null
-    },
    
     "STEP_18":{
         "replyMessage":[
@@ -290,20 +283,13 @@
         "media":null,
         "trigger":null
     },
-    "STEP_18_3":{
-        "replyMessage":[
-            "Lugar de trabajo: \n\n"
-        ],
-        "media":null,
-        "trigger":null
-    },
    
     "STEP_19":{
         "replyMessage":[
             "Referencias de APC: \n\n",
-            "Leer documento y firmar \n",
-            "Subir documento firmado o \n",
-            "Mande solo foto de su firma \n"
+            "Leer documento y firmar \n\n",
+            "=> Subir documento firmado o \n",
+            "=> Mande solo foto de su firma \n"
         ],
         "media":"Autorizacion APC ACsoraT.jpg",
         "trigger":null
