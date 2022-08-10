@@ -82,6 +82,8 @@ fileRoutes.post('/file2a', upload2.single('idUrl'), async (req, res) => {
 //   return str.join(".");
 // }
 
+
+// CREA PDF DE REFERENCIAS DE CREDITO DE APC
 fileRoutes.post('/createPDF', async (req, res) => {
 
   const { cedula } = req.body
@@ -284,6 +286,7 @@ fileRoutes.post('/createPDF', async (req, res) => {
   }
 })
 
+// CREA PDF DE AUTORIZACION PARA SOLICIRAR REFERENCIAS DE CREDITO DE APC
 fileRoutes.post('/authApcPDF', async (req, res) => {
 
   const { body } = req
@@ -384,5 +387,6 @@ fileRoutes.post('/authApcPDF', async (req, res) => {
 
     res.json({'fileName': fileName})
 })
+
 
 module.exports = fileRoutes

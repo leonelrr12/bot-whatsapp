@@ -44,7 +44,7 @@ appRoutes.get('/clientify-token', async (req, res) => {
   appRoutes.post('/clientify', async (req, res) => {
     const { body } = req
   
-    let { token, ID, Tracking, entidad_seleccionada = '700', prestamo_opciones, acepta_terminos_condiciones,
+    let { token, ID, Tracking, entidad_seleccionada = '700', prestamo_opciones, termConds,
       first_name, last_name, email, phone, fecha_nacimiento = '1900-01-01', contrato_laboral,
       meses_trabajo_actual = 0, meses_trabajo_anterior = 0, Salario = 0, Sector,
       nameProfesion, Genero = 'x', tipo_residencia = '1', mensualidad_casa = 0,
@@ -136,14 +136,13 @@ appRoutes.get('/clientify-token', async (req, res) => {
         { "field": "img_comprobante_pago", "value": img_comprobante_pago },
         { "field": "img_autoriza_apc", "value": img_autoriza_apc },
         { "field": "img_referencias_apc2", "value": img_referencias_apc },
+        { "field": "acepta_terminos_condiciones", "value": termConds },
       ]
   
       //   {"field": "entidad_seleccionada", "value": wbanco},
       //   {"field": "Monto", "value": Monto},
       //   {"field": "Letra", "value": Letra},
       //   {"field": "Plazo", "value": Plazo},
-
-      //   {"field": "acepta_terminos_condiciones", "value": acepta_terminos_condiciones},
       //   {"field": "Agente", "value": "0"}
     })
   

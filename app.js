@@ -18,6 +18,7 @@ const appRoutes = require('./routes/appRoutes');
 const fileRoutes = require('./routes/uploadFile');
 const Opciones = require('./helpers/Opciones');
 
+
 const app = express();
 app.use(cors())
 app.use(express.json())
@@ -151,7 +152,8 @@ const listenMessage = () => client.on('message', async msg => {
     } else {
       if (parseInt(respuesta) <= 0) step = 'STEP_4';
       else {
-        step = 'STEP_5';
+        // step = 'STEP_5';
+        step = 'STEP_8a';
         dataClient.meses_trabajo_actual = respuesta
       }
       // Aqui se puede agregar mas logica para validar cantidad de meses
@@ -220,6 +222,20 @@ const listenMessage = () => client.on('message', async msg => {
     }
   }
 
+  if (lastStep == 'STEP_8a') {
+    if (isNaN(respuesta)) {
+      step = 'STEP_8a';
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 1 || resp > 2) step = 'STEP_8a';
+      else {
+        dataClient.termConds = respuesta == "1" ? "Si" : "No"
+        trackClientify(dataClient);
+        step = respuesta == "1" ? 'STEP_8' : 'STEP_8b';
+      }
+    }
+  }
+
   if (lastStep == 'STEP_8') {
     if (validCedula.test(respuesta)) {
       dataClient.Cedula = respuesta
@@ -279,7 +295,8 @@ const listenMessage = () => client.on('message', async msg => {
     if (validDate.test(respuesta)) {
       dataClient.fec_nac = respuesta
       trackClientify(dataClient);
-      step = 'STEP_8_7';
+      // step = 'STEP_8_7';
+      step = 'STEP_9';
     } else {
       step = 'STEP_8_6';
     }
@@ -437,7 +454,8 @@ const listenMessage = () => client.on('message', async msg => {
     step = 'STEP_14_4';
   }
   if (lastStep == 'STEP_14_4') {
-    step = 'STEP_15';
+    // step = 'STEP_15';
+    step = 'STEP_17';
   }
 
   if (lastStep == 'STEP_15') {
@@ -610,8 +628,9 @@ const listenMessage = () => client.on('message', async msg => {
   if (lastStep == 'STEP_19') {
     step = 'STEP_20';
   }
-
+  
   if (lastStep == 'STEP_20') {
+    // TODO: MANDAR A GUARDAR LA INFORMACION DEL PROSPECTO.
     saveProspect(dataClient)
     step = 'STEP_21';
   }
@@ -923,7 +942,7 @@ const saveProspect = async (data) => {
 // )
 
 
-const enviarDatatoPdf = async (filename, id, ruta) => {
+const enviarDatatoPdf = async (filename, id, ruta, nameImage) => {
 
   let ext = 'jpeg'
   const extSplit = filename.split('.')
@@ -933,8 +952,9 @@ const enviarDatatoPdf = async (filename, id, ruta) => {
     "fileName": filename,
     "entity_f": ruta,
     "prospect": id + "." + ext,
-    "nameImage": "REFERENCIA-APC"
+    "nameImage": nameImage
   }
+  // nameImage: DEBE SER VARIABLE PARA MANEJAR TODOS LOS DOCUMENTOS
 
   axios.post(`${API_HOST}/upload/file2a`, raw)
     .then(async (res) => {
@@ -947,7 +967,7 @@ const enviarDatatoPdf = async (filename, id, ruta) => {
 }
 
 // const fileNamePath = `${__dirname}/media/1659133629434.jpeg`
-// enviarDatatoPdf(fileNamePath, '7-94-485', '700')
+// enviarDatatoPdf(fileNamePath, '7-94-485', '700', 'REFERENCIA-APC')
 
 // async function xxx(data) {
 //   const opciones = await Opciones(data)
