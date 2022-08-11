@@ -1,10 +1,13 @@
 require('dotenv').config()
 const express = require('express');
 const appRoutes = require('express').Router()
+const mongoose = require('mongoose')
+const Prospect = require('../models/Prospect')
 const { google } = require('googleapis')
 const OAuth2 = google.auth.OAuth2
 const axios = require('axios');
 const { connection } = require('../config/mysql')
+const config = require('../utils/config')
 
 // const { sendEmail: key } = config
 const OAuth2Client = new OAuth2(
@@ -15,11 +18,6 @@ const OAuth2Client = new OAuth2(
 OAuth2Client.setCredentials({
   refresh_token: process.env.refreshToken
 })
-
-// const { usuarioApc, claveApc } = config.APC
-const usuarioApc = process.env.APC_USER
-const claveApc = process.env.APC_PASS
-
 
 appRoutes.get('/clientify-token', async (req, res) => {
   try {
@@ -161,7 +159,7 @@ appRoutes.post('/prospects', (req, res) => {
   sql += ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
   sql += "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
-  let { id_personal, idUser, apcReferencesUrl, apcLetterUrl, sponsor, name, fname, fname_2, lname, lname_2 } = body
+  let { id_personal, idUser, apcReferenceUrl, apcLetterUrl, sponsor, name, fname, fname_2, lname, lname_2 } = body
   let { entity_f, email, cellphone, phoneNumber, idUrl, socialSecurityProofUrl, publicGoodProofUrl } = body
   let { workLetterUrl, payStubUrl, origin_idUser, gender, birthDate: BDH, contractType, jobSector, occupation, profession } = body
   let { paymentFrecuency, civil_status, province, district, county, sign } = body
@@ -172,6 +170,7 @@ appRoutes.post('/prospects', (req, res) => {
   let { salary, honorarios = 0, viaticos = 0, termConds, nationality = 0 } = body
   let { weight, weightUnit, height, heightUnit, aceptaAPC: aceptaApc, agente, Loans } = body
 
+
   estado = 7 // Nuevo registro desde BOT
 
   const birthDate = BDH.split('/')[2] + '-' + BDH.split('/')[1] + '-' + BDH.split('/')[0]
@@ -181,7 +180,7 @@ appRoutes.post('/prospects', (req, res) => {
     id_personal, sponsor, idUser, name, fname, fname_2, lname, lname_2, entity_f, estado, email, cellphone,
     phoneNumber, idUrl, socialSecurityProofUrl, publicGoodProofUrl, workLetterUrl, payStubUrl, origin_idUser, gender,
     birthDate, contractType, jobSector, occupation, paymentFrecuency, profession, civil_status, province,
-    district, county, sign, loanPP, loanAuto, loanTC, loanHip, cashOnHand, plazo, monthlyPay, apcReferencesUrl, apcLetterUrl,
+    district, county, sign, loanPP, loanAuto, loanTC, loanHip, cashOnHand, plazo, monthlyPay, apcReferenceUrl, apcLetterUrl,
     residenceType, residenceMonthly, work_name, work_cargo, work_address, work_phone, work_phone_ext, work_month,
     work_prev_name, work_prev_month, work_prev_salary,
     salary, honorarios, viaticos, termConds,
@@ -324,6 +323,342 @@ appRoutes.post('/email', async (req, res) => {
   } catch (err) {
     console.log('Estamos aqui 2: ', err)
   }
+})
+
+
+appRoutes.post('/APC', async (request, response) => {
+  const {id: cedula } = request.body
+
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('MongoDB Connected...1-a'))
+  .catch((err) => console.log(err))
+
+  let datos = {}
+  let antigRef = 0
+
+  try {
+    const data = await Prospect.find({ "Cedula": cedula }, {})
+    console.log('data MDB', cedula)
+    if (data.length) {
+      console.log('Hola por aqui-2222')
+      const created = data[0].Created
+      const today = new Date()
+      antigRef = Math.round((today.getTime() - created.getTime())/(24*60*60*1000))
+
+      if(antigRef < 91) {
+        datos = data[0].APC
+      }
+    }
+    if(!Object.keys(datos).length) {
+      console.log('Hola por aqui-1111')
+      await leerRefAPC(request, response)
+    } else {
+      formatData(datos, response)
+      console.log('Hola por aqui-3333')
+    }
+  } catch(err)  {
+    formatData(datos, response)
+    console.log('Hola por aqui-4444')
+  }
+})
+
+const leerRefAPC = async (request, response) => {
+  const { id, tipoCliente, productoApc } = request.body
+  const URL = "https://apirestapc20210918231653.azurewebsites.net/api/APCScore"
+
+  const { username: usuarioApc, password: claveApc } = config.APC
+
+  console.log(usuarioApc, claveApc, id, tipoCliente, productoApc)
+  let idMongo = ""
+  axios.post(URL, {
+    "usuarioconsulta": usuarioApc, "claveConsulta": claveApc, 
+    "IdentCliente": id, "TipoCliente": tipoCliente, "Producto": productoApc})
+  .then(async (res) => {
+    const result = res.data
+    console.log('Hola estoy por aqui-AAAAA', {result})
+    if(result.mensaje === 'Ok') {
+      idMongo = await guardarRef(result, id)
+      datos = await leerRefMongo(idMongo)
+      formatData(datos, response)
+    } else {
+      formatData([], response)
+    }
+  }).catch((error) => {
+    console.log('Hola estoy por aqui-BBBB')
+    formatData([], response)
+  });
+  return idMongo
+}
+
+const guardarRef = async (refApc, id) => {
+
+  console.log('refApc', refApc)
+  const { nombre, apellido, idenT_CLIE, noM_ASOC, } = refApc.gen
+
+  const Generales = {
+    "Nombre": nombre,
+    "Apellido": apellido,
+    "Id": idenT_CLIE,
+    "Usuario": usuarioApc,
+    "Asociado": noM_ASOC
+  }
+
+  const Resumen = []
+  Object.entries(refApc["res"]).forEach(([key, value]) => {
+    if(value !== null) {
+      const dato = {}
+      for (var i in value) {
+        switch(i) {
+          case "relacion":
+            dato.Relacion = value[i]
+            break
+          case "cantidad":
+            dato.Cantidad = value[i]
+            break
+          case "monto":
+            dato.Monto = value[i]
+            break
+          case "saldO_ACTUAL":
+            dato.Saldo_Actual = value[i]
+            break
+          default:
+            // code block
+        }
+      }
+      Resumen.push(dato)
+    }
+  })
+
+  const Referencias = []
+  Object.entries(refApc["det"]).forEach(([key, value]) => {
+    if(value !== null) {
+      const dato = {}
+      for (var i in value) {
+        switch(i) {
+          case "noM_ASOC":
+            dato.Agente_Economico = value[i]
+            break
+          case "descR_CORTA_RELA":
+            dato.Relacion = value[i]
+            break
+          case "montO_ORIGINAL":
+            dato.Monto_Original = value[i]
+            break
+          case "saldO_ACTUAL":
+            dato.Saldo_Actual = value[i]
+            break
+          case "nuM_REFER":
+            dato.Referencia = value[i]
+            break
+          case "nuM_PAGOS":
+            dato.Num_Pagos = value[i]
+            break
+          case "descR_FORMA_PAGO":
+            dato.Forma_Pago = value[i]
+            break
+          case "importE_PAGO":
+            dato.Letra = value[i]
+            break
+          case "montO_ULTIMO_PAGO":
+            dato.Monto_Utimo_Pago = value[i]
+            break
+          case "feC_ULTIMO_PAGO":
+            dato.Fec_Ultimo_pago = value[i]
+            break
+          case "descR_OBS_CORTA":
+            dato.Observacion = value[i]
+            break
+          case "nuM_DIAS_ATRASO":
+            dato.Dias_Atraso = value[i]
+            break
+          case "historia":
+            dato.Historial = value[i]
+            break
+          case "feC_INICIO_REL":
+            dato.Fec_Ini_Relacion = value[i]
+            break
+          case "feC_FIN_REL":
+            dato.Fec_Vencimiento = value[i]
+            break
+          case "feC_ACTUALIZACION":
+            dato.Fec_Actualiazacion = value[i]
+            break
+          default:
+            // code block
+        }
+      }
+      dato.Estado = "ACTULIZADA"
+      dato.Fec_Prescripcion = ""
+      Referencias.push(dato)
+    }
+  })
+
+  const Ref_Canceladas = []
+  Object.entries(refApc["ref"]).forEach(([key, value]) => {
+    if(value !== null) {
+      const dato = {}
+      for (var i in value) {
+        switch(i) {
+          case "noM_ASOC":
+            dato.Agente_Economico = value[i]
+            break
+          case "descR_CORTA_RELA":
+            dato.Relacion = value[i]
+            break
+          case "montO_ORIGINAL":
+            dato.Monto_Original = value[i]
+            break
+          case "nuM_REFER":
+            dato.Referencia = value[i]
+            break
+
+          case "feC_INICIO_REL":
+            dato.Fec_Ini_Relacion = value[i]
+            break
+          case "feC_FIN_REL":
+            dato.Fec_Vencimiento = value[i]
+            break
+          case "feC_LIQUIDACION":
+            dato.Fec_Cancelacion = value[i]
+            break
+
+          case "feC_ULTIMO_PAGO":
+            dato.Fec_Ultimo_pago = value[i]
+            break
+          case "descR_OBS_CORTA":
+            dato.Observacion = value[i]
+            break
+          case "historia":
+            dato.Historial = value[i]
+            break
+
+          default:
+            // code block
+        }
+      }
+      dato.Fec_Prescripcion = ""
+      Ref_Canceladas.push(dato)
+    }
+  })
+
+  const Score = {
+    Score: 0,
+    PI: 0,
+    Exclusion: ""
+  }
+
+  if(refApc["sc"] !== null) {
+    Score.Score = refApc["sc"]["score"]
+    Score.PI = refApc["sc"]["pi"]
+    Score.Exclusion = refApc["sc"]["exclusion"]
+  }
+
+  const udtDatos = {
+    Cedula: id,
+    APC: {
+      Generales,
+      Resumen,
+      Referencias,
+      Ref_Canceladas,
+      Score
+    }
+  }
+
+  await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('MongoDB Connected...2'))
+  .catch((err) => console.log(err))
+
+  let idMongo = ""
+  try {
+    const xxx = await Prospect.updateOne(
+      {Cedula: id},
+      udtDatos, 
+      {upsert: true}
+    )
+    idMongo = JSON.stringify(xxx.upsertedId).replace('"','').replace('"','')
+    console.log('idMongo',idMongo)
+  } catch(err)  {
+    console.log(err)
+  }
+  return idMongo
+}
+
+const leerRefMongo = async (id) => {
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('MongoDB Connected...1-b'))
+  .catch((err) => console.log(err))
+
+  try {
+    const data = await Prospect.findById( { "_id": id }, {})
+    if (Object.keys(data).length) {
+      return data.APC
+    }
+  } catch (err) {
+    console.log (err)
+    return {}
+  }
+}
+
+const formatData = (result, response) => {
+  let datos = []
+  if (Object.keys(result).length) {
+    let SCORE = "0"
+    let PI = "0"
+    let EXCLUSION = "0"
+    if(result["Score"] !== null) {
+      SCORE = result["Score"]["Score"]
+      PI = result["Score"]["PI"]
+      EXCLUSION = result["Score"]["Exclusion"]
+    }
+
+    Object.entries(result["Referencias"]).forEach(([key, value]) => {
+      if(value !== null) {
+        value.status = true
+        value.message = "Ok"
+        value.score = SCORE
+        value.pi = PI
+        value.exclusion = EXCLUSION
+        datos.push(value)
+      }
+    });
+  } else {
+    datos.push({ "status": false, "message": "WS-APC No disponible." })
+  }  
+  response.json(datos)
+}
+
+
+appRoutes.get('/leerAPC', (request, response) => {
+  // const { id: cedula } = request.body
+  const cedula = '7-94-485'
+
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('MongoDB Connected...3'))
+  .catch((err) => console.log(err))
+
+  Prospect.find({ "Cedula": cedula }, {}, function (err, data) {
+    if(err) {
+      console.log(err)
+      return
+    }
+    let result = {}
+    if(data.length) {
+      result = data[0].APC
+    }
+    formatData(result, response)
+  })
 })
 
 

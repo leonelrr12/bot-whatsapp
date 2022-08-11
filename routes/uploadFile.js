@@ -71,28 +71,16 @@ fileRoutes.post('/file2a', upload2.single('idUrl'), async (req, res) => {
 })
 
 
-// const separator = (numb) => {
-//   var str = numb.toString().split(".");
-//   if(str.length > 1) {
-//     str[1] = str[1].padEnd(2, '0')
-//   } else {
-//     str[1]='00'
-//   }
-//   str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-//   return str.join(".");
-// }
-
-
 // CREA PDF DE REFERENCIAS DE CREDITO DE APC
 fileRoutes.post('/createPDF', async (req, res) => {
 
   const { cedula } = req.body
 
-  await mongoose.connect(config.MONGODB_URI, {
+  await mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true, 
     useUnifiedTopology: true
   })
-  .then(() => console.log('MongoDB Connected...PDF'))
+  .then(() => console.log('MongoDB Connected...PDF', cedula))
   .catch((err) => console.log(err))
 
   try {
@@ -217,7 +205,7 @@ fileRoutes.post('/createPDF', async (req, res) => {
         {
           // under NodeJS (or in case you use virtual file system provided by pdfmake)
           // you can also pass file names here
-          image: './public/images/leer-historial-apc.png',
+          image: './mediaSend/leer-historial-apc.png',
           width: 300,
           height: 200,
           alignment: 'center'
@@ -264,10 +252,10 @@ fileRoutes.post('/createPDF', async (req, res) => {
 
     var fonts = {
       Roboto: {
-          normal: './public/fonts/Roboto-Regular.ttf',
-          bold: './public/fonts/Roboto-Medium.ttf',
-          italics: './public/fonts/Roboto-Italic.ttf',
-          bolditalics: './public/fonts/Roboto-MediumItalic.ttf'
+          normal: './fonts/Roboto-Regular.ttf',
+          bold: './fonts/Roboto-Medium.ttf',
+          italics: './fonts/Roboto-Italic.ttf',
+          bolditalics: './fonts/Roboto-MediumItalic.ttf'
       }
     };
 
@@ -347,6 +335,7 @@ fileRoutes.post('/authApcPDF', async (req, res) => {
         {
           // under NodeJS (or in case you use virtual file system provided by pdfmake)
           // you can also pass file names here
+          // image: './mediaSend/leer-historial-apc.png',
           image: sign,
           width: 150,
           height: 75,
@@ -369,10 +358,10 @@ fileRoutes.post('/authApcPDF', async (req, res) => {
 
     var fonts = {
       Roboto: {
-          normal: './public/fonts/Roboto-Regular.ttf',
-          bold: './public/fonts/Roboto-Medium.ttf',
-          italics: './public/fonts/Roboto-Italic.ttf',
-          bolditalics: './public/fonts/Roboto-MediumItalic.ttf'
+          normal: './fonts/Roboto-Regular.ttf',
+          bold: './fonts/Roboto-Medium.ttf',
+          italics: './fonts/Roboto-Italic.ttf',
+          bolditalics: './fonts/Roboto-MediumItalic.ttf'
       }
     };
 
@@ -385,6 +374,7 @@ fileRoutes.post('/authApcPDF', async (req, res) => {
     });
     pdfDoc.end();
 
+    console.log({fileName})
     res.json({'fileName': fileName})
 })
 

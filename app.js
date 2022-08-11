@@ -42,6 +42,9 @@ var refpnf = {}
 var opciones = {}
 var dirImageLocal = ''
 var dirImageAWS = ''
+var usuarioApc = process.env.APC_USER
+var claveApc = process.env.APC_PASS
+
 
 const validCedula = /^\d{1,2}(-|\s)\d{1,3}(-|\s)\d{1,4}$/
 const validDate = /^\d{1,2}(\/|\s)\d{1,2}(\/|\s)\d{2,4}$/
@@ -71,6 +74,7 @@ const listenMessage = () => client.on('message', async msg => {
   const numero = cleanNumber(from)
   await readChat(numero, message)
   dataClient.phone = numero.split('@')[0] //.slice(3)
+
 
   // VALORES POR DEFECTO QUE NO SERAN CAPTURADOS
   dataClient.tipo_residencia = '0'
@@ -315,9 +319,6 @@ const listenMessage = () => client.on('message', async msg => {
     trackClientify(dataClient);
     dirImageAWS = enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'CEDULA')
     dataClient.idUrl = dirImageAWS
-
-    // dirImageAWS = enviarDatatoPdf(dirImageLocal, '7-94-485', '100', 'CARTA-APC')
-    // dirImageAWS = enviarDatatoPdf(dirImageLocal, '7-94-485', '100', 'REFERENCIA-APC')
     step = 'STEP_14_1';
   }
   if (lastStep == 'STEP_14_1') {
@@ -406,6 +407,12 @@ const listenMessage = () => client.on('message', async msg => {
   dataClient.refpnf = refpnf;
 
   if (lastStep == 'STEP_19') {
+    const dirImageCA = await authApcPDF({ "nombre": dataClient.nombre + " " + dataClient.apellido, "cedula": dataClient.cedula, dirImageLocal })
+    dataClient.apcLetterUrl = enviarDatatoPdf(dirImageCA, dataClient.cedula, '100', 'CARTA-APC')
+
+    const dirImageRF = await createPDFRefApc(dataClient.cedula)
+    dataClient.apcReferenceUrl = enviarDatatoPdf(dirImageRF, dataClient.cedula, '100', 'REFERENCIA-APC')
+    
     saveProspect(dataClient)
     dataClient.Tracking = 'BOT-Proceso Terminado'
     trackClientify(dataClient);
@@ -664,7 +671,6 @@ const saveProspect = async (data) => {
     });
 }
 
-
 const enviarDatatoPdf = async (filename, id, ruta = '100', nameImage) => {
 
   let ext = 'jpeg'
@@ -688,6 +694,60 @@ const enviarDatatoPdf = async (filename, id, ruta = '100', nameImage) => {
       console.error(e);
     })
 }
+
+const refAPC = async (cedula) => {
+
+  const raw = {
+    "usuarioApc": usuarioApc, 
+    "claveApc": claveApc, 
+    "id": cedula, 
+    "tipoCliente": "1", 
+    "productoApc": "1", 
+    "idMongo": ""
+  }
+
+  axios.post(`${API_HOST}/api/APC`, raw)
+    .then(async (res) => {
+      const result = res.data
+      console.log(result)
+      return result
+    })
+    .catch((e) => {
+      console.error(e);
+    })
+}
+
+//refAPC("7-94-485")
+// refAPC("8-877-265")
+
+const createPDFRefApc = async (cedula) => {
+
+  axios.post(`${API_HOST}/upload/createPDF`, { "cedula": cedula })
+    .then(async (res) => {
+      const result = res.data
+      return result.fileName
+    })
+    .catch((e) => {
+      console.error(e);
+    })
+}
+
+// createPDFRefApc('7-94-485')
+
+const authApcPDF = async ({ nombre, cedula, dirFile }) => {
+
+  console.log(nombre, cedula, sign)
+
+  axios.post(`${API_HOST}/upload/createPDF`, { "nombre": nombre, "cedula": cedula, "sign": dirFile })
+    .then(async (res) => {
+      const result = res.data
+      return result.fileName
+    })
+    .catch((e) => {
+      console.error(e);
+    })
+}
+
 
 
 server.listen(port, () => {

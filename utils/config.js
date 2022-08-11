@@ -34,8 +34,8 @@ const sendEmail = {
 const MONGODB_URI = "mongodb+srv://doadmin:30x814oJ67N2gyYW@db-mongodb-nyc3-97071-024615bf.mongo.ondigitalocean.com/Finanservs?authSource=admin&replicaSet=db-mongodb-nyc3-97071&tls=true&tlsCAFile=ca-certificate-MDB.crt"
 
 const APC = {
-  user: process.env.APC_USER,
-  pass: process.env.APC_PASS
+  username: process.env.APC_USER,
+  password: process.env.APC_PASS
 }
 
 const ORIGEN = {
