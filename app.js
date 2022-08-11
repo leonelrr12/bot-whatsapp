@@ -693,6 +693,7 @@ const enviarDatatoPdf = async (filename, id, ruta = '100', nameImage) => {
     .then(async (res) => {
       const result = res.data
       // console.log(result.Location)
+      return result.Location
     })
     .catch((e) => {
       console.error(e);
