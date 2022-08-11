@@ -371,7 +371,6 @@ const listenMessage = () => client.on('message', async msg => {
   if (lastStep == 'STEP_17_3') {
     if (validCell.test(respuesta)) {
       refpf.cellphone = respuesta
-      refpf.work_name = 'N/A'
       step = 'STEP_18';
     } else {
       step = 'STEP_17_3';
@@ -397,7 +396,6 @@ const listenMessage = () => client.on('message', async msg => {
   if (lastStep == 'STEP_18_2') {
     if (validCell.test(respuesta)) {
       refpnf.cellphone = respuesta
-      refpnf.work_name = 'N/A'
       step = 'STEP_19';
     } else {
       step = 'STEP_18_2';
@@ -625,13 +623,9 @@ const saveProspect = async (data) => {
           tipo: 1,
           id_prospect: newId,
           name: refpf.name || "",
-          apellido: refpf.lastName || "",
-          parentesco: refpf.relationship || "",
-          cellphone: refpf.phoneNumber || "",
-          phonenumber: refpf.residenceNumber || "",
-          work_name: refpf.company || "",
-          work_phonenumber: refpf.companyPhoneNumber || "",
-          work_phone_ext: refpf.companyPhoneExtension || ""
+          apellido: refpf.apellido || "",
+          parentesco: refpf.parentesco || "",
+          cellphone: refpf.cellphone || ""
         }
 
         axios.post(`${API_HOST}/api/ref_personales`, body)
@@ -644,13 +638,8 @@ const saveProspect = async (data) => {
           tipo: 0,
           id_prospect: newId,
           name: refpnf.name || "",
-          apellido: refpnf.lastName || "",
-          parentesco: refpf.relationship || "",
-          cellphone: refpnf.phoneNumber || "",
-          phonenumber: refpnf.residenceNumber || "",
-          work_name: refpnf.company || "",
-          work_phonenumber: refpnf.companyPhoneNumber || "",
-          work_phone_ext: refpnf.companyPhoneExtension || ""
+          apellido: refpnf.apellido || "",
+          cellphone: refpnf.cellphone || "",
         }
 
         axios.post(`${API_HOST}/api/ref_personales`, body)
