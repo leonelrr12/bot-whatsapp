@@ -114,7 +114,7 @@ appRoutes.post('/clientify', async (req, res) => {
       { "field": "img_autoriza_apc", "value": img_autoriza_apc },
       { "field": "img_referencias_apc2", "value": img_referencias_apc },
       { "field": "acepta_terminos_condiciones", "value": termConds },
-      { "field": "entidad_seleccionada", "value": "100" },
+      { "field": "entidad_seleccionada", "value": "125" },
       { "field": "Monto", "value": monto_max },
       { "field": "Letra", "value": monthlyFee_max },
       { "field": "Plazo", "value": term_max },
@@ -218,7 +218,7 @@ appRoutes.post('/ref_personales', (req, res) => {
   ]
 
   console.log(sql, params)
-  
+
   connection.query(sql, params, (error, results, next) => {
     if (error) {
       console.log('Error SQL:', error.sqlMessage)

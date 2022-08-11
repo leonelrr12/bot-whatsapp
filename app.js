@@ -40,6 +40,8 @@ var dataClient = {};
 var refpf = {}
 var refpnf = {}
 var opciones = {}
+var dirImageLocal = ''
+var dirImageAWS = ''
 
 const validCedula = /^\d{1,2}(-|\s)\d{1,3}(-|\s)\d{1,4}$/
 const validDate = /^\d{1,2}(\/|\s)\d{1,2}(\/|\s)\d{2,4}$/
@@ -89,20 +91,15 @@ const listenMessage = () => client.on('message', async msg => {
   dataClient.work_phone_ext = 'N/A'
   dataClient.work_prev_name = 'N/A'
   dataClient.work_prev_salary = '0'
-  dataClient.entity_f = '100'
-  dataClient.idUrl = 'N/A'
-  dataClient.socialSecurityProofUrl = 'N/A'
-  dataClient.publicGoodProofUrl = 'N/A'
-  dataClient.workLetterUrl = 'N/A'
-  dataClient.payStubUrl = 'N'
+  dataClient.entity_f = '125'
   dataClient.proposito = '0'
 
   /**
-   * Guardamos el archivo multimedia que envia
+   * Guardamos el archivo multimedia que nos envia El Usuario
    */
   if (process.env.SAVE_MEDIA && hasMedia) {
     const media = await msg.downloadMedia();
-    saveMedia(media);
+    dirImageLocal =  saveMedia(media);
   }
 
   /**
@@ -126,7 +123,6 @@ const listenMessage = () => client.on('message', async msg => {
     switch (respuesta) {
       case "1":
         dataClient.sectorAb = 'P'
-        console.log(respuesta)
         step = 'STEP_2_1';
         break;
       case "2":
@@ -317,18 +313,31 @@ const listenMessage = () => client.on('message', async msg => {
   if (lastStep == 'STEP_14') {
     dataClient.Tracking = 'BOT-Subir Documentos'
     trackClientify(dataClient);
+    dirImageAWS = enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'CEDULA')
+    dataClient.idUrl = dirImageAWS
+
+    // dirImageAWS = enviarDatatoPdf(dirImageLocal, '7-94-485', '100', 'CARTA-APC')
+    // dirImageAWS = enviarDatatoPdf(dirImageLocal, '7-94-485', '100', 'REFERENCIA-APC')
     step = 'STEP_14_1';
   }
   if (lastStep == 'STEP_14_1') {
+    dirImageAWS = enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'COMP-PAGO')
+    dataClient.payStubUrl = dirImageAWS
     step = 'STEP_14_2';
   }
   if (lastStep == 'STEP_14_2') {
+    dirImageAWS = enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'FICHA-SS')
+    dataClient.socialSecurityProofUrl = dirImageAWS
     step = 'STEP_14_3';
   }
   if (lastStep == 'STEP_14_3') {
+    dirImageAWS = enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'SERV-PUBLICO')
+    dataClient.publicGoodProofUrl = dirImageAWS
     step = 'STEP_14_4';
   }
   if (lastStep == 'STEP_14_4') {
+    dirImageAWS = enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'CARTA-TRABAJO')
+    dataClient.workLetterUrl = dirImageAWS
     // step = 'STEP_15';
     step = 'STEP_17';
   }
@@ -410,6 +419,10 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (step) {
+
+    console.log('dirImageLocal', dirImageLocal)
+
+
     let response = ''
     if (step == 'STEP_10' || step == 'STEP_11')
       response = await responseMessages(step, opciones);
@@ -534,13 +547,13 @@ const saveProspect = async (data) => {
   const { barriada: barriada_edificio, casaApto: no_casa_piso_apto } = data
   const { work_name, work_cargo, work_address, entity_f, work_phone, work_phone_ext = '' } = data
   const { work_prev_name, work_prev_salary = 0 } = data
-  const { idUrl, socialSecurityProofUrl, publicGoodProofUrl, workLetterUrl, payStubUrl, apcReferencesUrl = 'N/A', apcLetterUrl = '' } = data
+  const { idUrl, socialSecurityProofUrl, publicGoodProofUrl, workLetterUrl, payStubUrl, apcReferencesUrl = 'N/A', apcLetterUrl = 'N/A' } = data
   const { fec_nac: birthDate, contractType = 0, genero, sector, occupation = 0, profesion: profession = 0, institution = 0, retirement = 0 } = data
   const { previousJobMonths: work_prev_month = 0, meses_trabajo_actual: work_month } = data
   const { salario: wage, hProfesional: alloance = 0, viaticos: perDiem = 0 } = data
   const { tipo_residencia: residenceType, mensualidad_casa: residenceMonthly = 0, frecuenciaPago: paymentFrecuency } = data
   const { weight = 0, weightUnit = 'lb', height = 0, heightUnit = 'mts' } = data
-  const { bank, proposito: reason = 0 } = data
+  const { entity_f: bank, proposito: reason = 0 } = data
   const { email, first_name: fname, nombre2: fname_2 = '', last_name: lname, apellido2: lname_2 = '', origin = 'bot', idUser = '', phone: cellphone = '' } = data
   const { termConds, nationality, refpf, refpnf, prestamo_opciones } = data
 
@@ -608,7 +621,7 @@ const saveProspect = async (data) => {
       if (Object.keys(refpf).length) {
 
         // Info de Referencias personales Familiares
-        body = {
+        let body = {
           tipo: 1,
           id_prospect: newId,
           name: refpf.name || "",
@@ -627,7 +640,7 @@ const saveProspect = async (data) => {
       if (Object.keys(refpnf).length) {
 
         // Info de Referencias personales NO Familiares
-        body = {
+        let body = {
           tipo: 0,
           id_prospect: newId,
           name: refpnf.name || "",
@@ -656,71 +669,14 @@ const saveProspect = async (data) => {
       }
 
       axios.post(`${API_HOST}/api/email`, body)
-
-      // saveTracking("Finanlizado!")
     })
     .catch(error => {
       console.log('Hola estoy por aqui-BBBB', error)
     });
 }
 
-// saveProspect(
-//   {
-//     token: '0cfbe97a236f2c62a97db9fe50b2367c63c33d08',
-//     phone: '14132304211',
-//     refpf: { 'name': 'Leonel', 'apellido': 'Rodriguez' },
-//     refpnf: { 'name': 'nLeonel', 'apellido': 'nRodriguez' },
-//     Sector: 'Privada',
-//     sector: '1',
-//     Profesion: '3',
-//     nameProfesion: 'Educador',
-//     contrato_laboral: '2',
-//     meses_trabajo_actual: '165',
-//     frecuenciaPago: '2',
-//     tipo_residencia: '3',
-//     mensualidad_casa: '320',
-//     Cedula: '7-94-485',
-//     first_name: 'leonel',
-//     nombre2: 'l',
-//     last_name: 'rodríguez',
-//     apellido2: 'r',
-//     email: 'dddd12@gmail.com',
-//     Tracking: 'Ingresos',
-//     ID: 30375696,
-//     Genero: 'Hombre',
-//     fec_nac: '12/04/1965',
-//     nacional: 'Panameño',
-//     peso: '160',
-//     estatura: '1.78',
-//     salario: '1550',
-//     hProfesional: '0',
-//     viaticos: '0',
-//     proposito: '5',
-//     estadoCivil: '1',
 
-//     calle: 'aquilino tejeira',
-//     barriada: 'ciudad radial',
-//     casaApto: 'casa 17-1',
-//     telefonoCasa: '234-5756',
-//     work_name: 'mi casa',
-//     work_cargo: 'own',
-//     work_address: 'la gloria',
-//     work_phone: '345-1234',
-//     work_phone_ext: '.',
-//     work_prev_name: 'no tengo',
-//     work_prev_salary: '0',
-//     entity_f: '700',
-//     idUrl: 'N/A',
-//     socialSecurityProofUrl: 'N/A',
-//     publicGoodProofUrl: 'N/A',
-//     workLetterUrl: 'N/A',
-//     payStubUrl: 'N/A',
-//     bank: '700'
-//   }
-// )
-
-
-const enviarDatatoPdf = async (filename, id, ruta, nameImage) => {
+const enviarDatatoPdf = async (filename, id, ruta = '100', nameImage) => {
 
   let ext = 'jpeg'
   const extSplit = filename.split('.')
@@ -732,35 +688,17 @@ const enviarDatatoPdf = async (filename, id, ruta, nameImage) => {
     "prospect": id + "." + ext,
     "nameImage": nameImage
   }
-  // nameImage: DEBE SER VARIABLE PARA MANEJAR TODOS LOS DOCUMENTOS
 
   axios.post(`${API_HOST}/upload/file2a`, raw)
     .then(async (res) => {
       const result = res.data
-      console.log(result.Location)
+      // console.log(result.Location)
     })
     .catch((e) => {
       console.error(e);
     })
 }
 
-// const fileNamePath = `${__dirname}/media/1659133629434.jpeg`
-// enviarDatatoPdf(fileNamePath, '7-94-485', '700', 'REFERENCIA-APC')
-
-// async function xxx(data) {
-//   const opciones = await Opciones(data)
-//   console.log(opciones)
-// }
-// xxx({
-//   jobSector: 'Pb',
-//   gender: 'male',
-//   birthDate: '12/04/1965',
-//   profession: 3,
-//   wage: 1250,
-//   creditHistory: true, paymentFrecuency: 2,
-//   Edad: 56,
-//   currentJobMonths: 120
-// })
 
 server.listen(port, () => {
   console.log(`El server esta listo por el puerto ${port}`);

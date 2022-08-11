@@ -6,7 +6,6 @@ const fs = require('fs')
  * @param {*} media 
  */
 
-
 const saveMedia = (media) => {
     const extensionProcess = mimeDb[media.mimetype]
     let fileNamePath = ''
@@ -21,4 +20,4 @@ const saveMedia = (media) => {
     return fileNamePath
 }
 
-module.exports = {saveMedia}
+module.exports = { saveMedia }
