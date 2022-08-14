@@ -43,12 +43,12 @@ appRoutes.post('/clientify', async (req, res) => {
   const { body } = req
 
   let { token, ID, Tracking, prestamo_opciones, termConds,
-    first_name, last_name, email, phone, fecha_nacimiento = '1900-01-01', contrato_laboral,
-    meses_trabajo_actual = 0, meses_trabajo_anterior = 0, Salario = 0, Sector,
-    nameProfesion, Genero = 'x', tipo_residencia = '1', mensualidad_casa = 0,
-    donde_trabaja = 'N/A', Puesto = 'N/A', Cedula = 'N/A',
-    provincia = 'N/A', distrito = 'N/A', street = 'N/A',
-    idUrl,socialSecurityProofUrl,publicGoodProofUrl,workLetterUrl,payStubUrl,apcReferenceUrl,apcLetterUrl
+    first_name, last_name, email, phone, fecha_nacimiento='1900-01-01', contrato_laboral,
+    meses_trabajo_actual=0, meses_trabajo_anterior=0, Salario=0, Sector,
+    nameProfesion, Genero='x', tipo_residencia='1', mensualidad_casa=0,
+    donde_trabaja='N/A', Puesto='N/A', Cedula='N/A',
+    provincia='N/A', distrito='N/A', street='N/A',
+    idUrl='N/A',socialSecurityProofUrl='N/A',publicGoodProofUrl='N/A',workLetterUrl='N/A',payStubUrl='N/A',apcReferenceUrl='N/A',apcLetterUrl='N/A'
   } = body
 
   let { monto_max = 0, term_max = 0, monthlyFee_max = 0 } = prestamo_opciones

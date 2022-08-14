@@ -17,6 +17,7 @@ const axios = require('axios');
 const appRoutes = require('./routes/appRoutes');
 const fileRoutes = require('./routes/uploadFile');
 const Opciones = require('./helpers/Opciones');
+const isValidFile = require('./helpers/isValidFile');
 
 
 const app = express();
@@ -129,7 +130,6 @@ const listenMessage = () => client.on('message', async msg => {
       case "1":
         dataClient.sectorAb = 'P'
         step = 'STEP_2_1';
-        // step = 'STEP_19';
         break;
       case "2":
         dataClient.sectorAb = 'Pb'
@@ -318,31 +318,46 @@ const listenMessage = () => client.on('message', async msg => {
 
   if (lastStep == 'STEP_14') {
     dataClient.Tracking = 'BOT-Subir Documentos'
-    trackClientify(dataClient);
-    dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'CEDULA') || 'N/A'
-    dataClient.idUrl = dirImageAWS
-    step = 'STEP_14_1';
+
+    if (isValidFile(dirImageLocal)) {
+      trackClientify(dataClient);
+      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'CEDULA') || 'N/A'
+      dataClient.idUrl = dirImageAWS
+      step = 'STEP_14_1';
+      dirImageLocal=''
+    } else step = 'STEP_14';
   }
   if (lastStep == 'STEP_14_1') {
-    dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'COMP-PAGO') || 'N/A'
-    dataClient.payStubUrl = dirImageAWS
-    step = 'STEP_14_2';
+    if (isValidFile(dirImageLocal)) {
+      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'COMP-PAGO') || 'N/A'
+      dataClient.payStubUrl = dirImageAWS
+      step = 'STEP_14_2';
+      dirImageLocal=''
+    } else step = 'STEP_14_1';
   }
   if (lastStep == 'STEP_14_2') {
-    dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'FICHA-SS') || 'N/A'
-    dataClient.socialSecurityProofUrl = dirImageAWS
-    step = 'STEP_14_3';
+    if (isValidFile(dirImageLocal)) {
+      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'FICHA-SS') || 'N/A'
+      dataClient.socialSecurityProofUrl = dirImageAWS
+      step = 'STEP_14_3';
+      dirImageLocal=''
+    } else step = 'STEP_14_2';
   }
   if (lastStep == 'STEP_14_3') {
-    dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'SERV-PUBLICO') || 'N/A'
-    dataClient.publicGoodProofUrl = dirImageAWS
-    step = 'STEP_14_4';
+    if (isValidFile(dirImageLocal)) {
+      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'SERV-PUBLICO') || 'N/A'
+      dataClient.publicGoodProofUrl = dirImageAWS
+      step = 'STEP_14_4';
+      dirImageLocal=''
+    } else step = 'STEP_14_3';
   }
   if (lastStep == 'STEP_14_4') {
-    dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'CARTA-TRABAJO') || 'N/A'
-    dataClient.workLetterUrl = dirImageAWS
-    // step = 'STEP_15';
-    step = 'STEP_17';
+    if (isValidFile(dirImageLocal)) {
+      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'CARTA-TRABAJO') || 'N/A'
+      dataClient.workLetterUrl = dirImageAWS
+      step = 'STEP_17';
+      dirImageLocal=''
+    } else step = 'STEP_14_4';
   }
 
   if (lastStep == 'STEP_17') {
