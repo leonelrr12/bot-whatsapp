@@ -47,22 +47,13 @@ appRoutes.post('/clientify', async (req, res) => {
     meses_trabajo_actual = 0, meses_trabajo_anterior = 0, Salario = 0, Sector,
     nameProfesion, Genero = 'x', tipo_residencia = '1', mensualidad_casa = 0,
     donde_trabaja = 'N/A', Puesto = 'N/A', Cedula = 'N/A',
-    img_cedula = 'N/A', img_ficha_css = 'N/A', img_servicio_publico = 'N/A', img_carta_trabajo = 'N/A',
-    img_comprobante_pago = 'N/A', img_autoriza_apc = 'N/A', img_referencias_apc = 'N/A',
-    provincia = 'N/A', distrito = 'N/A', street = 'N/A'
+    provincia = 'N/A', distrito = 'N/A', street = 'N/A',
+    idUrl,socialSecurityProofUrl,publicGoodProofUrl,workLetterUrl,payStubUrl,apcReferenceUrl,apcLetterUrl
   } = body
 
   let { monto_max = 0, term_max = 0, monthlyFee_max = 0 } = prestamo_opciones
 
   const wDate = date => (date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate())
-
-  if (!img_autoriza_apc) img_autoriza_apc = "N/A"
-  if (!img_referencias_apc) img_referencias_apc = "N/A"
-  if (!img_cedula) img_cedula = "N/A"
-  if (!img_ficha_css) img_ficha_css = "N/A"
-  if (!img_servicio_publico) img_servicio_publico = "N/A"
-  if (!img_carta_trabajo) img_carta_trabajo = "N/A"
-  if (!img_comprobante_pago) img_comprobante_pago = "N/A"
 
   raw = JSON.stringify({
     first_name,
@@ -104,13 +95,14 @@ appRoutes.post('/clientify', async (req, res) => {
       { "field": "Profesion", "value": nameProfesion },
       { "field": "Genero", "value": Genero },
 
-      { "field": "img_cedula", "value": img_cedula },
-      { "field": "img_servicio_publico", "value": img_servicio_publico },
-      { "field": "img_ficha_css", "value": img_ficha_css },
-      { "field": "img_carta_trabajo", "value": img_carta_trabajo },
-      { "field": "img_comprobante_pago", "value": img_comprobante_pago },
-      { "field": "img_autoriza_apc", "value": img_autoriza_apc },
-      { "field": "img_referencias_apc2", "value": img_referencias_apc },
+      { "field": "img_cedula", "value": idUrl },
+      { "field": "img_servicio_publico", "value": publicGoodProofUrl },
+      { "field": "img_ficha_css", "value": socialSecurityProofUrl },
+      { "field": "img_carta_trabajo", "value": workLetterUrl },
+      { "field": "img_comprobante_pago", "value": payStubUrl },
+      { "field": "img_autoriza_apc", "value": apcLetterUrl },
+      { "field": "img_referencias_apc2", "value": apcReferenceUrl },
+
       { "field": "acepta_terminos_condiciones", "value": termConds },
       { "field": "entidad_seleccionada", "value": "125" },
       { "field": "Monto", "value": monto_max },
@@ -215,7 +207,7 @@ appRoutes.post('/ref_personales', (req, res) => {
     name, id_prospect, apellido, parentesco, cellphone, phonenumber, work_name, work_phonenumber, work_phone_ext
   ]
 
-  console.log(sql, params)
+  // console.log(sql, params)
 
   connection.query(sql, params, (error, results, next) => {
     if (error) {

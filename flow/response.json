@@ -297,6 +297,14 @@
 
     "STEP_20":{
         "replyMessage":[
+            "Solo queda confirmar \n\n",
+            "Por favor escriba: OK \n"
+        ],
+        "media":null,
+        "trigger":null
+    },
+    "STEP_21":{
+        "replyMessage":[
             "Ha finalizado el proceso \n\n",
             "Muy pronto uno de nuestros \n",
             "Ejecutivos lo estará \n",

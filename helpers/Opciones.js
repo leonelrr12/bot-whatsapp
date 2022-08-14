@@ -462,7 +462,7 @@ async function Opciones(data) {
   laboralEntities.forEach((entity) => {
     handleCapacity(entity, deudaTotal, letraTotal)
   })
-  // console.log({ Loans, monto_max,  term_max,  cashOnHand_max })
+  console.log({ Loans, monto_max,  term_max,  cashOnHand_max, monthlyFee_max })
   return { Loans, monto_max,  term_max,  cashOnHand_max, monthlyFee_max }
 };
 

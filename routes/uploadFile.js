@@ -86,7 +86,6 @@ fileRoutes.post('/createPDF', async (req, res) => {
   try {
     result = await Prospect.find({ "Cedula": cedula }, {})
 
-    console.log(result)
     if(!result.length) {
       return
     }
@@ -259,7 +258,8 @@ fileRoutes.post('/createPDF', async (req, res) => {
       }
     };
 
-    let fileName = path.join(`./pdfs/tmp-pdf-${Date.now()}.pdf`)
+    // let fileName = path.join(`./pdfs/tmp-pdf-${Date.now()}.pdf`)
+    let fileName = path.join(`./pdfs/tmp-refApc-${cedula}.pdf`)
 
     const printer = new pdfPrinter(fonts)
     var pdfDoc = printer.createPdfKitDocument(dd);
@@ -268,14 +268,17 @@ fileRoutes.post('/createPDF', async (req, res) => {
     });
     pdfDoc.end();
 
+    console.log({ 'fileName': fileName })
     res.json({'fileName': fileName})
+    
   } catch(err)  {
     console.log(err)
   }
 })
 
-// CREA PDF DE AUTORIZACION PARA SOLICIRAR REFERENCIAS DE CREDITO DE APC
-fileRoutes.post('/authApcPDF', async (req, res) => {
+
+// CREA PDF DE AUTORIZACION PARA SOLICITAR REFERENCIAS DE CREDITO DE APC
+fileRoutes.post('/authApcPDF', (req, res) => {
 
   const { body } = req
   const { nombre, cedula, sign }  = body
@@ -365,7 +368,8 @@ fileRoutes.post('/authApcPDF', async (req, res) => {
       }
     };
 
-    let fileName = path.join(`./pdfs/tmp-pdf2-${Date.now()}.pdf`)
+    // let fileName = path.join(`./pdfs/tmp-pdf2-${Date.now()}.pdf`)
+    let fileName = path.join(`./pdfs/tmp-authApc-${cedula}.pdf`)
 
     const printer = new pdfPrinter(fonts)
     var pdfDoc = printer.createPdfKitDocument(dd);
