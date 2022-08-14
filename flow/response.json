@@ -152,7 +152,7 @@
             "Monto máximo de: 9999 \n",
             "Plazo en meses: 999 \n",
             "Monto a recibir: 9999 \n\n",
-            "ok, para continuar"
+            "  OK, para continuar"
         ],
         "media":null,
         "trigger":null
@@ -298,7 +298,7 @@
     "STEP_20":{
         "replyMessage":[
             "Solo queda confirmar \n\n",
-            "Por favor escriba: OK \n"
+            "  OK, para continuar\n"
         ],
         "media":null,
         "trigger":null
