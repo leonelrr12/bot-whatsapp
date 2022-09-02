@@ -1,26 +1,26 @@
-{ 
-    "DEFAULT":{
-        "replyMessage":[
+{
+    "DEFAULT": {
+        "replyMessage": [
             "Visite nuestra App de verificación \n",
             "https://finanservs.com/ \n\n",
             "o Prueba escribiendo *hola* \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_1":{
-        "replyMessage":[
+    "STEP_1": {
+        "replyMessage": [
             "¿Donde Laboras? Elije un sector: \n\n",
             "1. Privado \n",
             "2. Público \n",
             "3. Jubilado \n\n",
             "Escoge una opcion: "
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_2":{
-        "replyMessage":[
+    "STEP_2": {
+        "replyMessage": [
             "Perfecto, ahora dinos tu profesión: \n\n",
             "1. Medico/Enfermera \n",
             "2. Educador \n",
@@ -29,123 +29,123 @@
             "5. Seguridad Publica \n\n",
             "Escoge una opcion: "
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_2_1":{
-        "replyMessage":[
+    "STEP_2_1": {
+        "replyMessage": [
             "Perfecto, ahora dinos tu profesión: \n\n",
             "1. Medico/Enfermera \n",
             "2. Educador \n",
             "3. Empresa Privada \n\n",
             "Escoge una opcion: "
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_3":{
-        "replyMessage":[
+    "STEP_3": {
+        "replyMessage": [
             "Cual es tu situacion laboral: \n\n",
             "1. Temporal \n",
             "2. Permanente \n",
             "3. Servicio Profesional \n\n",
             "Escoge una opcion: "
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_4":{
-        "replyMessage":[
+    "STEP_4": {
+        "replyMessage": [
             "Cuantos meses en tu trabajo actual: \n\n",
             "Escribe cantidad de meses: "
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_4_1":{
-        "replyMessage":[
+    "STEP_4_1": {
+        "replyMessage": [
             "Lo sentimos.  Solo pueden aplicar Permanentes. \n",
             "https://finanservs.com \n"
         ],
-        "media":null,
-        "trigger":null
-    },      
-    "STEP_8a":{
-        "replyMessage":[
+        "media": null,
+        "trigger": null
+    },
+    "STEP_8a": {
+        "replyMessage": [
             "¿Acepta nuestra politica de privacidad? \n\n",
             "1. Si \n",
             "2. No \n\n",
             "Escoge una opcion: "
         ],
-        "media":"Politica de Privacidad.png",
-        "trigger":null
-    },  
-    "STEP_8b":{
-        "replyMessage":[
+        "media": "Politica de Privacidad.png",
+        "trigger": null
+    },
+    "STEP_8b": {
+        "replyMessage": [
             "Lo sentimos.  Necesitamos que acepte nuestro Terminos y Condiciones. \n",
             "https://finanservs.com \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_8":{
-        "replyMessage":[
+    "STEP_8": {
+        "replyMessage": [
             "Datos personales: \n\n",
             "ej.(7-245-7356) \n",
             "Escribe tu Cédula o ID: \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_8_0":{
-        "replyMessage":[
+    "STEP_8_0": {
+        "replyMessage": [
             "Nombre: \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_8_2":{
-        "replyMessage":[
+    "STEP_8_2": {
+        "replyMessage": [
             "Apellido: \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_8_4":{
-        "replyMessage":[
+    "STEP_8_4": {
+        "replyMessage": [
             "E-mail: \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_8_5":{
-        "replyMessage":[
+    "STEP_8_5": {
+        "replyMessage": [
             "Genero: \n\n",
             "1. Mujer \n",
             "2. Hombre \n\n",
             "Escoge una opcion: "
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_8_6":{
-        "replyMessage":[
+    "STEP_8_6": {
+        "replyMessage": [
             "Fecha Nacimiento: \n",
             "ej. (dd/mm/aaaa) \n\n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_9":{
-        "replyMessage":[
+    "STEP_9": {
+        "replyMessage": [
             "Ingresos mensuales: \n\n",
             "Salario fijo: \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_10":{
-        "replyMessage":[
+    "STEP_10": {
+        "replyMessage": [
             "Felicidades!!! \n\n",
             "Puede califica para un \n",
             "préstamo personal por un \n",
@@ -154,11 +154,11 @@
             "Monto a recibir: 9999 \n\n",
             "  OK, para continuar"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_12":{
-        "replyMessage":[
+    "STEP_12": {
+        "replyMessage": [
             "Propósitos del Préstamo: \n\n",
             "1. Compra de Auto \n",
             "2. Boda \n",
@@ -168,11 +168,11 @@
             "6. Quince Año \n\n",
             "Escoge una opcion: "
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_13":{
-        "replyMessage":[
+    "STEP_13": {
+        "replyMessage": [
             "Estado civil: \n\n",
             "1. Casado \n",
             "2. Soltero \n",
@@ -181,137 +181,134 @@
             "5. Viudo \n\n",
             "Escoge una opcion: "
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_14":{
-        "replyMessage":[
+    "STEP_14": {
+        "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
             "1. Cédula o ID \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_14_1":{
-        "replyMessage":[
+    "STEP_14_1": {
+        "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
             "2. Comprobante de Pago \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_14_2":{
-        "replyMessage":[
+    "STEP_14_2": {
+        "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
             "3. Ficha de Seguros Social \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_14_3":{
-        "replyMessage":[
+    "STEP_14_3": {
+        "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
             "4. Recibo de Servicio \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_14_4":{
-        "replyMessage":[
+    "STEP_14_4": {
+        "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
             "5. Carta de Trabajo \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_17":{
-        "replyMessage":[
+    "STEP_17": {
+        "replyMessage": [
             "Referencia personal - Pariente \n\n",
             "Nombres: \n\n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_17_1":{
-        "replyMessage":[
+    "STEP_17_1": {
+        "replyMessage": [
             "Apellidos: \n\n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_17_2":{
-        "replyMessage":[
+    "STEP_17_2": {
+        "replyMessage": [
             "Parentesco: \n\n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_17_3":{
-        "replyMessage":[
+    "STEP_17_3": {
+        "replyMessage": [
             "Teléfono celular: \n",
             "####-#### \n\n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-   
-    "STEP_18":{
-        "replyMessage":[
+    "STEP_18": {
+        "replyMessage": [
             "Referencia personal - NO Pariente \n\n",
             "Nombres: \n\n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_18_1":{
-        "replyMessage":[
+    "STEP_18_1": {
+        "replyMessage": [
             "Apellidos: \n\n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_18_2":{
-        "replyMessage":[
+    "STEP_18_2": {
+        "replyMessage": [
             "Teléfono celular: \n",
             "####-#### \n\n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-   
-    "STEP_19":{
-        "replyMessage":[
+    "STEP_19": {
+        "replyMessage": [
             "Referencias de APC: \n\n",
             "Leer documento \n\n",
             "=> Firme en papel blanco y \n",
             "=> Mande solo foto de su firma \n"
         ],
-        "media":"Autorizacion APC ACsoraT.jpg",
-        "trigger":null
+        "media": "Autorizacion APC ACsoraT.jpg",
+        "trigger": null
     },
-
-    "STEP_20":{
-        "replyMessage":[
+    "STEP_20": {
+        "replyMessage": [
             "Solo queda confirmar \n\n",
             "  OK, para continuar\n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     },
-    "STEP_21":{
-        "replyMessage":[
+    "STEP_21": {
+        "replyMessage": [
             "Ha finalizado el proceso \n\n",
             "Muy pronto uno de nuestros \n",
             "Ejecutivos lo estará \n",
             "Contactando. \n\n",
             "Muchas gracias, hasta luego. \n"
         ],
-        "media":null,
-        "trigger":null
+        "media": null,
+        "trigger": null
     }
 }

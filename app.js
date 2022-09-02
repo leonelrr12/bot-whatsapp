@@ -122,26 +122,29 @@ const listenMessage = () => client.on('message', async msg => {
     return
   }
 
-  let step = await getMessages(message);
+
   if (lastStep == 'STEP_1') {
     dataClient.Sector = respuesta == '1' ? 'Privada' : (respuesta == '2' ? 'Publico' : 'Jubilado')
     dataClient.sector = respuesta
     switch (respuesta) {
       case "1":
         dataClient.sectorAb = 'P'
-        step = 'STEP_2_1';
+        // step = 'STEP_2_1';
+        message = "Privado"
         break;
       case "2":
         dataClient.sectorAb = 'Pb'
-        step = 'STEP_2';
+        // step = 'STEP_2';
+        message = "Público"
         break;
       case "3":
         dataClient.sectorAb = 'J'
         dataClient.profesion = '7';
-        step = 'STEP_5';
+        // step = 'STEP_3';
+        message = "Jubilado"
         break;
       default:
-        step = 'STEP_1';
+        // step = 'STEP_1';
         break;
     }
   }
@@ -152,7 +155,7 @@ const listenMessage = () => client.on('message', async msg => {
     if (respuesta == '1') { resp = '2'; resp1 = 'Médicos Enfermeras' }
     if (respuesta == '2') { resp = '3'; resp1 = 'Educador' }
     if (respuesta == '3' && lastStep == 'STEP_2') { resp = '4'; resp1 = 'Administrativo' }
-    if (respuesta == '3' && lastStep == 'STEP_2_1') { resp = '1'; resp1 = 'EMpresa Privada' }
+    if (respuesta == '3' && lastStep == 'STEP_2_1') { resp = '1'; resp1 = 'Empresa Privada' }
     if (respuesta == '4') { resp = '5'; resp1 = 'ACP' }
     if (respuesta == '5') { resp = '6'; resp1 = 'Seguridad Pública' }
     dataClient.profesion = resp;
@@ -160,73 +163,108 @@ const listenMessage = () => client.on('message', async msg => {
 
     dataClient.historialCredito = true;
     dataClient.frecuenciaPago = "2";
-    step = 'STEP_3';
+
+    if (lastStep == 'STEP_2') {
+      if (respuesta == 1) message = "GMedico/Enfermera"
+      if (respuesta == 2) message = "GEducador"
+      if (respuesta == 3) message = "GAdministrativo"
+      if (respuesta == 4) message = "GACP"
+      if (respuesta == 5) message = "GSeguridad Publica"
+    }
+    if (lastStep == 'STEP_2_1') {
+      if (respuesta == 1) message = "Medico/Enfermera"
+      if (respuesta == 2) message = "Educador"
+      if (respuesta == 3) message = "Empresa Privada"
+    }
+
+    // step = 'STEP_3';
   }
 
   if (lastStep == 'STEP_3') {
     dataClient.contrato_laboral = respuesta
-    switch (respuesta) {
-      case "2":
-        step = 'STEP_4';
-        break;
-      case "1":
-      case "3":
-        step = 'STEP_4_1';
-        break;
-      default:
-        step = 'STEP_3';
-        break;
-    }
+
+    // switch (respuesta) {
+    //   case "2":
+    //     step = 'STEP_4';
+    //     break;
+    //   case "1":
+    //   case "3":
+    //     step = 'STEP_4_1';
+    //     break;
+    //   default:
+    //     step = 'STEP_3';
+    //     break;
+    // }
+
+    if (respuesta == 1) message = "Temporal"
+    if (respuesta == 2) message = "Permanente"
+    if (respuesta == 3) message = "Servicio Profesional"
   }
 
   if (lastStep == 'STEP_4') {
-    if (isNaN(respuesta)) {
-      step = 'STEP_4';
-    } else {
-      if (parseInt(respuesta) <= 0) step = 'STEP_4';
-      else {
-        // step = 'STEP_5';
-        step = 'STEP_8a';
-        dataClient.meses_trabajo_actual = respuesta
-      }
-      // Aqui se puede agregar mas logica para validar cantidad de meses
-    }
+    // if (isNaN(respuesta)) {
+    //   step = 'STEP_4';
+    // } else {
+    //   if (parseInt(respuesta) <= 0) step = 'STEP_4';
+    //   else {
+    // step = 'STEP_5';
+    // step = 'STEP_8a';
+    dataClient.meses_trabajo_actual = respuesta
+    // }
+    // Aqui se puede agregar mas logica para validar cantidad de meses
+    // }
+
+    message = "Meses Laborando"
   }
 
   if (lastStep == 'STEP_8a') {
-    if (isNaN(respuesta)) {
-      step = 'STEP_8a';
+    // if (isNaN(respuesta)) {
+    //   step = 'STEP_8a';
+    // } else {
+    //   const resp = parseInt(respuesta)
+    //   if (resp < 1 || resp > 2) step = 'STEP_8a';
+    //   else {
+    dataClient.termConds = respuesta == "1" ? "Si" : "No"
+    if (respuesta == "1") {
+      dataClient.Tracking = "BOT-Terminos y Condiciones"
+      dataClient.prestamo_opciones = {}
+      trackClientify(dataClient);
+      message = "Acepta TyC"
+      // step = 'STEP_8'
     } else {
-      const resp = parseInt(respuesta)
-      if (resp < 1 || resp > 2) step = 'STEP_8a';
-      else {
-        dataClient.termConds = respuesta == "1" ? "Si" : "No"
-        if (respuesta == "1") {
-          dataClient.Tracking = "BOT-Terminos y Condiciones"
-          dataClient.prestamo_opciones = {}
-          trackClientify(dataClient);
-          step = 'STEP_8'
-        } else step = 'STEP_8b'
-      }
+      message = "No Acepta TyC"
+      // step = 'STEP_8b'
     }
+    //   }
+    // }
+  }
+
+  if (lastStep == 'STEP_8b') {
+    // Reinicia dialogo
+    message = "Hola"
   }
 
   if (lastStep == 'STEP_8') {
     if (validCedula.test(respuesta)) {
       dataClient.Cedula = respuesta
-      step = 'STEP_8_0';
+      message = "Cedula"
+      // step = 'STEP_8_0';
     } else {
-      step = 'STEP_8';
+      // step = 'STEP_8';
     }
   }
 
   if (lastStep == 'STEP_8_0') {
     dataClient.first_name = respuesta.toUpperCase()
-    step = 'STEP_8_2';
+    message = "Nombre"
+    // step = 'STEP_8_2';
   }
+
+
   if (lastStep == 'STEP_8_2') {
     dataClient.last_name = respuesta.toUpperCase()
-    step = 'STEP_8_4';
+    message = "Apellido"
+    // step = 'STEP_8_4';
   }
 
   if (lastStep == 'STEP_8_4') {
@@ -447,7 +485,12 @@ const listenMessage = () => client.on('message', async msg => {
     step = 'STEP_21';
   }
 
+  console.log(respuesta, message)
+  let step = await getMessages(message);
+
+
   if (step) {
+    console.log("Resp:", respuesta)
 
     let response = ''
     if (step == 'STEP_10' || step == 'STEP_11')
@@ -545,7 +588,10 @@ const token = async () => {
 }
 token();
 
+
 const trackClientify = (data) => {
+  return
+
   data.ID = idClientify
   const URL = `${API_HOST}/api/clientify`
 
@@ -565,6 +611,7 @@ const trackClientify = (data) => {
 //***************************************//
 //***************************************//
 const saveProspect = async (data) => {
+  return
 
   console.log('DATA', data)
 

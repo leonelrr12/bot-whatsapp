@@ -1,6 +1,6 @@
 [
     {
-        "keywords":  [
+        "keywords": [
             "hola",
             "hola!",
             "ola",
@@ -15,6 +15,91 @@
             "quisiera saber si venden",
             "necesito saber"
         ],
-        "key": "STEP_1"  
+        "key": "STEP_1"
+    },
+    {
+        "keywords": [
+            "Público"
+        ],
+        "key": "STEP_2"
+    },
+    {
+        "keywords": [
+            "Privado"
+        ],
+        "key": "STEP_2_1"
+    },
+    {
+        "keywords": [
+            "Jubilado"
+        ],
+        "key": "STEP_8a"
+    },
+    {
+        "keywords": [
+            "GMedico/Enfermera",
+            "GEducador",
+            "GAdministrativo",
+            "GACP",
+            "GSeguridad Publica"
+        ],
+        "key": "STEP_3"
+    },
+    {
+        "keywords": [
+            "Medico/Enfermera",
+            "Educador",
+            "Empresa Privada"
+        ],
+        "key": "STEP_3"
+    },
+    {
+        "keywords": [
+            "Permanente"
+        ],
+        "key": "STEP_4"
+    },
+    {
+        "keywords": [
+            "Temporal",
+            "Servicio Profesional"
+        ],
+        "key": "STEP_4_1"
+    },
+    {
+        "keywords": [
+            "Meses Laborando"
+        ],
+        "key": "STEP_8a"
+    },
+    {
+        "keywords": [
+            "Acepta TyC"
+        ],
+        "key": "STEP_8"
+    },
+    {
+        "keywords": [
+            "No Acepta TyC"
+        ],
+        "key": "STEP_8b"
+    },
+    {
+        "keywords": [
+            "Cedula"
+        ],
+        "key": "STEP_8_0"
+    },
+    {
+        "keywords": [
+            "Nombre"
+        ],
+        "key": "STEP_8_2"
+    },
+    {
+        "keywords": [
+            "Apellido"
+        ],
+        "key": "STEP_8_4"
     }
 ]

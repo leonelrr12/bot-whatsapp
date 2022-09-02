@@ -1,6 +1,6 @@
 { 
-    "DEFAULT":{
-        "replyMessage":[
+    "DEFAULT": {
+        "replyMessage": [
             "Visite nuestra App de verificación \n",
             "https://finanservs.com/ \n\n",
             "o Prueba escribiendo *hola* \n"
@@ -8,8 +8,8 @@
         "media":null,
         "trigger":null
     },
-    "STEP_1":{
-        "replyMessage":[
+    "STEP_1": {
+        "replyMessage": [
             "¿Donde Laboras? Elije un sector: \n\n",
             "1. Privado \n",
             "2. Público \n",
@@ -19,8 +19,8 @@
         "media":"Autorizacion APC ACsoraT.pdf",
         "trigger":null
     },
-    "STEP_2":{
-        "replyMessage":[
+    "STEP_2": {
+        "replyMessage": [
             "Perfecto, ahora dinos tu profesión: \n\n",
             "1. Medico/Enfermera \n",
             "2. Educador \n",
@@ -32,8 +32,8 @@
         "media":null,
         "trigger":null
     },
-    "STEP_2_1":{
-        "replyMessage":[
+    "STEP_2_1": {
+        "replyMessage": [
             "Perfecto, ahora dinos tu profesión: \n\n",
             "1. Medico/Enfermera \n",
             "2. Educador \n",
@@ -43,8 +43,8 @@
         "media":null,
         "trigger":null
     },
-    "STEP_3":{
-        "replyMessage":[
+    "STEP_3": {
+        "replyMessage": [
             "Cual es tu situacion laboral: \n\n",
             "1. Temporal \n",
             "2. Permanente \n",
@@ -54,24 +54,24 @@
         "media":null,
         "trigger":null
     },
-    "STEP_4":{
-        "replyMessage":[
+    "STEP_4": {
+        "replyMessage": [
             "Cuantos meses en tu trabajo actual: \n\n",
             "Escribe cantidad de meses: "
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_4_1":{
-        "replyMessage":[
+    "STEP_4_1": {
+        "replyMessage": [
             "Lo sentimos.  Solo pueden aplicar Permanentes. \n",
             "https://finanservs.com \n"
         ],
         "media":null,
         "trigger":null
     },     
-    "STEP_5":{
-        "replyMessage":[
+    "STEP_5": {
+        "replyMessage": [
             "¿Tienes historial de Credito? \n\n",
             "1. Si \n",
             "2. No \n\n",
@@ -80,16 +80,16 @@
         "media":null,
         "trigger":null
     },   
-    "STEP_5_1":{
-        "replyMessage":[
+    "STEP_5_1": {
+        "replyMessage": [
             "Lo sentimos.  Necesitamos un Historial de Créditos. \n",
             "https://finanservs.com \n"
         ],
         "media":null,
         "trigger":null
     },   
-    "STEP_6":{
-        "replyMessage":[
+    "STEP_6": {
+        "replyMessage": [
             "Sus pagos los realiza de: \n\n",
             "1. 0 a 30 dias \n",
             "2. 31 a 60 dias \n",
@@ -101,16 +101,16 @@
         "media":null,
         "trigger":null
     },
-    "STEP_6_1":{
-        "replyMessage":[
+    "STEP_6_1": {
+        "replyMessage": [
             "Lo sentimos.  Es muy importante mantener al dia sus pagos. \n",
             "https://finanservs.com \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_7":{ 
-        "replyMessage":[
+    "STEP_7": { 
+        "replyMessage": [
             "Donde vives: \n\n",
             "1. Casa propia \n",
             "2. Con padres o familia \n",
@@ -121,8 +121,8 @@
         "media":null,
         "trigger":null
     },    
-    "STEP_7_1":{
-        "replyMessage":[
+    "STEP_7_1": {
+        "replyMessage": [
             "Cuanto pagas mensualmente: \n\n",
    
             "Escribe el monto en Balboas \n"
@@ -130,8 +130,8 @@
         "media":null,
         "trigger":null
     },   
-    "STEP_8a":{
-        "replyMessage":[
+    "STEP_8a": {
+        "replyMessage": [
             "¿Acepta nuestra politica de privacidad? \n\n",
             "1. Si \n",
             "2. No \n\n",
@@ -140,16 +140,16 @@
         "media":"Politica de Privacidad.png",
         "trigger":null
     },  
-    "STEP_8b":{
-        "replyMessage":[
+    "STEP_8b": {
+        "replyMessage": [
             "Lo sentimos.  Necesitamos que acepte nuestro Terminos y Condiciones. \n",
             "https://finanservs.com \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_8":{
-        "replyMessage":[
+    "STEP_8": {
+        "replyMessage": [
             "Datos personales: \n\n",
             "ej.(7-245-7356) \n",
             "Escribe tu Cédula o ID: \n"
@@ -157,43 +157,43 @@
         "media":null,
         "trigger":null
     },
-    "STEP_8_0":{
-        "replyMessage":[
+    "STEP_8_0": {
+        "replyMessage": [
             "Primer nombre: \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_8_1":{
-        "replyMessage":[
+    "STEP_8_1": {
+        "replyMessage": [
             "Segundo nombre: \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_8_2":{
-        "replyMessage":[
+    "STEP_8_2": {
+        "replyMessage": [
             "Primer apellido: \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_8_3":{
-        "replyMessage":[
+    "STEP_8_3": {
+        "replyMessage": [
             "Segundo apellido: \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_8_4":{
-        "replyMessage":[
+    "STEP_8_4": {
+        "replyMessage": [
             "Email: \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_8_5":{
-        "replyMessage":[
+    "STEP_8_5": {
+        "replyMessage": [
             "Genero: \n\n",
             "1. Mujer \n",
             "2. Hombre \n\n",
@@ -202,16 +202,16 @@
         "media":null,
         "trigger":null
     },
-    "STEP_8_6":{
-        "replyMessage":[
+    "STEP_8_6": {
+        "replyMessage": [
             "Fecha Nacimiento: \n",
             "ej. (dd/mm/aaaa) \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_8_7":{
-        "replyMessage":[
+    "STEP_8_7": {
+        "replyMessage": [
             "Nacionalidad: \n\n",
             "1. Panameño \n",
             "2. Extranjero \n\n",
@@ -220,44 +220,44 @@
         "media":null,
         "trigger":null
     },
-    "STEP_8_8":{
-        "replyMessage":[
+    "STEP_8_8": {
+        "replyMessage": [
             "Tu peso en libras: \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_8_9":{
-        "replyMessage":[
+    "STEP_8_9": {
+        "replyMessage": [
             "Tu estatura en metros ej.(1.45): \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_9":{
-        "replyMessage":[
+    "STEP_9": {
+        "replyMessage": [
             "Ingresos mensuales: \n\n",
             "Salario fijo: \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_9_1":{
-        "replyMessage":[
+    "STEP_9_1": {
+        "replyMessage": [
             "Gastos representación: \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_9_2":{
-        "replyMessage":[
+    "STEP_9_2": {
+        "replyMessage": [
             "Viáticos: \n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_10":{
-        "replyMessage":[
+    "STEP_10": {
+        "replyMessage": [
             "Felicidades!!! \n\n",
             "Puede califica para un \n",
             "préstamo personal por un \n",
@@ -268,8 +268,8 @@
         "media":null,
         "trigger":null
     },
-    "STEP_11":{
-        "replyMessage":[
+    "STEP_11": {
+        "replyMessage": [
             "Opciones: \n\n",
             "1. Financomer \n",
             "2. Panacredit \n",
@@ -279,8 +279,8 @@
         "media":null,
         "trigger":null
     },
-    "STEP_12":{
-        "replyMessage":[
+    "STEP_12": {
+        "replyMessage": [
             "Propósitos del Préstamo: \n\n",
             "1. Compra de Auto \n",
             "2. Boda \n",
@@ -293,8 +293,8 @@
         "media":null,
         "trigger":null
     },
-    "STEP_13":{
-        "replyMessage":[
+    "STEP_13": {
+        "replyMessage": [
             "Estado civil: \n\n",
             "1. Casado \n",
             "2. Soltero \n",
@@ -306,8 +306,8 @@
         "media":null,
         "trigger":null
     },
-    "STEP_14":{
-        "replyMessage":[
+    "STEP_14": {
+        "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
             "1. Cédula o ID \n"
@@ -315,8 +315,8 @@
         "media":null,
         "trigger":null
     },
-    "STEP_14_1":{
-        "replyMessage":[
+    "STEP_14_1": {
+        "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
             "2. Comprobante de Pago \n"
@@ -324,8 +324,8 @@
         "media":null,
         "trigger":null
     },
-    "STEP_14_2":{
-        "replyMessage":[
+    "STEP_14_2": {
+        "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
             "3. Ficha de Seguros Social \n"
@@ -333,8 +333,8 @@
         "media":null,
         "trigger":null
     },
-    "STEP_14_3":{
-        "replyMessage":[
+    "STEP_14_3": {
+        "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
             "4. Recibo de Servicio \n"
@@ -342,8 +342,8 @@
         "media":null,
         "trigger":null
     },
-    "STEP_14_4":{
-        "replyMessage":[
+    "STEP_14_4": {
+        "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
             "5. Carta de Trabajo \n"
@@ -352,81 +352,81 @@
         "trigger":null
     },
 
-    "STEP_15":{
-        "replyMessage":[
+    "STEP_15": {
+        "replyMessage": [
             "Acerca de tu Residencia \n\n",
             "Calle: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_15_1":{
-        "replyMessage":[
+    "STEP_15_1": {
+        "replyMessage": [
             "Barriada o Nombre Edificio: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_15_2":{
-        "replyMessage":[
+    "STEP_15_2": {
+        "replyMessage": [
             "No. Casa o Piso, Apto.: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_15_3":{
-        "replyMessage":[
+    "STEP_15_3": {
+        "replyMessage": [
             "Teléfono residencial: \n\n"
         ],
         "media":null,
         "trigger":null
     },
 
-    "STEP_16":{
-        "replyMessage":[
+    "STEP_16": {
+        "replyMessage": [
             "Acerca de tu Trabajo \n\n",
             "Lugar de trabajo: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_16_1":{
-        "replyMessage":[
+    "STEP_16_1": {
+        "replyMessage": [
             "Cargo actual: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_16_2":{
-        "replyMessage":[
+    "STEP_16_2": {
+        "replyMessage": [
             "Dirección de trabajo: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_16_3":{
-        "replyMessage":[
+    "STEP_16_3": {
+        "replyMessage": [
             "Teléfono trabajo: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_16_4":{
-        "replyMessage":[
+    "STEP_16_4": {
+        "replyMessage": [
             "Extensión: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_16_5":{
-        "replyMessage":[
+    "STEP_16_5": {
+        "replyMessage": [
             "Empleo anterior: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_16_6":{
-        "replyMessage":[
+    "STEP_16_6": {
+        "replyMessage": [
             "Salario mensual \n",
             "empleo anterior: \n\n"
         ],
@@ -434,75 +434,75 @@
         "trigger":null
     },
 
-    "STEP_17":{
-        "replyMessage":[
+    "STEP_17": {
+        "replyMessage": [
             "Referencia personal - Pariente \n\n",
             "Nombres: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_17_1":{
-        "replyMessage":[
+    "STEP_17_1": {
+        "replyMessage": [
             "Apellidos: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_17_2":{
-        "replyMessage":[
+    "STEP_17_2": {
+        "replyMessage": [
             "Parentesco: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_17_3":{
-        "replyMessage":[
+    "STEP_17_3": {
+        "replyMessage": [
             "Teléfono celular: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_17_4":{
-        "replyMessage":[
+    "STEP_17_4": {
+        "replyMessage": [
             "Lugar de trabajo: \n\n"
         ],
         "media":null,
         "trigger":null
     },
    
-    "STEP_18":{
-        "replyMessage":[
+    "STEP_18": {
+        "replyMessage": [
             "Referencia personal - No Pariente \n\n",
             "Nombres: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_18_1":{
-        "replyMessage":[
+    "STEP_18_1": {
+        "replyMessage": [
             "Apellidos: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_18_2":{
-        "replyMessage":[
+    "STEP_18_2": {
+        "replyMessage": [
             "Teléfono celular: \n\n"
         ],
         "media":null,
         "trigger":null
     },
-    "STEP_18_3":{
-        "replyMessage":[
+    "STEP_18_3": {
+        "replyMessage": [
             "Lugar de trabajo: \n\n"
         ],
         "media":null,
         "trigger":null
     },
    
-    "STEP_19":{
-        "replyMessage":[
+    "STEP_19": {
+        "replyMessage": [
             "Referencias de APC: \n\n",
             "Leer documento y firmar \n",
             "Subir documento firmado o \n",
@@ -512,8 +512,8 @@
         "trigger":null
     },
 
-    "STEP_20":{
-        "replyMessage":[
+    "STEP_20": {
+        "replyMessage": [
             "Ha finalizado el proceso \n\n",
             "Muy pronto uno de nuestros \n",
             "Ejecutivos lo estará \n",

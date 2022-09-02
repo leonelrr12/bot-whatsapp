@@ -57,7 +57,7 @@ await sendMessageButton(
         "title":"¿Que te interesa ver?",
         "message":"Recuerda todo este contenido es gratis y estaria genial que me siguas!",
         "footer":"Gracias",
-        "buttons":[
+        "buttons": [
             {"body":"😎 Cursos"},
             {"body":"👉 Youtube"},
             {"body":"😁 Telegram"}
