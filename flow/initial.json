@@ -126,6 +126,12 @@
             "Salario"
         ],
         "key": "STEP_10"
+    }, 
+    {
+        "keywords": [
+            "OpcionesLoan"
+        ],
+        "key": "STEP_11"
     },
     {
         "keywords": [

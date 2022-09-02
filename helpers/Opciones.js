@@ -17,7 +17,7 @@ async function Opciones(data) {
 
   let { monthlyResidenceFee = 0.00, wage = 0.00, alloance = 0.00, perDiem = 0.00, previousJobMonths = 0,
     jobSector, profession = 0, currentJobMonths = 0, contractType = "",
-    creditHistory, paymentFrecuency = 0, gender, birthDate
+    creditHistory = 0, paymentFrecuency = 0, gender, birthDate
   } = data
 
   const sectorsRes = await axios.get(`${API_HOST}/api/laboral_sector`)

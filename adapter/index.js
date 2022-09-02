@@ -37,17 +37,18 @@ const reply = (step, data = '') => new Promise((resolve, reject) => {
       // Buscar calculos en el Backend
       const { monto_max, term_max, cashOnHand_max } = data
       responseFind.replyMessage = [
-        `Felicidades!!! \n
+        `Felicidades!!! ⭐⭐⭐\n
         Puede calificar para un
         préstamo personal por un
         Monto máximo: ${separator(monto_max)}
         Plazo en meses: ${term_max}
         Monto a recibir: ${separator(cashOnHand_max)}
-        \nok, para continuar
+        \n🆗, para continuar
         `
       ]
     }
     if (step == 'STEP_11') {
+      arrNum = ["0️⃣","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"]
       // Buscar opciones de Entidades disponibles
       const { Loans } = data
       let idx = 0
@@ -55,7 +56,7 @@ const reply = (step, data = '') => new Promise((resolve, reject) => {
       text += 'Entidad | Monto | Letra\n'
       Loans.forEach(p => {
         idx++
-        text += idx.toString() + '. ' + p.bank + ' | ' + separator(p.loan) + ' | ' + separator(p.monthlyFee) + '\n'
+        text += arrNum[idx] + ' ' + p.bank + ' | ' + separator(p.loan) + ' | ' + separator(p.monthlyFee) + '\n'
       })
       text += '\nEscoge una opcion:'
       responseFind.replyMessage = [text]

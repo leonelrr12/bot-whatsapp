@@ -11,9 +11,9 @@
     "STEP_1": {
         "replyMessage": [
             "¿Donde Laboras? Elije un sector: \n\n",
-            "1. Privado \n",
-            "2. Público \n",
-            "3. Jubilado \n\n",
+            "1️⃣ Privado \n",
+            "2️⃣ Público \n",
+            "3️⃣ Jubilado \n\n",
             "Escoge una opcion: "
         ],
         "media": null,
@@ -22,11 +22,11 @@
     "STEP_2": {
         "replyMessage": [
             "Perfecto, ahora dinos tu profesión: \n\n",
-            "1. Medico/Enfermera \n",
-            "2. Educador \n",
-            "3. Administrativo \n",
-            "4. ACP \n",
-            "5. Seguridad Publica \n\n",
+            "1️⃣ Medico/Enfermera \n",
+            "2️⃣ Educador \n",
+            "3️⃣ Administrativo \n",
+            "4️⃣ ACP \n",
+            "5️⃣ Seguridad Publica \n\n",
             "Escoge una opcion: "
         ],
         "media": null,
@@ -35,9 +35,9 @@
     "STEP_2_1": {
         "replyMessage": [
             "Perfecto, ahora dinos tu profesión: \n\n",
-            "1. Medico/Enfermera \n",
-            "2. Educador \n",
-            "3. Empresa Privada \n\n",
+            "1️⃣ Medico/Enfermera \n",
+            "2️⃣ Educador \n",
+            "3️⃣ Empresa Privada \n\n",
             "Escoge una opcion: "
         ],
         "media": null,
@@ -46,9 +46,9 @@
     "STEP_3": {
         "replyMessage": [
             "Cual es tu situacion laboral: \n\n",
-            "1. Temporal \n",
-            "2. Permanente \n",
-            "3. Servicio Profesional \n\n",
+            "1️⃣ Temporal \n",
+            "2️⃣ Permanente \n",
+            "3️⃣ Servicio Profesional \n\n",
             "Escoge una opcion: "
         ],
         "media": null,
@@ -73,8 +73,8 @@
     "STEP_8a": {
         "replyMessage": [
             "¿Acepta nuestra politica de privacidad? \n\n",
-            "1. Si \n",
-            "2. No \n\n",
+            "1️⃣. Si \n",
+            "2️⃣. No \n\n",
             "Escoge una opcion: "
         ],
         "media": "Politica de Privacidad.png",
@@ -121,8 +121,8 @@
     "STEP_8_5": {
         "replyMessage": [
             "Genero: \n\n",
-            "1. Mujer \n",
-            "2. Hombre \n\n",
+            "1️⃣ Mujer \n",
+            "2️⃣ Hombre \n\n",
             "Escoge una opcion: "
         ],
         "media": null,
@@ -152,7 +152,18 @@
             "Monto máximo de: 9999 \n",
             "Plazo en meses: 999 \n",
             "Monto a recibir: 9999 \n\n",
-            "  OK, para continuar"
+            "  Ok, para continuar"
+        ],
+        "media": null,
+        "trigger": null
+    },
+    "STEP_11": {
+        "replyMessage": [
+            "Opciones: \n\n",
+            "1. Financomer \n",
+            "2. Panacredit \n",
+            "3. Banisi \n\n",
+            "Escoge una opcion: "
         ],
         "media": null,
         "trigger": null
@@ -160,12 +171,12 @@
     "STEP_12": {
         "replyMessage": [
             "Propósitos del Préstamo: \n\n",
-            "1. Compra de Auto \n",
-            "2. Boda \n",
-            "3. Remodelación \n",
-            "4. Colegio \n",
-            "5. Viaje \n",
-            "6. Quince Año \n\n",
+            "1️⃣ Compra de Auto \n",
+            "2️⃣ Boda \n",
+            "3️⃣ Remodelación \n",
+            "4️⃣ Colegio \n",
+            "5️⃣ Viaje \n",
+            "6️⃣ Quince Año \n\n",
             "Escoge una opcion: "
         ],
         "media": null,
@@ -174,11 +185,11 @@
     "STEP_13": {
         "replyMessage": [
             "Estado civil: \n\n",
-            "1. Casado \n",
-            "2. Soltero \n",
-            "3. Unido \n",
-            "4. Divorciado \n",
-            "5. Viudo \n\n",
+            "1️⃣ Casado \n",
+            "2️⃣ Soltero \n",
+            "3️⃣ Unido \n",
+            "4️⃣ Divorciado \n",
+            "5️⃣ Viudo \n\n",
             "Escoge una opcion: "
         ],
         "media": null,
@@ -188,7 +199,7 @@
         "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
-            "1. Cédula o ID \n"
+            "1️⃣ Cédula o ID \n"
         ],
         "media": null,
         "trigger": null
@@ -197,7 +208,7 @@
         "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
-            "2. Comprobante de Pago \n"
+            "2️⃣ Comprobante de Pago \n"
         ],
         "media": null,
         "trigger": null
@@ -206,7 +217,7 @@
         "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
-            "3. Ficha de Seguros Social \n"
+            "3️⃣ Ficha de Seguros Social \n"
         ],
         "media": null,
         "trigger": null
@@ -215,7 +226,7 @@
         "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
-            "4. Recibo de Servicio \n"
+            "4️⃣ Recibo de Servicio \n"
         ],
         "media": null,
         "trigger": null
@@ -224,7 +235,7 @@
         "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
-            "5. Carta de Trabajo \n"
+            "5️⃣ Carta de Trabajo \n"
         ],
         "media": null,
         "trigger": null
@@ -295,18 +306,18 @@
     "STEP_20": {
         "replyMessage": [
             "Solo queda confirmar \n\n",
-            "  OK, para continuar\n"
+            "  🆗, para continuar\n"
         ],
         "media": null,
         "trigger": null
     },
     "STEP_21": {
         "replyMessage": [
-            "Ha finalizado el proceso \n\n",
+            "Ha finalizado el proceso ✔️ \n\n",
             "Muy pronto uno de nuestros \n",
             "Ejecutivos lo estará \n",
-            "Contactando. \n\n",
-            "Muchas gracias, hasta luego. \n"
+            "Contactando 📞. \n\n",
+            "Muchas gracias, hasta luego. 😃\n"
         ],
         "media": null,
         "trigger": null
