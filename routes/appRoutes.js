@@ -628,10 +628,9 @@ const formatData = (result, response) => {
   response.json(datos)
 }
 
-
 appRoutes.get('/leerAPC', (request, response) => {
-  // const { id: cedula } = request.body
-  const cedula = '7-94-485'
+  const { id: cedula } = request.body
+  // const cedula = '7-94-485'
 
   mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true, 

@@ -1,6 +1,7 @@
 [
     {
         "keywords": [
+            "Hola",
             "hola",
             "hola!",
             "ola",
@@ -101,5 +102,142 @@
             "Apellido"
         ],
         "key": "STEP_8_4"
+    },
+    {
+        "keywords": [
+            "Email"
+        ],
+        "key": "STEP_8_5"
+    },
+    {
+        "keywords": [
+            "Genero"
+        ],
+        "key": "STEP_8_6"
+    },
+    {
+        "keywords": [
+            "FecNac"
+        ],
+        "key": "STEP_9"
+    },
+    {
+        "keywords": [
+            "Salario"
+        ],
+        "key": "STEP_10"
+    },
+    {
+        "keywords": [
+            "Propósito"
+        ],
+        "key": "STEP_12"
+    },
+    {
+        "keywords": [
+            "Compra de Auto",
+            "Boda",
+            "Remodelación",
+            "Colegio",
+            "Viaje",
+            "Quince Año"
+        ],
+        "key": "STEP_13"
+    },
+    {
+        "keywords": [
+            "Casado",
+            "Soltero",
+            "Unido",
+            "Divorciado",
+            "Viudo"
+        ],
+        "key": "STEP_14"
+    },
+    {
+        "keywords": [
+            "imgCedula"
+        ],
+        "key": "STEP_14_1"
+    },
+    {
+        "keywords": [
+            "imgComp-pago"
+        ],
+        "key": "STEP_14_2"
+    },
+    {
+        "keywords": [
+            "imgFicha-css"
+        ],
+        "key": "STEP_14_3"
+    },
+    {
+        "keywords": [
+            "imgServ-publico"
+        ],
+        "key": "STEP_14_4"
+    },
+    {
+        "keywords": [
+            "imgCarta-trabajo"
+        ],
+        "key": "STEP_17"
+    },
+    {
+        "keywords": [
+            "RefPFNombre"
+        ],
+        "key": "STEP_17_1"
+    },
+    {
+        "keywords": [
+            "RefPFApellido"
+        ],
+        "key": "STEP_17_2"
+    },
+    {
+        "keywords": [
+            "RefPFParentesco"
+
+        ],
+        "key": "STEP_17_3"
+    },
+    {
+        "keywords": [
+            "RefPFCellphone"
+        ],
+        "key": "STEP_18"
+    },
+
+    {
+        "keywords": [
+            "RefPNFNombre"
+        ],
+        "key": "STEP_18_1"
+    },
+    {
+        "keywords": [
+            "RefPNFApellido"
+        ],
+        "key": "STEP_18_2"
+    },
+    {
+        "keywords": [
+            "RefPNFCellphone"
+        ],
+        "key": "STEP_19"
+    },
+    {
+        "keywords": [
+            "AuthRefAPC"
+        ],
+        "key": "STEP_20"
+    },
+    {
+        "keywords": [
+            "RefAPC"
+        ],
+        "key": "STEP_21"
     }
 ]

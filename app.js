@@ -34,7 +34,7 @@ const API_HOST = `http://localhost:${port}`
 
 var client;
 var respuesta;
-var lastStep;
+var lastStep = [];
 var idClientify = '';
 var tokenClientify;
 var dataClient = {};
@@ -46,11 +46,10 @@ var dirImageAWS = ''
 var usuarioApc = process.env.APC_USER
 var claveApc = process.env.APC_PASS
 
-
 const validCedula = /^\d{1,2}(-|\s)\d{1,3}(-|\s)\d{1,4}$/
 const validDate = /^\d{1,2}(\/|\s)\d{1,2}(\/|\s)\d{2,4}$/
 const validEmail = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
-const validPhone = /^\d{3}(-|\s)\d{4}$/
+// const validPhone = /^\d{3}(-|\s)\d{4}$/
 const validCell = /^\d{4}(-|\s)\d{4}$/
 
 
@@ -68,14 +67,13 @@ const listenMessage = () => client.on('message', async msg => {
   if (from === 'status@broadcast') {
     return
   }
-  message = body.toLowerCase();
-  // message = body;
-  respuesta = message;
+  message = body.toLowerCase()
+  respuesta = message
   console.log('BODY', message)
   const numero = cleanNumber(from)
   await readChat(numero, message)
   dataClient.phone = numero.split('@')[0] //.slice(3)
-
+  
 
   // VALORES POR DEFECTO QUE NO SERAN CAPTURADOS
   dataClient.tipo_residencia = '0'
@@ -122,8 +120,19 @@ const listenMessage = () => client.on('message', async msg => {
     return
   }
 
+  const { LSTEP="", LMSG="" } = lastStep[dataClient.phone] || ""
+  console.log('LSTEP', LSTEP, LMSG)
 
-  if (lastStep == 'STEP_1') {
+  const verifyStep = (Step, msg) => {
+    switch (Step) {
+      case "STEP_X":
+        return msg
+      default:
+        return msg
+    }
+  }
+
+  if (LSTEP == 'STEP_1') {
     dataClient.Sector = respuesta == '1' ? 'Privada' : (respuesta == '2' ? 'Publico' : 'Jubilado')
     dataClient.sector = respuesta
     switch (respuesta) {
@@ -145,85 +154,91 @@ const listenMessage = () => client.on('message', async msg => {
         break;
       default:
         // step = 'STEP_1';
+        message = verifyStep(LSTEP, "Hola")
+        console.log(message)
         break;
     }
   }
 
-  if (lastStep == 'STEP_2' || lastStep == 'STEP_2_1') {
-    let resp = '0'
-    let resp1 = ''
-    if (respuesta == '1') { resp = '2'; resp1 = 'Médicos Enfermeras' }
-    if (respuesta == '2') { resp = '3'; resp1 = 'Educador' }
-    if (respuesta == '3' && lastStep == 'STEP_2') { resp = '4'; resp1 = 'Administrativo' }
-    if (respuesta == '3' && lastStep == 'STEP_2_1') { resp = '1'; resp1 = 'Empresa Privada' }
-    if (respuesta == '4') { resp = '5'; resp1 = 'ACP' }
-    if (respuesta == '5') { resp = '6'; resp1 = 'Seguridad Pública' }
-    dataClient.profesion = resp;
-    dataClient.nameProfesion = resp1;
+  if (LSTEP == 'STEP_2' || LSTEP == 'STEP_2_1') {
 
-    dataClient.historialCredito = true;
-    dataClient.frecuenciaPago = "2";
+    console.log('LSTEP', LSTEP, LMSG)
+    if (isNaN(respuesta)) {
+      message = verifyStep(LSTEP, LMSG)
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 1 || resp > 5) message = verifyStep(LSTEP, LMSG)
+      else {
+        let resp = '0'
+        let resp1 = ''
+        if (respuesta == '1') { resp = '2'; resp1 = 'Médicos Enfermeras' }
+        if (respuesta == '2') { resp = '3'; resp1 = 'Educador' }
+        if (respuesta == '3' && lastStep == 'STEP_2') { resp = '4'; resp1 = 'Administrativo' }
+        if (respuesta == '3' && lastStep == 'STEP_2_1') { resp = '1'; resp1 = 'Empresa Privada' }
+        if (respuesta == '4') { resp = '5'; resp1 = 'ACP' }
+        if (respuesta == '5') { resp = '6'; resp1 = 'Seguridad Pública' }
+        dataClient.profesion = resp;
+        dataClient.nameProfesion = resp1;
 
-    if (lastStep == 'STEP_2') {
-      if (respuesta == 1) message = "GMedico/Enfermera"
-      if (respuesta == 2) message = "GEducador"
-      if (respuesta == 3) message = "GAdministrativo"
-      if (respuesta == 4) message = "GACP"
-      if (respuesta == 5) message = "GSeguridad Publica"
+        dataClient.historialCredito = true;
+        dataClient.frecuenciaPago = "2";
+
+        if (LSTEP == 'STEP_2') {
+          if (respuesta == 1) message = "GMedico/Enfermera"
+          if (respuesta == 2) message = "GEducador"
+          if (respuesta == 3) message = "GAdministrativo"
+          if (respuesta == 4) message = "GACP"
+          if (respuesta == 5) message = "GSeguridad Publica"
+        }
+        if (LSTEP == 'STEP_2_1') {
+          if (respuesta == 1) message = "Medico/Enfermera"
+          if (respuesta == 2) message = "Educador"
+          if (respuesta == 3) message = "Empresa Privada"
+        }
+      }
     }
-    if (lastStep == 'STEP_2_1') {
-      if (respuesta == 1) message = "Medico/Enfermera"
-      if (respuesta == 2) message = "Educador"
-      if (respuesta == 3) message = "Empresa Privada"
-    }
-
-    // step = 'STEP_3';
   }
 
-  if (lastStep == 'STEP_3') {
+  if (LSTEP == 'STEP_3') {
     dataClient.contrato_laboral = respuesta
 
-    // switch (respuesta) {
-    //   case "2":
-    //     step = 'STEP_4';
-    //     break;
-    //   case "1":
-    //   case "3":
-    //     step = 'STEP_4_1';
-    //     break;
-    //   default:
-    //     step = 'STEP_3';
-    //     break;
-    // }
+    switch (respuesta) {
+      case "1":
+      case "3":
+        message = verifyStep(LSTEP, LMSG)
+        break;
+      default:
+        break;
+    }
 
     if (respuesta == 1) message = "Temporal"
     if (respuesta == 2) message = "Permanente"
     if (respuesta == 3) message = "Servicio Profesional"
   }
 
-  if (lastStep == 'STEP_4') {
-    // if (isNaN(respuesta)) {
-    //   step = 'STEP_4';
-    // } else {
-    //   if (parseInt(respuesta) <= 0) step = 'STEP_4';
-    //   else {
-    // step = 'STEP_5';
-    // step = 'STEP_8a';
-    dataClient.meses_trabajo_actual = respuesta
-    // }
-    // Aqui se puede agregar mas logica para validar cantidad de meses
-    // }
-
-    message = "Meses Laborando"
+  if (LSTEP == 'STEP_4') {
+    if (isNaN(respuesta)) {
+      message = verifyStep(LSTEP, LMSG)
+    } else {
+      if (parseInt(respuesta) <= 0) message = verifyStep(LSTEP, LMSG)
+      else {
+        // step = 'STEP_5';
+        // step = 'STEP_8a';
+        dataClient.meses_trabajo_actual = respuesta
+        message = "Meses Laborando"
+      }
+      // Aqui se puede agregar mas logica para validar cantidad de meses
+    }
   }
 
-  if (lastStep == 'STEP_8a') {
-    // if (isNaN(respuesta)) {
-    //   step = 'STEP_8a';
-    // } else {
-    //   const resp = parseInt(respuesta)
-    //   if (resp < 1 || resp > 2) step = 'STEP_8a';
-    //   else {
+  if (LSTEP == 'STEP_8a') {
+    if (isNaN(respuesta)) {
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_8a';
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 1 || resp > 2) message = verifyStep(LSTEP, LMSG) // step = 'STEP_8a';
+      else {
     dataClient.termConds = respuesta == "1" ? "Si" : "No"
     if (respuesta == "1") {
       dataClient.Tracking = "BOT-Terminos y Condiciones"
@@ -235,81 +250,89 @@ const listenMessage = () => client.on('message', async msg => {
       message = "No Acepta TyC"
       // step = 'STEP_8b'
     }
-    //   }
-    // }
+      }
+    }
   }
 
-  if (lastStep == 'STEP_8b') {
+  if (LSTEP == 'STEP_8b') {
     // Reinicia dialogo
     message = "Hola"
   }
 
-  if (lastStep == 'STEP_8') {
+  if (LSTEP == 'STEP_8') {
     if (validCedula.test(respuesta)) {
       dataClient.Cedula = respuesta
       message = "Cedula"
       // step = 'STEP_8_0';
     } else {
+      message = verifyStep(LSTEP, LMSG)
       // step = 'STEP_8';
     }
   }
 
-  if (lastStep == 'STEP_8_0') {
+  if (LSTEP == 'STEP_8_0') {
     dataClient.first_name = respuesta.toUpperCase()
     message = "Nombre"
     // step = 'STEP_8_2';
   }
 
 
-  if (lastStep == 'STEP_8_2') {
+  if (LSTEP == 'STEP_8_2') {
     dataClient.last_name = respuesta.toUpperCase()
     message = "Apellido"
     // step = 'STEP_8_4';
   }
 
-  if (lastStep == 'STEP_8_4') {
+  if (LSTEP == 'STEP_8_4') {
     if (validEmail.test(respuesta)) {
       dataClient.email = respuesta
       dataClient.Tracking = 'BOT-Datos Cliente'
       trackClientify(dataClient);
-      step = 'STEP_8_5';
+      message = "Email"
+      // step = 'STEP_8_5';
     } else {
-      step = 'STEP_8_4';
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_8_4';
     }
   }
 
-  if (lastStep == 'STEP_8_5') {
+  if (LSTEP == 'STEP_8_5') {
     if (isNaN(respuesta)) {
-      step = 'STEP_8_5';
+      // step = 'STEP_8_5';
+      message = verifyStep(LSTEP, LMSG)
     } else {
       const resp = parseInt(respuesta)
-      if (resp < 1 || resp > 2) step = 'STEP_8_5';
+      if (resp < 1 || resp > 2) message = verifyStep(LSTEP, LMSG) // step = 'STEP_8_5';
       else {
         dataClient.Genero = respuesta == "1" ? "Mujer" : "Hombre"
         dataClient.genero = respuesta == "1" ? "female" : "male"
         trackClientify(dataClient);
-        step = 'STEP_8_6';
+        message = "Genero"
+        // step = 'STEP_8_6';
       }
     }
   }
 
-  if (lastStep == 'STEP_8_6') {
+  if (LSTEP == 'STEP_8_6') {
     if (validDate.test(respuesta)) {
       dataClient.fec_nac = respuesta
       trackClientify(dataClient);
+      message = "FecNac"
       // step = 'STEP_8_7';
-      step = 'STEP_9';
+      // step = 'STEP_9';
     } else {
-      step = 'STEP_8_6';
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_8_6';
     }
   }
 
-  if (lastStep == 'STEP_9') {
+  if (LSTEP == 'STEP_9') {
     if (isNaN(respuesta)) {
-      step = 'STEP_9';
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_9';
     } else {
       const resp = parseInt(respuesta)
-      if (resp < 1) step = 'STEP_9';
+      if (resp < 1) message = verifyStep(LSTEP, LMSG) // step = 'STEP_9';
       else {
         dataClient.salario = respuesta
 
@@ -331,144 +354,181 @@ const listenMessage = () => client.on('message', async msg => {
         dataClient.Tracking = 'BOT-Opciones Disponibles'
         dataClient.prestamo_opciones = opciones
         trackClientify(dataClient);
+        message = "Salario"
         // step = 'STEP_9_1';
-        step = 'STEP_10';
+        // step = 'STEP_10';
       }
     }
   }
 
-  if (lastStep == 'STEP_10') {
-    step = 'STEP_13';
+  if (LSTEP == 'STEP_10') {
+    message = "Propósito"
+    // step = 'STEP_13';
   }
 
-  if (lastStep == 'STEP_13') {
+  if (LSTEP == 'STEP_12') {
+    if (respuesta == 1) message = "Compra de Auto"
+    if (respuesta == 2) message = "Boda"
+    if (respuesta == 3) message = "Remodelación"
+    if (respuesta == 4) message = "Colegio"
+    if (respuesta == 5) message = "Viaje"
+    if (respuesta == 6) message = "Quince Año"
+  }
+
+  if (LSTEP == 'STEP_13') {
     if (isNaN(respuesta)) {
-      step = 'STEP_13';
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_13';
     } else {
       const resp = parseInt(respuesta)
-      if (resp < 1 || resp > 5) step = 'STEP_13';
+      if (resp < 1 || resp > 5) message = verifyStep(LSTEP, LMSG) // step = 'STEP_13';
       else {
         dataClient.estadoCivil = respuesta
-        step = 'STEP_14';
+        message = "EstadoCivil"
+        if (respuesta == 1) message = "Casado"
+        if (respuesta == 2) message = "Soltero"
+        if (respuesta == 3) message = "Unido"
+        if (respuesta == 4) message = "Divorciado"
+        if (respuesta == 5) message = "Viudo"
+        // step = 'STEP_14';
       }
     }
   }
 
-  if (lastStep == 'STEP_14') {
+  if (LSTEP == 'STEP_14') {
     dataClient.Tracking = 'BOT-Subir Documentos'
 
     if (isValidFile(dirImageLocal)) {
       trackClientify(dataClient);
       dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'CEDULA') || 'N/A'
       dataClient.idUrl = dirImageAWS
-      step = 'STEP_14_1';
-      dirImageLocal=''
-    } else step = 'STEP_14';
+      message = "imgCedula"
+      // step = 'STEP_14_1';
+      dirImageLocal = ''
+    } else message = verifyStep(LSTEP, LMSG) // step = 'STEP_14';
   }
-  if (lastStep == 'STEP_14_1') {
+  if (LSTEP == 'STEP_14_1') {
     if (isValidFile(dirImageLocal)) {
       dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'COMP-PAGO') || 'N/A'
       dataClient.payStubUrl = dirImageAWS
-      step = 'STEP_14_2';
-      dirImageLocal=''
-    } else step = 'STEP_14_1';
+      message = "imgComp-pago"
+      // step = 'STEP_14_2';
+      dirImageLocal = ''
+    } else message = verifyStep(LSTEP, LMSG) // step = 'STEP_14_1';
   }
-  if (lastStep == 'STEP_14_2') {
+  if (LSTEP == 'STEP_14_2') {
     if (isValidFile(dirImageLocal)) {
       dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'FICHA-SS') || 'N/A'
       dataClient.socialSecurityProofUrl = dirImageAWS
-      step = 'STEP_14_3';
-      dirImageLocal=''
-    } else step = 'STEP_14_2';
+      message = "imgFicha-css"
+      // step = 'STEP_14_3';
+      dirImageLocal = ''
+    } else message = verifyStep(LSTEP, LMSG) // step = 'STEP_14_2';
   }
-  if (lastStep == 'STEP_14_3') {
+  if (LSTEP == 'STEP_14_3') {
     if (isValidFile(dirImageLocal)) {
       dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'SERV-PUBLICO') || 'N/A'
       dataClient.publicGoodProofUrl = dirImageAWS
-      step = 'STEP_14_4';
-      dirImageLocal=''
-    } else step = 'STEP_14_3';
+      message = "imgServ-publico"
+      // step = 'STEP_14_4';
+      dirImageLocal = ''
+    } else message = verifyStep(LSTEP, LMSG) // step = 'STEP_14_3';
   }
-  if (lastStep == 'STEP_14_4') {
+  if (LSTEP == 'STEP_14_4') {
     if (isValidFile(dirImageLocal)) {
       dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'CARTA-TRABAJO') || 'N/A'
       dataClient.workLetterUrl = dirImageAWS
-      step = 'STEP_17';
-      dirImageLocal=''
-    } else step = 'STEP_14_4';
+      message = "imgCarta-trabajo"
+      // step = 'STEP_17';
+      dirImageLocal = ''
+    } else message = verifyStep(LSTEP, LMSG) // step = 'STEP_14_4';
   }
 
-  if (lastStep == 'STEP_17') {
+  if (LSTEP == 'STEP_17') {
     if (respuesta.length > 2 && respuesta.length < 61) {
       refpf.name = respuesta.toUpperCase()
-      step = 'STEP_17_1';
+      // step = 'STEP_17_1';
       dataClient.Tracking = 'BOT-Referencias Personales'
       trackClientify(dataClient);
+      message = "RefPFNombre"
     } else {
-      step = 'STEP_17';
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_17';
     }
   }
-  if (lastStep == 'STEP_17_1') {
+  if (LSTEP == 'STEP_17_1') {
     if (respuesta.length > 2 && respuesta.length < 61) {
       refpf.apellido = respuesta.toUpperCase()
-      step = 'STEP_17_2';
+      message = "RefPFApellido"
+      // step = 'STEP_17_2';
     } else {
-      step = 'STEP_17_1';
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_17_1';
     }
   }
-  if (lastStep == 'STEP_17_2') {
+  if (LSTEP == 'STEP_17_2') {
     if (respuesta.length > 2 && respuesta.length < 11) {
       refpf.parentesco = respuesta.toUpperCase()
-      step = 'STEP_17_3';
+      message = "RefPFParentesco"
+      // step = 'STEP_17_3';
     } else {
-      step = 'STEP_17_2';
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_17_2';
     }
   }
-  if (lastStep == 'STEP_17_3') {
+  if (LSTEP == 'STEP_17_3') {
     if (validCell.test(respuesta)) {
       refpf.cellphone = respuesta
-      step = 'STEP_18';
+      message = "RefPFCellphone"
+      // step = 'STEP_18';
     } else {
-      step = 'STEP_17_3';
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_17_3';
     }
   }
 
-  if (lastStep == 'STEP_18') {
+  if (LSTEP == 'STEP_18') {
     if (respuesta.length > 2 && respuesta.length < 61) {
       refpnf.name = respuesta.toUpperCase()
-      step = 'STEP_18_1';
+      message = "RefPNFNombre"
+      // step = 'STEP_18_1';
     } else {
-      step = 'STEP_18';
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_18';
     }
   }
-  if (lastStep == 'STEP_18_1') {
+  if (LSTEP == 'STEP_18_1') {
     if (respuesta.length > 2 && respuesta.length < 61) {
       refpnf.apellido = respuesta.toUpperCase()
-      step = 'STEP_18_2';
+      message = "RefPNFApellido"
+      // step = 'STEP_18_2';
     } else {
-      step = 'STEP_18_1';
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_18_1';
     }
   }
-  if (lastStep == 'STEP_18_2') {
+  if (LSTEP == 'STEP_18_2') {
     if (validCell.test(respuesta)) {
       refpnf.cellphone = respuesta
-      step = 'STEP_19';
+      message = "RefPNFCellphone"
+      // step = 'STEP_19';
     } else {
-      step = 'STEP_18_2';
+      message = verifyStep(LSTEP, LMSG)
+      // step = 'STEP_18_2';
     }
   }
 
   dataClient.refpf = refpf;
   dataClient.refpnf = refpnf;
 
-  if (lastStep == 'STEP_19') {
+  if (LSTEP == 'STEP_19') {
     console.log('dirImageLocal', dirImageLocal)
-
-    step = 'STEP_20';
+    message = "AuthRefAPC"
+    // step = 'STEP_20';
   }
 
-  if (lastStep == 'STEP_20') {
-    dataClient.cedula = "7-94-485"
+  if (LSTEP == 'STEP_20') {
+    // dataClient.cedula = "7-94-485"
     await refAPC(dataClient.cedula)
     const dirImageRF = await createPDFRefApc(dataClient.cedula)
     console.log('dirImageRF', dirImageRF)
@@ -482,11 +542,12 @@ const listenMessage = () => client.on('message', async msg => {
     dataClient.Tracking = 'BOT-Proceso Terminado'
     trackClientify(dataClient);
 
-    step = 'STEP_21';
+    message = "RefAPC"
+    // step = 'STEP_21';
   }
 
-  console.log(respuesta, message)
-  let step = await getMessages(message);
+  console.log(respuesta, message, LMSG)
+  let step = await getMessages(message)
 
 
   if (step) {
@@ -494,29 +555,29 @@ const listenMessage = () => client.on('message', async msg => {
 
     let response = ''
     if (step == 'STEP_10' || step == 'STEP_11')
-      response = await responseMessages(step, opciones);
-    else response = await responseMessages(step);
+      response = await responseMessages(step, opciones)
+    else response = await responseMessages(step)
 
-    await sendMessage(client, from, response.replyMessage, response.trigger);
+    await sendMessage(client, from, response.replyMessage, response.trigger)
     if (response.hasOwnProperty('actions')) {
-      const { actions } = response;
-      await sendMessageButton(client, from, null, actions);
-      lastStep = step;
+      const { actions } = response
+      await sendMessageButton(client, from, null, actions)
+      lastStep[dataClient.phone] = {"LSTEP": step, "LMSG": message}
       return
     }
 
     if (!response.delay && response.media) {
-      sendMedia(client, from, response.media);
+      sendMedia(client, from, response.media)
     }
     if (response.delay && response.media) {
       setTimeout(() => {
-        sendMedia(client, from, response.media);
+        sendMedia(client, from, response.media)
       }, response.delay)
     }
-    lastStep = step;
+    lastStep[dataClient.phone] = {"LSTEP": step, "LMSG": message}
     return
   }
-  lastStep = step;
+  lastStep[dataClient.phone] = {"LSTEP": step, "LMSG": message}
 
   //Si quieres tener un mensaje por defecto
   if (process.env.DEFAULT_MESSAGE === 'true') {
@@ -590,7 +651,6 @@ token();
 
 
 const trackClientify = (data) => {
-  return
 
   data.ID = idClientify
   const URL = `${API_HOST}/api/clientify`
@@ -611,7 +671,6 @@ const trackClientify = (data) => {
 //***************************************//
 //***************************************//
 const saveProspect = async (data) => {
-  return
 
   console.log('DATA', data)
 
@@ -819,8 +878,6 @@ const authApcPDF = ({ nombre, cedula, dirFile }) => {
       })
   })
 }
-
-
 
 server.listen(port, () => {
   console.log(`El server esta listo por el puerto ${port}`);
