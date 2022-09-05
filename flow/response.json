@@ -8,13 +8,33 @@
         "media": null,
         "trigger": null
     },
+    "STEP_00": {
+        "replyMessage": [
+            "✅ Hola como le podemos ayudar \n\n",
+            "✅ Uno de nuestros Ejecutivos 🤵 \n\n",
+            "✅ Lo atenderá en unos instantes. 🕓 \n\n"
+        ],
+        "media": null,
+        "trigger": null
+    },
     "STEP_1": {
         "replyMessage": [
             "¿Donde Laboras? Elije un sector: \n\n",
             "1️⃣ Privado \n",
             "2️⃣ Público \n",
-            "3️⃣ Jubilado \n\n",
+            "3️⃣ Jubilado \n",
+            "4️⃣ Otros \n\n",
             "Escoge una opcion: "
+        ],
+        "media": null,
+        "trigger": null
+    },
+    "STEP_1_1": {
+        "replyMessage": [
+            "Lo sentimos. 🙏 \n", 
+            "Estamos trabajando fuertemente \n",
+            "Para ofrecer otras Opciones \n\n",
+            "Visite: https://finanservs.com \n"
         ],
         "media": null,
         "trigger": null
@@ -65,7 +85,7 @@
     "STEP_4_1": {
         "replyMessage": [
             "Lo sentimos.  Solo pueden aplicar Permanentes. \n",
-            "https://finanservs.com \n"
+            "Visite: https://finanservs.com \n"
         ],
         "media": null,
         "trigger": null
@@ -83,7 +103,7 @@
     "STEP_8b": {
         "replyMessage": [
             "Lo sentimos.  Necesitamos que acepte nuestro Terminos y Condiciones. \n",
-            "https://finanservs.com \n"
+            "Visite: https://finanservs.com \n"
         ],
         "media": null,
         "trigger": null
@@ -199,7 +219,7 @@
         "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
-            "1️⃣ Cédula o ID \n"
+            "📸 Cédula o ID \n"
         ],
         "media": null,
         "trigger": null
@@ -208,7 +228,7 @@
         "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
-            "2️⃣ Comprobante de Pago \n"
+            "📸 Comprobante de Pago \n"
         ],
         "media": null,
         "trigger": null
@@ -217,7 +237,7 @@
         "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
-            "3️⃣ Ficha de Seguros Social \n"
+            "📸 Ficha de Seguros Social \n"
         ],
         "media": null,
         "trigger": null
@@ -226,7 +246,9 @@
         "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
-            "4️⃣ Recibo de Servicio \n"
+            "📸 Recibo de Servicio \n",
+            "Luz, Agua, Teléfono \n",
+            "❌ No lo tengo a mano \n"
         ],
         "media": null,
         "trigger": null
@@ -235,7 +257,8 @@
         "replyMessage": [
             "Subir Documento Personal: \n",
             "(Foto o Archivo) \n\n",
-            "5️⃣ Carta de Trabajo \n"
+            "📸 Carta de Trabajo \n",
+            "❌ No lo tengo a mano \n"
         ],
         "media": null,
         "trigger": null
@@ -297,8 +320,8 @@
         "replyMessage": [
             "Referencias de APC: \n\n",
             "Leer documento \n\n",
-            "=> Firme en papel blanco y \n",
-            "=> Mande solo foto de su firma \n"
+            "=> Firme ✍🏻 en papel blanco y \n",
+            "=> Mande solo foto 📸 de su firma \n"
         ],
         "media": "Autorizacion APC ACsoraT.jpg",
         "trigger": null
@@ -306,7 +329,7 @@
     "STEP_20": {
         "replyMessage": [
             "Solo queda confirmar \n\n",
-            "  🆗, para continuar\n"
+            "  🆗 para continuar\n"
         ],
         "media": null,
         "trigger": null

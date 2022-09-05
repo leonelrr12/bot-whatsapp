@@ -67,6 +67,12 @@ const listenMessage = () => client.on('message', async msg => {
   if (from === 'status@broadcast') {
     return
   }
+
+  const { LSTEP = "", LMSG = "", OUT = false } = lastStep[dataClient.phone] || ""
+  if (OUT) {
+    return // Corta comunicacion con el Bot
+  }
+
   message = body.toLowerCase()
   respuesta = message
   console.log('BODY', message)
@@ -98,6 +104,8 @@ const listenMessage = () => client.on('message', async msg => {
   dataClient.proposito = '0'
   dataClient.Profesion = 'N/A'
   dataClient.prestamo_opciones = {}
+  dataClient.nameProfesion = 'N/A'
+  dataClient.meses_trabajo_actual = 60
 
   /**
    * Guardamos el archivo multimedia que nos envia El Usuario
@@ -121,81 +129,90 @@ const listenMessage = () => client.on('message', async msg => {
     return
   }
 
-  const { LSTEP = "", LMSG = "" } = lastStep[dataClient.phone] || ""
-  console.log('LSTEP', LSTEP, LMSG)
-
+  const pedirAsesor = () => {
+    return "Rolando=Sanchez"
+  }
   const verifyResponse = (Step, msg) => {
-    switch (Step) {
-      case "STEP_X":
-        return msg
-      default:
-        return msg
-    }
+    return msg
   }
 
   if (LSTEP == 'STEP_1') {
-    dataClient.Sector = respuesta == '1' ? 'Privada' : (respuesta == '2' ? 'Publico' : 'Jubilado')
-    dataClient.sector = respuesta
-    switch (respuesta) {
-      case "1":
-        dataClient.sectorAb = 'P'
-        message = "Privado"
-        break;
-      case "2":
-        dataClient.sectorAb = 'Pb'
-        message = "Público"
-        break;
-      case "3":
-        dataClient.sectorAb = 'J'
-        dataClient.profesion = '7'
-        dataClient.nameProfesion = 'Jubilado'
-        dataClient.historialCredito = true
-        dataClient.frecuenciaPago = "2"
-        dataClient.contrato_laboral = '2'
-        dataClient.meses_trabajo_actual = 60
-        message = "Jubilado"
-        break;
-      default:
-        message = verifyResponse(LSTEP, "Hola")
-        console.log(message)
-        break;
+    if (respuesta.toLowerCase() == 'x') {
+      message = pedirAsesor()
+    } else {
+      dataClient.Sector = respuesta == '1' ? 'Privada' : (respuesta == '2' ? 'Publico' : 'Jubilado')
+      dataClient.sector = respuesta
+      switch (respuesta) {
+        case "1":
+          dataClient.sectorAb = 'P'
+          message = "Privado"
+          break;
+        case "2":
+          dataClient.sectorAb = 'Pb'
+          message = "Público"
+          break;
+        case "3":
+          dataClient.sectorAb = 'J'
+          dataClient.profesion = '7'
+          dataClient.nameProfesion = 'Jubilado'
+          dataClient.historialCredito = true
+          dataClient.frecuenciaPago = "2"
+          dataClient.contrato_laboral = '2'
+          dataClient.meses_trabajo_actual = 60
+          message = "Jubilado"
+          break;
+        case "4":
+          dataClient.sectorAb = 'Pb'
+          message = "xIndependiente"
+          break;
+        default:
+          message = verifyResponse(LSTEP, "Hola")
+          break;
+      }
     }
   }
 
+  if (LSTEP == 'STEP_1_1') {
+
+  }
+
   if (LSTEP == 'STEP_2' || LSTEP == 'STEP_2_1') {
-
-    console.log('LSTEP', LSTEP, LMSG)
-    if (isNaN(respuesta)) {
-      message = verifyResponse(LSTEP, LMSG)
+    if (respuesta.toLowerCase() == 'x') {
+      message = pedirAsesor()
     } else {
-      const resp = parseInt(respuesta)
-      if (resp < 1 || resp > 5) message = verifyResponse(LSTEP, LMSG)
-      else {
-        let resp = '0'
-        let resp1 = ''
-        if (respuesta == '1') { resp = '2'; resp1 = 'Médicos Enfermeras' }
-        if (respuesta == '2') { resp = '3'; resp1 = 'Educador' }
-        if (respuesta == '3' && lastStep == 'STEP_2') { resp = '4'; resp1 = 'Administrativo' }
-        if (respuesta == '3' && lastStep == 'STEP_2_1') { resp = '1'; resp1 = 'Empresa Privada' }
-        if (respuesta == '4') { resp = '5'; resp1 = 'ACP' }
-        if (respuesta == '5') { resp = '6'; resp1 = 'Seguridad Pública' }
-        dataClient.profesion = resp;
-        dataClient.nameProfesion = resp1;
+      console.log('LSTEP', LSTEP, LMSG)
+      if (isNaN(respuesta)) {
+        message = verifyResponse(LSTEP, LMSG)
+      } else {
+        const resp = parseInt(respuesta)
+        if (resp < 1 || resp > 5) message = verifyResponse(LSTEP, LMSG)
+        else {
+          let resp = '0'
+          let resp1 = ''
+          if (respuesta == '1') { resp = '2'; resp1 = 'Médicos Enfermeras' }
+          if (respuesta == '2') { resp = '3'; resp1 = 'Educador' }
+          if (respuesta == '3' && LSTEP == 'STEP_2') { resp = '4'; resp1 = 'Administrativo' }
+          if (respuesta == '3' && LSTEP == 'STEP_2_1') { resp = '1'; resp1 = 'Empresa Privada' }
+          if (respuesta == '4') { resp = '5'; resp1 = 'ACP' }
+          if (respuesta == '5') { resp = '6'; resp1 = 'Seguridad Pública' }
+          dataClient.profesion = resp;
+          dataClient.nameProfesion = resp1;
 
-        dataClient.historialCredito = true;
-        dataClient.frecuenciaPago = "2";
+          dataClient.historialCredito = true;
+          dataClient.frecuenciaPago = "2";
 
-        if (LSTEP == 'STEP_2') {
-          if (respuesta == 1) message = "GMedico/Enfermera"
-          if (respuesta == 2) message = "GEducador"
-          if (respuesta == 3) message = "GAdministrativo"
-          if (respuesta == 4) message = "GACP"
-          if (respuesta == 5) message = "GSeguridad Publica"
-        }
-        if (LSTEP == 'STEP_2_1') {
-          if (respuesta == 1) message = "Medico/Enfermera"
-          if (respuesta == 2) message = "Educador"
-          if (respuesta == 3) message = "Empresa Privada"
+          if (LSTEP == 'STEP_2') {
+            if (respuesta == 1) message = "GMedico/Enfermera"
+            if (respuesta == 2) message = "GEducador"
+            if (respuesta == 3) message = "GAdministrativo"
+            if (respuesta == 4) message = "GACP"
+            if (respuesta == 5) message = "GSeguridad Publica"
+          }
+          if (LSTEP == 'STEP_2_1') {
+            if (respuesta == 1) message = "Medico/Enfermera"
+            if (respuesta == 2) message = "Educador"
+            if (respuesta == 3) message = "Empresa Privada"
+          }
         }
       }
     }
@@ -239,8 +256,8 @@ const listenMessage = () => client.on('message', async msg => {
       else {
         dataClient.termConds = respuesta == "1" ? "Si" : "No"
         if (respuesta == "1") {
-          dataClient.Tracking = "BOT-Terminos y Condiciones"
           dataClient.prestamo_opciones = {}
+          dataClient.Tracking = "BOT-Terminos y Condiciones"
           trackClientify(dataClient);
           message = "Acepta TyC"
         } else {
@@ -296,6 +313,7 @@ const listenMessage = () => client.on('message', async msg => {
       else {
         dataClient.Genero = respuesta == "1" ? "Mujer" : "Hombre"
         dataClient.genero = respuesta == "1" ? "female" : "male"
+        dataClient.Tracking = 'BOT-Datos Genero'
         trackClientify(dataClient);
         message = "Genero"
       }
@@ -321,11 +339,13 @@ const listenMessage = () => client.on('message', async msg => {
       else {
         dataClient.salario = respuesta
 
-        const { sectorAb, genero, fec_nac, profesion, salario, historialCredito = 1, frecuenciaPago = 1, meses_trabajo_actual = 60 } = dataClient
-        // console.log(sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
+        console.log(dataClient)
+        const { sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito = 1, frecuenciaPago = 1, meses_trabajo_actual = 60 } = dataClient
+        console.log(sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
 
         opciones = await Opciones({
           jobSector: sectorAb,
+          sector: sector,
           gender: genero,
           birthDate: fec_nac,
           profession: profesion,
@@ -336,8 +356,8 @@ const listenMessage = () => client.on('message', async msg => {
         })
         //console.log(opciones)
 
-        dataClient.Tracking = 'BOT-Opciones Disponibles'
         dataClient.prestamo_opciones = opciones
+        dataClient.Tracking = 'BOT-Opciones Disponibles'
         trackClientify(dataClient);
         message = "Salario"
       }
@@ -363,15 +383,15 @@ const listenMessage = () => client.on('message', async msg => {
       const resp = parseInt(respuesta)
       if (resp < 1 || resp > Loans.length) message = verifyResponse(LSTEP, LMSG)
       else {
-        const Loan = Loans[resp-1]
+        const Loan = Loans[resp - 1]
         dataClient.entity_f = Loan.bank
         dataClient.loanPP = Loan.loan
         dataClient.monthlyPay = Loan.monthlyFee
         dataClient.cashOnHand = Loan.cashOnHand
         dataClient.plazo = Loan.term
 
-        console.log(dataClient)
-        // trackClientify(dataClient);
+        dataClient.Tracking = 'BOT-Datos Seleccion'
+        trackClientify(dataClient);
         message = "Propósito"
       }
     }
@@ -391,7 +411,7 @@ const listenMessage = () => client.on('message', async msg => {
       message = verifyResponse(LSTEP, LMSG)
     } else {
       const resp = parseInt(respuesta)
-      if (resp < 1 || resp > 5) message = verifyResponse(LSTEP, LMSG) 
+      if (resp < 1 || resp > 5) message = verifyResponse(LSTEP, LMSG)
       else {
         dataClient.estadoCivil = respuesta
         message = "EstadoCivil"
@@ -409,7 +429,7 @@ const listenMessage = () => client.on('message', async msg => {
 
     if (isValidFile(dirImageLocal)) {
       trackClientify(dataClient);
-      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'CEDULA') || 'N/A'
+      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, dataClient.entity_f, 'CEDULA') || 'N/A'
       dataClient.idUrl = dirImageAWS
       message = "imgCedula"
       dirImageLocal = ''
@@ -417,7 +437,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (LSTEP == 'STEP_14_1') {
     if (isValidFile(dirImageLocal)) {
-      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'COMP-PAGO') || 'N/A'
+      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, dataClient.entity_f, 'COMP-PAGO') || 'N/A'
       dataClient.payStubUrl = dirImageAWS
       message = "imgComp-pago"
       dirImageLocal = ''
@@ -425,27 +445,37 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (LSTEP == 'STEP_14_2') {
     if (isValidFile(dirImageLocal)) {
-      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'FICHA-SS') || 'N/A'
+      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, dataClient.entity_f, 'FICHA-SS') || 'N/A'
       dataClient.socialSecurityProofUrl = dirImageAWS
       message = "imgFicha-css"
       dirImageLocal = ''
-    } else message = verifyResponse(LSTEP, LMSG) 
+    } else message = verifyResponse(LSTEP, LMSG)
   }
   if (LSTEP == 'STEP_14_3') {
-    if (isValidFile(dirImageLocal)) {
-      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'SERV-PUBLICO') || 'N/A'
-      dataClient.publicGoodProofUrl = dirImageAWS
+    if (respuesta.toLowerCase() == 'x') {
       message = "imgServ-publico"
       dirImageLocal = ''
-    } else message = verifyResponse(LSTEP, LMSG) 
+    } else {
+      if (isValidFile(dirImageLocal)) {
+        dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, dataClient.entity_f, 'SERV-PUBLICO') || 'N/A'
+        dataClient.publicGoodProofUrl = dirImageAWS
+        message = "imgServ-publico"
+        dirImageLocal = ''
+      } else message = verifyResponse(LSTEP, LMSG)
+    }
   }
   if (LSTEP == 'STEP_14_4') {
-    if (isValidFile(dirImageLocal)) {
-      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, '100', 'CARTA-TRABAJO') || 'N/A'
-      dataClient.workLetterUrl = dirImageAWS
+    if (respuesta.toLowerCase() == 'x') {
       message = "imgCarta-trabajo"
       dirImageLocal = ''
-    } else message = verifyResponse(LSTEP, LMSG) 
+    } else {
+      if (isValidFile(dirImageLocal)) {
+        dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, dataClient.entity_f, 'CARTA-TRABAJO') || 'N/A'
+        dataClient.workLetterUrl = dirImageAWS
+        message = "imgCarta-trabajo"
+        dirImageLocal = ''
+      } else message = verifyResponse(LSTEP, LMSG)
+    }
   }
 
   if (LSTEP == 'STEP_17') {
@@ -512,12 +542,14 @@ const listenMessage = () => client.on('message', async msg => {
   dataClient.refpnf = refpnf;
 
   if (LSTEP == 'STEP_19') {
-    console.log('dirImageLocal', dirImageLocal)
-    message = "AuthRefAPC"
+    if (isValidFile(dirImageLocal)) {
+      console.log('dirImageLocal', dirImageLocal)
+      message = "AuthRefAPC"
+    } else message = verifyResponse(LSTEP, LMSG)
   }
 
   if (LSTEP == 'STEP_20') {
-    dataClient.Cedula = "7-94-485"
+    dataClient.Cedula = process.env.APC_Cedula || dataClient.Cedula
     await refAPC(dataClient.Cedula)
     const dirImageRF = await createPDFRefApc(dataClient.Cedula)
     console.log('dirImageRF', dirImageRF)
@@ -532,14 +564,35 @@ const listenMessage = () => client.on('message', async msg => {
     trackClientify(dataClient);
 
     message = "RefAPC"
+    lastStep[dataClient.phone] = { "OUT": true }
   }
 
-  console.log(respuesta, message, LMSG)
+  if (LSTEP == 'STEP_1_1') {
+    lastStep[dataClient.phone] = { "OUT": true }
+    return
+  }
   let step = await getMessages(message)
 
-
   if (step) {
-    console.log("Resp:", respuesta)
+    console.log('Resp: ', respuesta, step)
+
+    // SOLO PARA PRUEBAS RAPIDAS 
+    // if(step == 'STEP_3') {
+    //   console.log(dataClient)
+    //   opciones = await Opciones({
+    //     jobSector: dataClient.sectorAb,
+    //     sector: dataClient.sector,
+    //     gender: 'male',
+    //     birthDate: '1994-01-19',
+    //     profession: dataClient.profesion,
+    //     wage: 1250,
+    //     creditHistory: dataClient.historialCredito,
+    //     paymentFrecuency: parseInt(dataClient.frecuenciaPago),
+    //     currentJobMonths: parseInt(dataClient.meses_trabajo_actual)
+    //   })
+    //   lastStep[dataClient.phone] = { "OUT": true }
+    //   message='Hola'
+    // }
 
     let response = ''
     if (step == 'STEP_10' || step == 'STEP_11')
@@ -565,10 +618,15 @@ const listenMessage = () => client.on('message', async msg => {
     lastStep[dataClient.phone] = { "LSTEP": step, "LMSG": message }
     return
   }
+
   lastStep[dataClient.phone] = { "LSTEP": step, "LMSG": message }
+  if (respuesta.toLowerCase() == 'x' || LSTEP == 'STEP_1_1') {
+    lastStep[dataClient.phone] = { "OUT": true }
+  }
+  const { OUT: outBot } = lastStep[dataClient.phone]
 
   //Si quieres tener un mensaje por defecto
-  if (process.env.DEFAULT_MESSAGE === 'true') {
+  if (process.env.DEFAULT_MESSAGE === 'true' && !outBot) {
     const response = await responseMessages('DEFAULT')
     await sendMessage(client, from, response.replyMessage, response.trigger);
 
@@ -608,8 +666,8 @@ const withOutSession = () => {
 
   client.initialize();
 }
-
 withOutSession();
+
 
 /**
  * Verificamos si tienes un gesto de db
@@ -673,7 +731,7 @@ const saveProspect = async (data) => {
   const { salario: wage, hProfesional: alloance = 0, viaticos: perDiem = 0 } = data
   const { tipo_residencia: residenceType, mensualidad_casa: residenceMonthly = 0, frecuenciaPago: paymentFrecuency } = data
   const { weight = 0, weightUnit = 'lb', height = 0, heightUnit = 'mts' } = data
-  const { entity_f: bank, proposito: reason = 0 } = data
+  const { entity_f, proposito: reason = 0 } = data
   const { email, first_name: fname, nombre2: fname_2 = '', last_name: lname, apellido2: lname_2 = '', origin = 'bot', idUser = '', phone: cellphone = '' } = data
   const { termConds, nationality, refpf, refpnf, prestamo_opciones } = data
 
@@ -713,7 +771,7 @@ const saveProspect = async (data) => {
 
   telefono = cellphone
   email2 = email
-  banco = bank
+  banco = entity_f
 
   name = fname + ' '
   if (fname_2) name += fname_2 + ' '
@@ -843,7 +901,7 @@ const createPDFRefApc = (cedula) => {
   return new Promise((resolve, reject) => {
     axios.post(`${API_HOST}/upload/createPDF`, { "cedula": cedula })
       .then(async (res) => {
-        const result = res.data
+        const result = await res.data
         resolve(result.fileName)
       })
       .catch((e) => {

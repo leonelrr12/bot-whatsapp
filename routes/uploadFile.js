@@ -262,8 +262,8 @@ fileRoutes.post('/createPDF', async (req, res) => {
     let fileName = path.join(`./pdfs/tmp-refApc-${cedula}.pdf`)
 
     const printer = new pdfPrinter(fonts)
-    var pdfDoc = printer.createPdfKitDocument(dd);
-    pdfDoc.pipe(fs.createWriteStream(fileName)).on('finish',function(){
+    var pdfDoc = await printer.createPdfKitDocument(dd);
+    await pdfDoc.pipe(fs.createWriteStream(fileName)).on('finish',function(){
         //success
     });
     pdfDoc.end();

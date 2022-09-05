@@ -43,7 +43,7 @@ const reply = (step, data = '') => new Promise((resolve, reject) => {
         Monto máximo: ${separator(monto_max)}
         Plazo en meses: ${term_max}
         Monto a recibir: ${separator(cashOnHand_max)}
-        \n🆗, para continuar
+        \n🆗 para continuar
         `
       ]
     }

@@ -45,9 +45,10 @@ appRoutes.post('/clientify', async (req, res) => {
   let { token, ID, Tracking, prestamo_opciones, termConds,
     first_name, last_name, email, phone, fecha_nacimiento='1900-01-01', contrato_laboral,
     meses_trabajo_actual=0, meses_trabajo_anterior=0, Salario=0, Sector,
-    nameProfesion, Genero='x', tipo_residencia='1', mensualidad_casa=0,
+    nameProfesion='N/A', Genero='x', tipo_residencia='1', mensualidad_casa=0,
     donde_trabaja='N/A', Puesto='N/A', Cedula='N/A',
     provincia='N/A', distrito='N/A', street='N/A',
+    entity_f='125',
     idUrl='N/A',socialSecurityProofUrl='N/A',publicGoodProofUrl='N/A',workLetterUrl='N/A',payStubUrl='N/A',apcReferenceUrl='N/A',apcLetterUrl='N/A'
   } = body
 
@@ -104,7 +105,7 @@ appRoutes.post('/clientify', async (req, res) => {
       { "field": "img_referencias_apc2", "value": apcReferenceUrl },
 
       { "field": "acepta_terminos_condiciones", "value": termConds },
-      { "field": "entidad_seleccionada", "value": "125" },
+      { "field": "entidad_seleccionada", "value": entity_f },
       { "field": "Monto", "value": monto_max },
       { "field": "Letra", "value": monthlyFee_max },
       { "field": "Plazo", "value": term_max },
@@ -340,7 +341,7 @@ appRoutes.post('/APC', async (request, response) => {
       const today = new Date()
       antigRef = Math.round((today.getTime() - created.getTime())/(24*60*60*1000))
 
-      if(antigRef < 91) {
+      if(antigRef < 91 || process.env.APC_NoVence) {
         datos = data[0].APC
       }
     }
@@ -363,7 +364,7 @@ const leerRefAPC = async (request, response) => {
 
   const { username: usuarioApc, password: claveApc } = config.APC
 
-  console.log(usuarioApc, claveApc, id, tipoCliente, productoApc)
+  console.log(usuarioApc, id, tipoCliente, productoApc)
   let idMongo = ""
   axios.post(URL, {
     "usuarioconsulta": usuarioApc, "claveConsulta": claveApc, 
@@ -630,7 +631,6 @@ const formatData = (result, response) => {
 
 appRoutes.get('/leerAPC', (request, response) => {
   const { id: cedula } = request.body
-  // const cedula = '7-94-485'
 
   mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true, 

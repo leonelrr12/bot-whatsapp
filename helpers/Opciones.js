@@ -16,22 +16,35 @@ let monthlyFee_max = 0.00
 async function Opciones(data) {
 
   let { monthlyResidenceFee = 0.00, wage = 0.00, alloance = 0.00, perDiem = 0.00, previousJobMonths = 0,
-    jobSector, profession = 0, currentJobMonths = 0, contractType = "",
+    sector, jobSector, profession = 0, currentJobMonths = 0, contractType = "",
     creditHistory = 0, paymentFrecuency = 0, gender, birthDate
   } = data
 
   const sectorsRes = await axios.get(`${API_HOST}/api/laboral_sector`)
   const sectors = await sectorsRes.data
-  // console.log(sectors)
+  const idSectors = sectors.filter(st => st.sector == jobSector)
+  const idSector = idSectors[0].id_sector
+  // console.log(idSector)
 
   const leRes = await axios.get(`${API_HOST}/api/laboral_sector_entity_f`)
   const laboralEntitys = await leRes.data
-  // console.log(laboralEntities)
 
-  const idSectors = sectors.filter(st => st.sector == jobSector)
-  const idSector = idSectors[0].id_sector
- 
+  const sectorLaboralEntity = laboralEntitys.filter(
+    le => le.id_sector == sector &&
+      le.id_profesion == profession &&
+      le.ruta != "100" && le.ruta != "810")
+
   let salario = wage + alloance + perDiem
+  // console.log(sectorLaboralEntity, salario, currentJobMonths)
+
+  // LLRR cambiado para los calculos por cada entidad
+  // Falta incluir filtro para la antiguedad minima en el empleo (meses) 22-nov-2021
+  const wrkLaboralEntities = sectorLaboralEntity.filter(
+    le => le.salario_min <= salario &&
+      le.min_antiguedad <= currentJobMonths
+  )
+  let laboralEntities = wrkLaboralEntities
+  // console.log('wrkLaboralEntities', wrkLaboralEntities)
 
   const today = new Date(); //  Ver como traerla del servidor
   let birth = new Date();
@@ -70,18 +83,6 @@ async function Opciones(data) {
 
   const fGovIni = new Date(y1.toString() + '-07-01')
   const fGovFin = new Date(y2.toString() + '-07-01')
-
-  // LLRR cambiado para los calculos por cada entidad
-  // Falta incluir filtro para la antiguedad minima en el empleo (meses) 22-nov-2021
-  const wrkLaboralEntities = laboralEntitys.filter(
-    le => le.id_sector == idSector &&
-      le.id_profesion == Number(profession) &&
-      le.ruta != "100" && le.ruta != "810" &&
-      le.salario_min <= salario &&
-      le.min_antiguedad <= currentJobMonths
-  )
-  let laboralEntities = wrkLaboralEntities
-
 
   function handleCapacity(entity, deudaTotal, letraTotal) {
     let {
@@ -216,7 +217,7 @@ async function Opciones(data) {
     let term = 0
 
     let wrkV = calc_fvcto(plazo_max, pje_dscto, fj)
- 
+
     if (jobSector === 'J') {
       wPlazo = wrkV.wpp
       plazoCalc = wPlazo + wrkV.wDic
@@ -462,8 +463,8 @@ async function Opciones(data) {
   laboralEntities.forEach((entity) => {
     handleCapacity(entity, deudaTotal, letraTotal)
   })
-  console.log({ Loans, monto_max,  term_max,  cashOnHand_max, monthlyFee_max })
-  return { Loans, monto_max,  term_max,  cashOnHand_max, monthlyFee_max }
+  console.log({ Loans, monto_max, term_max, cashOnHand_max, monthlyFee_max })
+  return { Loans, monto_max, term_max, cashOnHand_max, monthlyFee_max }
 };
 
 
