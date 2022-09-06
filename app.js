@@ -72,6 +72,7 @@ const listenMessage = () => client.on('message', async msg => {
   if (OUT) {
     return // Corta comunicacion con el Bot
   }
+  console.log('Cell => ', dataClient.phone, 'Lst.Step => ',LSTEP, 'Lst.Msg => ',LMSG, 'End ? => ', OUT)
 
   message = body.toLowerCase()
   respuesta = message
