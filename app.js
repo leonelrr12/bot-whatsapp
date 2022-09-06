@@ -32,6 +32,8 @@ const port = process.env.PORT || 3000
 
 const API_HOST = `http://localhost:${port}`
 
+var message;
+var respuesta;
 var client;
 var respuesta;
 var lastStep = [];
@@ -68,18 +70,18 @@ const listenMessage = () => client.on('message', async msg => {
     return
   }
 
-  const { LSTEP = "", LMSG = "", OUT = false } = lastStep[dataClient.phone] || ""
-  if (OUT) {
-    return // Corta comunicacion con el Bot
-  }
-  console.log('Cell => ', dataClient.phone, 'Lst.Step => ',LSTEP, 'Lst.Msg => ',LMSG, 'End ? => ', OUT)
-
   message = body.toLowerCase()
   respuesta = message
   console.log('BODY', message)
   const numero = cleanNumber(from)
   await readChat(numero, message)
   dataClient.phone = numero.split('@')[0] //.slice(3)
+
+  const { LSTEP = "", LMSG = "", OUT = false } = lastStep[dataClient.phone] || ""
+  if (OUT) {
+    return // Corta comunicacion con el Bot
+  }
+  console.log(`Cell => ${dataClient.phone} | Lst.Step => ${LSTEP} | Lst.Msg => ${LMSG} | End ? => ${OUT}`)
 
 
   // VALORES POR DEFECTO QUE NO SERAN CAPTURADOS
@@ -173,15 +175,10 @@ const listenMessage = () => client.on('message', async msg => {
     }
   }
 
-  if (LSTEP == 'STEP_1_1') {
-
-  }
-
   if (LSTEP == 'STEP_2' || LSTEP == 'STEP_2_1') {
     if (respuesta.toLowerCase() == 'x') {
       message = pedirAsesor()
     } else {
-      console.log('LSTEP', LSTEP, LMSG)
       if (isNaN(respuesta)) {
         message = verifyResponse(LSTEP, LMSG)
       } else {
@@ -267,13 +264,11 @@ const listenMessage = () => client.on('message', async msg => {
       }
     }
   }
-
   if (LSTEP == 'STEP_8b') {
     // Reinicia dialogo
     message = "Hola"
     lastStep[dataClient.phone] = {}
   }
-
   if (LSTEP == 'STEP_8') {
     if (validCedula.test(respuesta)) {
       dataClient.Cedula = respuesta
@@ -282,18 +277,14 @@ const listenMessage = () => client.on('message', async msg => {
       message = verifyResponse(LSTEP, LMSG)
     }
   }
-
   if (LSTEP == 'STEP_8_0') {
     dataClient.first_name = respuesta.toUpperCase()
     message = "Nombre"
   }
-
-
   if (LSTEP == 'STEP_8_2') {
     dataClient.last_name = respuesta.toUpperCase()
     message = "Apellido"
   }
-
   if (LSTEP == 'STEP_8_4') {
     if (validEmail.test(respuesta)) {
       dataClient.email = respuesta
@@ -304,7 +295,6 @@ const listenMessage = () => client.on('message', async msg => {
       message = verifyResponse(LSTEP, LMSG)
     }
   }
-
   if (LSTEP == 'STEP_8_5') {
     if (isNaN(respuesta)) {
       message = verifyResponse(LSTEP, LMSG)
@@ -320,7 +310,6 @@ const listenMessage = () => client.on('message', async msg => {
       }
     }
   }
-
   if (LSTEP == 'STEP_8_6') {
     if (validDate.test(respuesta)) {
       dataClient.fec_nac = respuesta
@@ -342,7 +331,7 @@ const listenMessage = () => client.on('message', async msg => {
 
         console.log(dataClient)
         const { sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito = 1, frecuenciaPago = 1, meses_trabajo_actual = 60 } = dataClient
-        console.log(sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
+        // console.log(sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
 
         opciones = await Opciones({
           jobSector: sectorAb,
@@ -572,10 +561,11 @@ const listenMessage = () => client.on('message', async msg => {
     lastStep[dataClient.phone] = { "OUT": true }
     return
   }
+
   let step = await getMessages(message)
 
   if (step) {
-    console.log('Resp: ', respuesta, step)
+    console.log('Resp: ', respuesta, step, message)
 
     // SOLO PARA PRUEBAS RAPIDAS 
     // if(step == 'STEP_3') {
