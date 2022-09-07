@@ -25,7 +25,7 @@ async function Opciones(data) {
   const idSectors = sectors.filter(st => st.sector == jobSector)
   const idSector = idSectors[0].id_sector
   // console.log(idSector)
-
+ 
   const leRes = await axios.get(`${API_HOST}/api/laboral_sector_entity_f`)
   const laboralEntitys = await leRes.data
 

@@ -36,10 +36,10 @@ var message;
 var respuesta;
 var client;
 var respuesta;
+var dataClient = [];
 var lastStep = [];
 var idClientify = '';
 var tokenClientify;
-var dataClient = {};
 var refpf = {}
 var refpnf = {}
 var opciones = {}
@@ -77,7 +77,6 @@ const listenMessage = () => client.on('message', async msg => {
   const numero = cleanNumber(from)
   await readChat(numero, message)
   IDPhone = numero.split('@')[0] //.slice(3)
-  dataClient.phone = IDPhone
 
   const { LSTEP = "", LMSG = "", OUT = false } = lastStep[IDPhone] || ""
   if (OUT) {
@@ -85,32 +84,36 @@ const listenMessage = () => client.on('message', async msg => {
   }
   console.log(`Cell => ${IDPhone} | Lst.Step => ${LSTEP} | Lst.Msg => ${LMSG} | End ? => ${OUT}`)
 
-
   // VALORES POR DEFECTO QUE NO SERAN CAPTURADOS
-  dataClient.tipo_residencia = '0'
-  dataClient.mensualidad_casa = '0'
-  dataClient.nacional = 'N/A'
-  dataClient.peso = '0'
-  dataClient.estatura = '0'
-  dataClient.hProfesional = '0'
-  dataClient.viaticos = '0'
-  dataClient.calle = 'N/A'
-  dataClient.barriada = 'N/A'
-  dataClient.casaApto = 'N/A'
-  dataClient.telefonoCasa = 'N/A'
-  dataClient.work_name = 'N/A'
-  dataClient.work_cargo = 'N/A'
-  dataClient.work_address = 'N/A'
-  dataClient.work_phone = 'N/A'
-  dataClient.work_phone_ext = 'N/A'
-  dataClient.work_prev_name = 'N/A'
-  dataClient.work_prev_salary = '0'
-  dataClient.entity_f = '125'
-  dataClient.proposito = '0'
-  dataClient.Profesion = 'N/A'
-  dataClient.prestamo_opciones = {}
-  dataClient.nameProfesion = 'N/A'
-  dataClient.meses_trabajo_actual = 60
+  if (!dataClient[IDPhone]) {
+    dataClient[IDPhone] = {}
+    dataClient[IDPhone].phone = IDPhone
+    dataClient[IDPhone].tipo_residencia = '0'
+    dataClient[IDPhone].mensualidad_casa = '0'
+    dataClient[IDPhone].nacional = 'N/A'
+    dataClient[IDPhone].peso = '0'
+    dataClient[IDPhone].estatura = '0'
+    dataClient[IDPhone].hProfesional = '0'
+    dataClient[IDPhone].viaticos = '0'
+    dataClient[IDPhone].calle = 'N/A'
+    dataClient[IDPhone].barriada = 'N/A'
+    dataClient[IDPhone].casaApto = 'N/A'
+    dataClient[IDPhone].telefonoCasa = 'N/A'
+    dataClient[IDPhone].work_name = 'N/A'
+    dataClient[IDPhone].work_cargo = 'N/A'
+    dataClient[IDPhone].work_address = 'N/A'
+    dataClient[IDPhone].work_phone = 'N/A'
+    dataClient[IDPhone].work_phone_ext = 'N/A'
+    dataClient[IDPhone].work_prev_name = 'N/A'
+    dataClient[IDPhone].work_prev_salary = '0'
+    dataClient[IDPhone].entity_f = '125'
+    dataClient[IDPhone].proposito = '0'
+    dataClient[IDPhone].Profesion = 'N/A'
+    dataClient[IDPhone].prestamo_opciones = {}
+    dataClient[IDPhone].nameProfesion = 'N/A'
+    dataClient[IDPhone].meses_trabajo_actual = 60
+    dataClient[IDPhone].token = tokenClientify
+  }
 
   /**
    * Guardamos el archivo multimedia que nos envia El Usuario
@@ -145,29 +148,29 @@ const listenMessage = () => client.on('message', async msg => {
     if (respuesta.toLowerCase() == 'x') {
       message = pedirAsesor()
     } else {
-      dataClient.Sector = respuesta == '1' ? 'Privada' : (respuesta == '2' ? 'Publico' : 'Jubilado')
-      dataClient.sector = respuesta
+      dataClient[IDPhone].Sector = respuesta == '1' ? 'Privada' : (respuesta == '2' ? 'Publico' : 'Jubilado')
+      dataClient[IDPhone].sector = respuesta
       switch (respuesta) {
         case "1":
-          dataClient.sectorAb = 'P'
+          dataClient[IDPhone].sectorAb = 'P'
           message = "Privado"
           break;
         case "2":
-          dataClient.sectorAb = 'Pb'
+          dataClient[IDPhone].sectorAb = 'Pb'
           message = "Público"
           break;
         case "3":
-          dataClient.sectorAb = 'J'
-          dataClient.profesion = '7'
-          dataClient.nameProfesion = 'Jubilado'
-          dataClient.historialCredito = true
-          dataClient.frecuenciaPago = "2"
-          dataClient.contrato_laboral = '2'
-          dataClient.meses_trabajo_actual = 60
+          dataClient[IDPhone].sectorAb = 'J'
+          dataClient[IDPhone].profesion = '7'
+          dataClient[IDPhone].nameProfesion = 'Jubilado'
+          dataClient[IDPhone].historialCredito = true
+          dataClient[IDPhone].frecuenciaPago = "2"
+          dataClient[IDPhone].contrato_laboral = '2'
+          dataClient[IDPhone].meses_trabajo_actual = 60
           message = "Jubilado"
           break;
         case "4":
-          dataClient.sectorAb = 'Pb'
+          dataClient[IDPhone].sectorAb = 'Pb'
           message = "xIndependiente"
           break;
         default:
@@ -195,11 +198,11 @@ const listenMessage = () => client.on('message', async msg => {
           if (respuesta == '3' && LSTEP == 'STEP_2_1') { resp = '1'; resp1 = 'Empresa Privada' }
           if (respuesta == '4') { resp = '5'; resp1 = 'ACP' }
           if (respuesta == '5') { resp = '6'; resp1 = 'Seguridad Pública' }
-          dataClient.profesion = resp;
-          dataClient.nameProfesion = resp1;
+          dataClient[IDPhone].profesion = resp;
+          dataClient[IDPhone].nameProfesion = resp1;
 
-          dataClient.historialCredito = true;
-          dataClient.frecuenciaPago = "2";
+          dataClient[IDPhone].historialCredito = true;
+          dataClient[IDPhone].frecuenciaPago = "2";
 
           if (LSTEP == 'STEP_2') {
             if (respuesta == 1) message = "GMedico/Enfermera"
@@ -227,7 +230,7 @@ const listenMessage = () => client.on('message', async msg => {
       default:
         break;
     }
-    dataClient.contrato_laboral = respuesta
+    dataClient[IDPhone].contrato_laboral = respuesta
 
     if (respuesta == 1) message = "Temporal"
     if (respuesta == 2) message = "Permanente"
@@ -241,7 +244,7 @@ const listenMessage = () => client.on('message', async msg => {
       if (parseInt(respuesta) <= 0) message = verifyResponse(LSTEP, LMSG)
       else {
         // Aqui se puede agregar mas logica para validar cantidad de meses
-        dataClient.meses_trabajo_actual = respuesta
+        dataClient[IDPhone].meses_trabajo_actual = respuesta
         message = "Meses Laborando"
       }
     }
@@ -254,11 +257,11 @@ const listenMessage = () => client.on('message', async msg => {
       const resp = parseInt(respuesta)
       if (resp < 1 || resp > 2) message = verifyResponse(LSTEP, LMSG)
       else {
-        dataClient.termConds = respuesta == "1" ? "Si" : "No"
+        dataClient[IDPhone].termConds = respuesta == "1" ? "Si" : "No"
         if (respuesta == "1") {
-          dataClient.prestamo_opciones = {}
-          dataClient.Tracking = "BOT-Terminos y Condiciones"
-          trackClientify(dataClient);
+          dataClient[IDPhone].prestamo_opciones = {}
+          dataClient[IDPhone].Tracking = "BOT-Terminos y Condiciones"
+          trackClientify(dataClient[IDPhone])
           message = "Acepta TyC"
         } else {
           message = "No Acepta TyC"
@@ -273,25 +276,25 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (LSTEP == 'STEP_8') {
     if (validCedula.test(respuesta)) {
-      dataClient.Cedula = respuesta
+      dataClient[IDPhone].Cedula = respuesta
       message = "Cedula"
     } else {
       message = verifyResponse(LSTEP, LMSG)
     }
   }
   if (LSTEP == 'STEP_8_0') {
-    dataClient.first_name = respuesta.toUpperCase()
+    dataClient[IDPhone].first_name = respuesta.toUpperCase()
     message = "Nombre"
   }
   if (LSTEP == 'STEP_8_2') {
-    dataClient.last_name = respuesta.toUpperCase()
+    dataClient[IDPhone].last_name = respuesta.toUpperCase()
     message = "Apellido"
   }
   if (LSTEP == 'STEP_8_4') {
     if (validEmail.test(respuesta)) {
-      dataClient.email = respuesta
-      dataClient.Tracking = 'BOT-Datos Cliente'
-      trackClientify(dataClient);
+      dataClient[IDPhone].email = respuesta
+      dataClient[IDPhone].Tracking = 'BOT-Datos Cliente'
+      trackClientify(dataClient[IDPhone])
       message = "Email"
     } else {
       message = verifyResponse(LSTEP, LMSG)
@@ -304,18 +307,18 @@ const listenMessage = () => client.on('message', async msg => {
       const resp = parseInt(respuesta)
       if (resp < 1 || resp > 2) message = verifyResponse(LSTEP, LMSG)
       else {
-        dataClient.Genero = respuesta == "1" ? "Mujer" : "Hombre"
-        dataClient.genero = respuesta == "1" ? "female" : "male"
-        dataClient.Tracking = 'BOT-Datos Genero'
-        trackClientify(dataClient);
+        dataClient[IDPhone].Genero = respuesta == "1" ? "Mujer" : "Hombre"
+        dataClient[IDPhone].genero = respuesta == "1" ? "female" : "male"
+        dataClient[IDPhone].Tracking = 'BOT-Datos Genero'
+        trackClientify(dataClient[IDPhone])
         message = "Genero"
       }
     }
   }
   if (LSTEP == 'STEP_8_6') {
     if (validDate.test(respuesta)) {
-      dataClient.fec_nac = respuesta
-      trackClientify(dataClient);
+      dataClient[IDPhone].fec_nac = respuesta
+      trackClientify(dataClient[IDPhone])
       message = "FecNac"
     } else {
       message = verifyResponse(LSTEP, LMSG)
@@ -329,10 +332,9 @@ const listenMessage = () => client.on('message', async msg => {
       const resp = parseInt(respuesta)
       if (resp < 1) message = verifyResponse(LSTEP, LMSG)
       else {
-        dataClient.salario = respuesta
+        dataClient[IDPhone].salario = respuesta
 
-        console.log(dataClient)
-        const { sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito = 1, frecuenciaPago = 1, meses_trabajo_actual = 60 } = dataClient
+        const { sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito = 1, frecuenciaPago = 1, meses_trabajo_actual = 60 } = dataClient[IDPhone]
         // console.log(sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
 
         opciones = await Opciones({
@@ -348,9 +350,9 @@ const listenMessage = () => client.on('message', async msg => {
         })
         //console.log(opciones)
 
-        dataClient.prestamo_opciones = opciones
-        dataClient.Tracking = 'BOT-Opciones Disponibles'
-        trackClientify(dataClient);
+        dataClient[IDPhone].prestamo_opciones = opciones
+        dataClient[IDPhone].Tracking = 'BOT-Opciones Disponibles'
+        trackClientify(dataClient[IDPhone])
         message = "Salario"
       }
     }
@@ -376,14 +378,14 @@ const listenMessage = () => client.on('message', async msg => {
       if (resp < 1 || resp > Loans.length) message = verifyResponse(LSTEP, LMSG)
       else {
         const Loan = Loans[resp - 1]
-        dataClient.entity_f = Loan.bank
-        dataClient.loanPP = Loan.loan
-        dataClient.monthlyPay = Loan.monthlyFee
-        dataClient.cashOnHand = Loan.cashOnHand
-        dataClient.plazo = Loan.term
+        dataClient[IDPhone].entity_f = Loan.bank
+        dataClient[IDPhone].loanPP = Loan.loan
+        dataClient[IDPhone].monthlyPay = Loan.monthlyFee
+        dataClient[IDPhone].cashOnHand = Loan.cashOnHand
+        dataClient[IDPhone].plazo = Loan.term
 
-        dataClient.Tracking = 'BOT-Datos Seleccion'
-        trackClientify(dataClient);
+        dataClient[IDPhone].Tracking = 'BOT-Datos Seleccion'
+        trackClientify(dataClient[IDPhone]);
         message = "Propósito"
       }
     }
@@ -405,7 +407,7 @@ const listenMessage = () => client.on('message', async msg => {
       const resp = parseInt(respuesta)
       if (resp < 1 || resp > 5) message = verifyResponse(LSTEP, LMSG)
       else {
-        dataClient.estadoCivil = respuesta
+        dataClient[IDPhone].estadoCivil = respuesta
         message = "EstadoCivil"
         if (respuesta == 1) message = "Casado"
         if (respuesta == 2) message = "Soltero"
@@ -417,28 +419,28 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (LSTEP == 'STEP_14') {
-    dataClient.Tracking = 'BOT-Subir Documentos'
+    dataClient[IDPhone].Tracking = 'BOT-Subir Documentos'
 
     if (isValidFile(dirImageLocal)) {
-      trackClientify(dataClient);
-      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, dataClient.entity_f, 'CEDULA') || 'N/A'
-      dataClient.idUrl = dirImageAWS
+      trackClientify(dataClient[IDPhone]);
+      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient[IDPhone].Cedula, dataClient[IDPhone].entity_f, 'CEDULA') || 'N/A'
+      dataClient[IDPhone].idUrl = dirImageAWS
       message = "imgCedula"
       dirImageLocal = ''
     } else message = verifyResponse(LSTEP, LMSG)
   }
   if (LSTEP == 'STEP_14_1') {
     if (isValidFile(dirImageLocal)) {
-      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, dataClient.entity_f, 'COMP-PAGO') || 'N/A'
-      dataClient.payStubUrl = dirImageAWS
+      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient[IDPhone].Cedula, dataClient[IDPhone].entity_f, 'COMP-PAGO') || 'N/A'
+      dataClient[IDPhone].payStubUrl = dirImageAWS
       message = "imgComp-pago"
       dirImageLocal = ''
     } else message = verifyResponse(LSTEP, LMSG)
   }
   if (LSTEP == 'STEP_14_2') {
     if (isValidFile(dirImageLocal)) {
-      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, dataClient.entity_f, 'FICHA-SS') || 'N/A'
-      dataClient.socialSecurityProofUrl = dirImageAWS
+      dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient[IDPhone].Cedula, dataClient[IDPhone].entity_f, 'FICHA-SS') || 'N/A'
+      dataClient[IDPhone].socialSecurityProofUrl = dirImageAWS
       message = "imgFicha-css"
       dirImageLocal = ''
     } else message = verifyResponse(LSTEP, LMSG)
@@ -449,8 +451,8 @@ const listenMessage = () => client.on('message', async msg => {
       dirImageLocal = ''
     } else {
       if (isValidFile(dirImageLocal)) {
-        dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, dataClient.entity_f, 'SERV-PUBLICO') || 'N/A'
-        dataClient.publicGoodProofUrl = dirImageAWS
+        dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient[IDPhone].Cedula, dataClient[IDPhone].entity_f, 'SERV-PUBLICO') || 'N/A'
+        dataClient[IDPhone].publicGoodProofUrl = dirImageAWS
         message = "imgServ-publico"
         dirImageLocal = ''
       } else message = verifyResponse(LSTEP, LMSG)
@@ -462,8 +464,8 @@ const listenMessage = () => client.on('message', async msg => {
       dirImageLocal = ''
     } else {
       if (isValidFile(dirImageLocal)) {
-        dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient.Cedula, dataClient.entity_f, 'CARTA-TRABAJO') || 'N/A'
-        dataClient.workLetterUrl = dirImageAWS
+        dirImageAWS = await enviarDatatoPdf(dirImageLocal, dataClient[IDPhone].Cedula, dataClient[IDPhone].entity_f, 'CARTA-TRABAJO') || 'N/A'
+        dataClient[IDPhone].workLetterUrl = dirImageAWS
         message = "imgCarta-trabajo"
         dirImageLocal = ''
       } else message = verifyResponse(LSTEP, LMSG)
@@ -473,8 +475,8 @@ const listenMessage = () => client.on('message', async msg => {
   if (LSTEP == 'STEP_17') {
     if (respuesta.length > 2 && respuesta.length < 61) {
       refpf.name = respuesta.toUpperCase()
-      dataClient.Tracking = 'BOT-Referencias Personales'
-      trackClientify(dataClient);
+      dataClient[IDPhone].Tracking = 'BOT-Referencias Personales'
+      trackClientify(dataClient[IDPhone]);
       message = "RefPFNombre"
     } else {
       message = verifyResponse(LSTEP, LMSG)
@@ -530,8 +532,8 @@ const listenMessage = () => client.on('message', async msg => {
     }
   }
 
-  dataClient.refpf = refpf;
-  dataClient.refpnf = refpnf;
+  dataClient[IDPhone].refpf = refpf;
+  dataClient[IDPhone].refpnf = refpnf;
 
   if (LSTEP == 'STEP_19') {
     if (isValidFile(dirImageLocal)) {
@@ -541,19 +543,19 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (LSTEP == 'STEP_20') {
-    dataClient.Cedula = process.env.APC_Cedula || dataClient.Cedula
-    await refAPC(dataClient.Cedula)
-    const dirImageRF = await createPDFRefApc(dataClient.Cedula)
+    dataClient[IDPhone].Cedula = process.env.APC_Cedula || dataClient[IDPhone].Cedula
+    await refAPC(dataClient[IDPhone].Cedula)
+    const dirImageRF = await createPDFRefApc(dataClient[IDPhone].Cedula)
     console.log('dirImageRF', dirImageRF)
-    dataClient.apcReferenceUrl = await enviarDatatoPdf(dirImageRF, dataClient.Cedula, dataClient.entity_f, 'REFERENCIA-APC') || 'N/A'
+    dataClient[IDPhone].apcReferenceUrl = await enviarDatatoPdf(dirImageRF, dataClient[IDPhone].Cedula, dataClient[IDPhone].entity_f, 'REFERENCIA-APC') || 'N/A'
 
-    const dirImageCA = await authApcPDF({ "nombre": dataClient.first_name + " " + dataClient.last_name, "cedula": dataClient.Cedula, "dirFile": dirImageLocal })
+    const dirImageCA = await authApcPDF({ "nombre": dataClient[IDPhone].first_name + " " + dataClient[IDPhone].last_name, "cedula": dataClient[IDPhone].Cedula, "dirFile": dirImageLocal })
     console.log('dirImageCA', dirImageCA)
-    dataClient.apcLetterUrl = await enviarDatatoPdf(dirImageCA, dataClient.Cedula, dataClient.entity_f, 'CARTA-APC') || 'N/A'
+    dataClient[IDPhone].apcLetterUrl = await enviarDatatoPdf(dirImageCA, dataClient[IDPhone].Cedula, dataClient[IDPhone].entity_f, 'CARTA-APC') || 'N/A'
 
-    saveProspect(dataClient)
-    dataClient.Tracking = 'BOT-Proceso Terminado'
-    trackClientify(dataClient);
+    saveProspect(dataClient[IDPhone])
+    dataClient[IDPhone].Tracking = 'BOT-Proceso Terminado'
+    trackClientify(dataClient[IDPhone]);
 
     message = "RefAPC"
     lastStep[IDPhone] = { "OUT": true }
@@ -566,22 +568,23 @@ const listenMessage = () => client.on('message', async msg => {
 
   let step = await getMessages(message)
 
+  console.log(dataClient[IDPhone])
   if (step) {
     console.log('Resp: ', respuesta, step, message)
 
     // SOLO PARA PRUEBAS RAPIDAS 
     // if(step == 'STEP_3') {
-    //   console.log(dataClient)
+    //   console.log(dataClient[IDPhone])
     //   opciones = await Opciones({
-    //     jobSector: dataClient.sectorAb,
-    //     sector: dataClient.sector,
+    //     jobSector: dataClient[IDPhone].sectorAb,
+    //     sector: dataClient[IDPhone].sector,
     //     gender: 'male',
     //     birthDate: '1994-01-19',
-    //     profession: dataClient.profesion,
+    //     profession: dataClient[IDPhone].profesion,
     //     wage: 1250,
-    //     creditHistory: dataClient.historialCredito,
-    //     paymentFrecuency: parseInt(dataClient.frecuenciaPago),
-    //     currentJobMonths: parseInt(dataClient.meses_trabajo_actual)
+    //     creditHistory: dataClient[IDPhone].historialCredito,
+    //     paymentFrecuency: parseInt(dataClient[IDPhone].frecuenciaPago),
+    //     currentJobMonths: parseInt(dataClient[IDPhone].meses_trabajo_actual)
     //   })
     //   lastStep[IDPhone] = { "OUT": true }
     //   message='Hola'
@@ -676,7 +679,6 @@ const token = async () => {
       .then(res => {
         tokenClientify = res.data
         console.log('tokenClientify', tokenClientify)
-        dataClient.token = tokenClientify
       }).catch((err) => {
         tokenClientify = 'N/A'
         console.log('tokenClientify', err)
