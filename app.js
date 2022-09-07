@@ -47,6 +47,7 @@ var dirImageLocal = ''
 var dirImageAWS = ''
 var usuarioApc = process.env.APC_USER
 var claveApc = process.env.APC_PASS
+var IDPhone;
 
 const validCedula = /^\d{1,2}(-|\s)\d{1,3}(-|\s)\d{1,4}$/
 const validDate = /^\d{1,2}(\/|\s)\d{1,2}(\/|\s)\d{2,4}$/
@@ -75,13 +76,14 @@ const listenMessage = () => client.on('message', async msg => {
   console.log('BODY', message)
   const numero = cleanNumber(from)
   await readChat(numero, message)
-  dataClient.phone = numero.split('@')[0] //.slice(3)
+  IDPhone = numero.split('@')[0] //.slice(3)
+  dataClient.phone = IDPhone
 
-  const { LSTEP = "", LMSG = "", OUT = false } = lastStep[dataClient.phone] || ""
+  const { LSTEP = "", LMSG = "", OUT = false } = lastStep[IDPhone] || ""
   if (OUT) {
     return // Corta comunicacion con el Bot
   }
-  console.log(`Cell => ${dataClient.phone} | Lst.Step => ${LSTEP} | Lst.Msg => ${LMSG} | End ? => ${OUT}`)
+  console.log(`Cell => ${IDPhone} | Lst.Step => ${LSTEP} | Lst.Msg => ${LMSG} | End ? => ${OUT}`)
 
 
   // VALORES POR DEFECTO QUE NO SERAN CAPTURADOS
@@ -267,7 +269,7 @@ const listenMessage = () => client.on('message', async msg => {
   if (LSTEP == 'STEP_8b') {
     // Reinicia dialogo
     message = "Hola"
-    lastStep[dataClient.phone] = {}
+    lastStep[IDPhone] = {}
   }
   if (LSTEP == 'STEP_8') {
     if (validCedula.test(respuesta)) {
@@ -359,7 +361,7 @@ const listenMessage = () => client.on('message', async msg => {
     if (Loans.length) {
       message = "OpcionesLoan"
     } else {
-      lastStep[dataClient.phone] = {}
+      lastStep[IDPhone] = {}
       message = "Hola"
     }
   }
@@ -554,11 +556,11 @@ const listenMessage = () => client.on('message', async msg => {
     trackClientify(dataClient);
 
     message = "RefAPC"
-    lastStep[dataClient.phone] = { "OUT": true }
+    lastStep[IDPhone] = { "OUT": true }
   }
 
   if (LSTEP == 'STEP_1_1') {
-    lastStep[dataClient.phone] = { "OUT": true }
+    lastStep[IDPhone] = { "OUT": true }
     return
   }
 
@@ -581,7 +583,7 @@ const listenMessage = () => client.on('message', async msg => {
     //     paymentFrecuency: parseInt(dataClient.frecuenciaPago),
     //     currentJobMonths: parseInt(dataClient.meses_trabajo_actual)
     //   })
-    //   lastStep[dataClient.phone] = { "OUT": true }
+    //   lastStep[IDPhone] = { "OUT": true }
     //   message='Hola'
     // }
 
@@ -594,7 +596,7 @@ const listenMessage = () => client.on('message', async msg => {
     if (response.hasOwnProperty('actions')) {
       const { actions } = response
       await sendMessageButton(client, from, null, actions)
-      lastStep[dataClient.phone] = { "LSTEP": step, "LMSG": message }
+      lastStep[IDPhone] = { "LSTEP": step, "LMSG": message }
       return
     }
 
@@ -606,15 +608,15 @@ const listenMessage = () => client.on('message', async msg => {
         sendMedia(client, from, response.media)
       }, response.delay)
     }
-    lastStep[dataClient.phone] = { "LSTEP": step, "LMSG": message }
+    lastStep[IDPhone] = { "LSTEP": step, "LMSG": message }
     return
   }
 
-  lastStep[dataClient.phone] = { "LSTEP": step, "LMSG": message }
+  lastStep[IDPhone] = { "LSTEP": step, "LMSG": message }
   if (respuesta.toLowerCase() == 'x' || LSTEP == 'STEP_1_1') {
-    lastStep[dataClient.phone] = { "OUT": true }
+    lastStep[IDPhone] = { "OUT": true }
   }
-  const { OUT: outBot } = lastStep[dataClient.phone]
+  const { OUT: outBot } = lastStep[IDPhone]
 
   //Si quieres tener un mensaje por defecto
   if (process.env.DEFAULT_MESSAGE === 'true' && !outBot) {
