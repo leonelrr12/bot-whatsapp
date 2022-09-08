@@ -8,3 +8,4 @@ pdfs/*
 !media/.gitkeep
 .env
 .wwebjs_auth
+*.svg
