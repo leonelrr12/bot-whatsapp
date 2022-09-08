@@ -111,7 +111,7 @@
     "STEP_8": {
         "replyMessage": [
             "Datos personales: \n\n",
-            "ej.(7-245-7356) \n",
+            "Ej.(7-245-7356) \n",
             "Escribe tu Cédula o ID: \n"
         ],
         "media": null,
@@ -133,7 +133,8 @@
     },
     "STEP_8_4": {
         "replyMessage": [
-            "E-mail: \n"
+            "E-mail: \n",
+            "Ej.(ejemplo@xxxx.com) \n"
         ],
         "media": null,
         "trigger": null
@@ -151,7 +152,7 @@
     "STEP_8_6": {
         "replyMessage": [
             "Fecha Nacimiento: \n",
-            "ej. (dd/mm/aaaa) \n\n"
+            "Ej. (dd/mm/aaaa) \n\n"
         ],
         "media": null,
         "trigger": null
@@ -288,7 +289,7 @@
     "STEP_17_3": {
         "replyMessage": [
             "Teléfono celular: \n",
-            "####-#### \n\n"
+            "Ej. (6599-5038) \n\n"
         ],
         "media": null,
         "trigger": null
@@ -311,7 +312,7 @@
     "STEP_18_2": {
         "replyMessage": [
             "Teléfono celular: \n",
-            "####-#### \n\n"
+            "Ej. (6599-5038) \n\n"
         ],
         "media": null,
         "trigger": null
