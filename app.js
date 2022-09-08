@@ -241,10 +241,27 @@ const listenMessage = () => client.on('message', async msg => {
     if (isNaN(respuesta)) {
       message = verifyResponse(LSTEP, LMSG)
     } else {
-      if (parseInt(respuesta) <= 0) message = verifyResponse(LSTEP, LMSG)
+      const meses = parseInt(respuesta)
+      if (meses <= 0) message = verifyResponse(LSTEP, LMSG)
       else {
-        // Aqui se puede agregar mas logica para validar cantidad de meses
-        dataClient[IDPhone].meses_trabajo_actual = respuesta
+        if (dataClient[IDPhone].sectorAb == 'P' && meses < 24) {
+          dataClient[IDPhone].meses_trabajo_actual = respuesta
+          message = "Meses Trabajo Anterior"
+        } else {
+          dataClient[IDPhone].meses_trabajo_actual = respuesta
+          message = "Meses Laborando"
+        }
+      }
+    }
+  }
+  if (LSTEP == 'STEP_4_2') {
+    if (isNaN(respuesta)) {
+      message = verifyResponse(LSTEP, LMSG)
+    } else {
+      const meses = parseInt(respuesta)
+      if (meses < 0) message = verifyResponse(LSTEP, LMSG)
+      else {
+        dataClient[IDPhone].meses_trabajo_anterior = respuesta
         message = "Meses Laborando"
       }
     }
@@ -544,6 +561,7 @@ const listenMessage = () => client.on('message', async msg => {
 
   if (LSTEP == 'STEP_20') {
     dataClient[IDPhone].Cedula = process.env.APC_Cedula || dataClient[IDPhone].Cedula
+
     await refAPC(dataClient[IDPhone].Cedula)
     const dirImageRF = await createPDFRefApc(dataClient[IDPhone].Cedula)
     console.log('dirImageRF', dirImageRF)
@@ -558,10 +576,9 @@ const listenMessage = () => client.on('message', async msg => {
     trackClientify(dataClient[IDPhone]);
 
     message = "RefAPC"
-    lastStep[IDPhone] = { "OUT": true }
   }
 
-  if (LSTEP == 'STEP_1_1') {
+  if (LSTEP == 'STEP_1_1' || LSTEP == 'STEP_21') {
     lastStep[IDPhone] = { "OUT": true }
     return
   }
@@ -722,7 +739,7 @@ const saveProspect = async (data) => {
   const { work_prev_name, work_prev_salary = 0 } = data
   const { idUrl, socialSecurityProofUrl, publicGoodProofUrl, workLetterUrl, payStubUrl, apcReferenceUrl = 'N/A', apcLetterUrl = 'N/A' } = data
   const { fec_nac: birthDate, contractType = 0, genero, sector, occupation = 0, profesion: profession = 0, institution = 0, retirement = 0 } = data
-  const { previousJobMonths: work_prev_month = 0, meses_trabajo_actual: work_month } = data
+  const { meses_trabajo_anterior: work_prev_month = 0, meses_trabajo_actual: work_month } = data
   const { salario: wage, hProfesional: alloance = 0, viaticos: perDiem = 0 } = data
   const { tipo_residencia: residenceType, mensualidad_casa: residenceMonthly = 0, frecuenciaPago: paymentFrecuency } = data
   const { weight = 0, weightUnit = 'lb', height = 0, heightUnit = 'mts' } = data

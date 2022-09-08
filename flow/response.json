@@ -76,7 +76,7 @@
     },
     "STEP_4": {
         "replyMessage": [
-            "Cuantos meses en tu trabajo actual: \n\n",
+            "Meses en tu trabajo Actual: \n\n",
             "Escribe cantidad de meses: "
         ],
         "media": null,
@@ -86,6 +86,14 @@
         "replyMessage": [
             "Lo sentimos.  Solo pueden aplicar Permanentes. \n",
             "Visite: https://finanservs.com \n"
+        ],
+        "media": null,
+        "trigger": null
+    },
+    "STEP_4_2": {
+        "replyMessage": [
+            "Meses en tu trabajo (Anterior): \n\n",
+            "Escribe cantidad de meses: "
         ],
         "media": null,
         "trigger": null
