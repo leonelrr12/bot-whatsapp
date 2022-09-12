@@ -246,7 +246,7 @@ appRoutes.post('/email', async (req, res) => {
   let fileAtach = ""
   try {
     if (banco === '800')   // Banisi
-      fileAtach = await solicPrestBanisi(cedula)
+      fileAtach = "" // await solicPrestBanisi(cedula)
 
     const htmlEmail = `
         <h3>Nuevo Prospecto desde **** BOT Whatsapp ****</h3>

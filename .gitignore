@@ -9,3 +9,4 @@ pdfs/*
 .env
 .wwebjs_auth
 *.svg
+qr-code.svg

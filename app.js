@@ -40,9 +40,8 @@ var dataClient = [];
 var lastStep = [];
 var idClientify = '';
 var tokenClientify;
-var refpf = {}
-var refpnf = {}
-var opciones = {}
+var refpf = [];
+var refpnf = [];
 var dirImageLocal = ''
 var dirImageAWS = ''
 var usuarioApc = process.env.APC_USER
@@ -86,6 +85,8 @@ const listenMessage = () => client.on('message', async msg => {
 
   // VALORES POR DEFECTO QUE NO SERAN CAPTURADOS
   if (!dataClient[IDPhone]) {
+    refpf[IDPhone] = {}
+    refpnf[IDPhone] = {}
     dataClient[IDPhone] = {}
     dataClient[IDPhone].phone = IDPhone
     dataClient[IDPhone].tipo_residencia = '0'
@@ -354,7 +355,7 @@ const listenMessage = () => client.on('message', async msg => {
         const { sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito = 1, frecuenciaPago = 1, meses_trabajo_actual = 60 } = dataClient[IDPhone]
         // console.log(sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
 
-        opciones = await Opciones({
+        dataClient[IDPhone].prestamo_opciones = await Opciones({
           jobSector: sectorAb,
           sector: sector,
           gender: genero,
@@ -365,9 +366,7 @@ const listenMessage = () => client.on('message', async msg => {
           paymentFrecuency: parseInt(frecuenciaPago),
           currentJobMonths: parseInt(meses_trabajo_actual)
         })
-        //console.log(opciones)
-
-        dataClient[IDPhone].prestamo_opciones = opciones
+        
         dataClient[IDPhone].Tracking = 'BOT-Opciones Disponibles'
         trackClientify(dataClient[IDPhone])
         message = "Salario"
@@ -376,7 +375,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (LSTEP == 'STEP_10') {
-    const { Loans } = opciones
+    const { Loans } = dataClient[IDPhone].prestamo_opciones
     if (Loans.length) {
       message = "OpcionesLoan"
     } else {
@@ -389,7 +388,7 @@ const listenMessage = () => client.on('message', async msg => {
     if (isNaN(respuesta)) {
       message = verifyResponse(LSTEP, LMSG)
     } else {
-      const { Loans } = opciones
+      const { Loans } = dataClient[IDPhone].prestamo_opciones
       console.log(Loans)
       const resp = parseInt(respuesta)
       if (resp < 1 || resp > Loans.length) message = verifyResponse(LSTEP, LMSG)
@@ -491,7 +490,7 @@ const listenMessage = () => client.on('message', async msg => {
 
   if (LSTEP == 'STEP_17') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      refpf.name = respuesta.toUpperCase()
+      refpf[IDPhone].name = respuesta.toUpperCase()
       dataClient[IDPhone].Tracking = 'BOT-Referencias Personales'
       trackClientify(dataClient[IDPhone]);
       message = "RefPFNombre"
@@ -501,7 +500,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (LSTEP == 'STEP_17_1') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      refpf.apellido = respuesta.toUpperCase()
+      refpf[IDPhone].apellido = respuesta.toUpperCase()
       message = "RefPFApellido"
     } else {
       message = verifyResponse(LSTEP, LMSG)
@@ -509,7 +508,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (LSTEP == 'STEP_17_2') {
     if (respuesta.length > 2 && respuesta.length < 11) {
-      refpf.parentesco = respuesta.toUpperCase()
+      refpf[IDPhone].parentesco = respuesta.toUpperCase()
       message = "RefPFParentesco"
     } else {
       message = verifyResponse(LSTEP, LMSG)
@@ -517,7 +516,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (LSTEP == 'STEP_17_3') {
     if (validCell.test(respuesta)) {
-      refpf.cellphone = respuesta
+      refpf[IDPhone].cellphone = respuesta
       message = "RefPFCellphone"
     } else {
       message = verifyResponse(LSTEP, LMSG)
@@ -526,7 +525,7 @@ const listenMessage = () => client.on('message', async msg => {
 
   if (LSTEP == 'STEP_18') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      refpnf.name = respuesta.toUpperCase()
+      refpnf[IDPhone].name = respuesta.toUpperCase()
       message = "RefPNFNombre"
     } else {
       message = verifyResponse(LSTEP, LMSG)
@@ -534,7 +533,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (LSTEP == 'STEP_18_1') {
     if (respuesta.length > 2 && respuesta.length < 61) {
-      refpnf.apellido = respuesta.toUpperCase()
+      refpnf[IDPhone].apellido = respuesta.toUpperCase()
       message = "RefPNFApellido"
     } else {
       message = verifyResponse(LSTEP, LMSG)
@@ -542,15 +541,15 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (LSTEP == 'STEP_18_2') {
     if (validCell.test(respuesta)) {
-      refpnf.cellphone = respuesta
+      refpnf[IDPhone].cellphone = respuesta
       message = "RefPNFCellphone"
     } else {
       message = verifyResponse(LSTEP, LMSG)
     }
   }
 
-  dataClient[IDPhone].refpf = refpf;
-  dataClient[IDPhone].refpnf = refpnf;
+  dataClient[IDPhone].refpf = refpf[IDPhone];
+  dataClient[IDPhone].refpnf = refpnf[IDPhone];
 
   if (LSTEP == 'STEP_19') {
     if (isValidFile(dirImageLocal)) {
@@ -609,7 +608,7 @@ const listenMessage = () => client.on('message', async msg => {
 
     let response = ''
     if (step == 'STEP_10' || step == 'STEP_11')
-      response = await responseMessages(step, opciones)
+      response = await responseMessages(step, dataClient[IDPhone].prestamo_opciones)
     else response = await responseMessages(step)
 
     await sendMessage(client, from, response.replyMessage, response.trigger)
