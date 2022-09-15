@@ -1,9 +1,18 @@
 {
     "DEFAULT": {
         "replyMessage": [
-            "Visite nuestra App de verificación \n",
+            "Hola le saluda Rolando de \n",
             "https://finanservs.com/ \n\n",
-            "o Prueba escribiendo *hola* \n"
+
+            "¿Desea CONSOLIDAR sus DEUDAS \n", 
+            "a través de un PRÉSTAMO PERSONAL? \n",
+            "Nosotros le diremos como. \n\n",
+
+            "¿Dónde laboras? Elige un número\n\n",
+            "1️⃣ Privado \n",
+            "2️⃣ Público \n",
+            "3️⃣ Jubilado \n",
+            "4️⃣ Otros \n\n"
         ],
         "media": null,
         "trigger": null

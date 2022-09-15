@@ -145,7 +145,7 @@ const listenMessage = () => client.on('message', async msg => {
     return msg
   }
 
-  if (LSTEP == 'STEP_1') {
+  if (LSTEP == 'STEP_1' || (LSTEP == null && LMSG.length > 0)) {
     if (respuesta.toLowerCase() == 'x') {
       message = pedirAsesor()
     } else {
@@ -584,7 +584,7 @@ const listenMessage = () => client.on('message', async msg => {
 
   let step = await getMessages(message)
 
-  console.log(dataClient[IDPhone])
+  // console.log(dataClient[IDPhone])
   if (step) {
     console.log('Resp: ', respuesta, step, message)
 
