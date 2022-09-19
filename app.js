@@ -149,6 +149,7 @@ const listenMessage = () => client.on('message', async msg => {
     if (respuesta.toLowerCase() == 'x') {
       message = pedirAsesor()
     } else {
+      dataClient[IDPhone].prestamo_opciones = {}
       dataClient[IDPhone].Sector = respuesta == '1' ? 'Privada' : (respuesta == '2' ? 'Publico' : 'Jubilado')
       dataClient[IDPhone].sector = respuesta
       switch (respuesta) {
@@ -352,21 +353,19 @@ const listenMessage = () => client.on('message', async msg => {
       else {
         dataClient[IDPhone].salario = respuesta
 
-        const { sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito = 1, frecuenciaPago = 1, meses_trabajo_actual = 60 } = dataClient[IDPhone]
-
         dataClient[IDPhone].prestamo_opciones = {}
         dataClient[IDPhone].prestamo_opciones = await Opciones({
-          jobSector: sectorAb,
-          sector: sector,
-          gender: genero,
-          birthDate: fec_nac,
-          profession: profesion,
-          wage: parseFloat(salario),
-          creditHistory: historialCredito,
-          paymentFrecuency: parseInt(frecuenciaPago),
-          currentJobMonths: parseInt(meses_trabajo_actual)
+          jobSector: dataClient[IDPhone].sectorAb,
+          sector: dataClient[IDPhone].sector,
+          gender: dataClient[IDPhone].genero,
+          birthDate: dataClient[IDPhone].fec_nac,
+          profession: dataClient[IDPhone].profesion,
+          wage: parseFloat(dataClient[IDPhone].salario),
+          creditHistory: dataClient[IDPhone].historialCredito,
+          paymentFrecuency: parseInt(dataClient[IDPhone].frecuenciaPago),
+          currentJobMonths: parseInt(dataClient[IDPhone].meses_trabajo_actual)
         })
-        console.log({'sector': sector, 'sectorAb': sectorAb, 'genero': genero, 'fec_nac': fec_nac, 'profesion': profesion, 'salario':salario,'historialCredito': historialCredito,'frecuenciaPago': frecuenciaPago,'meses_trabajo_actual': meses_trabajo_actual})
+        console.log({'sector': dataClient[IDPhone].sector, 'sectorAb': dataClient[IDPhone].sectorAb, 'genero': dataClient[IDPhone].genero, 'fec_nac': dataClient[IDPhone].fec_nac, 'profesion': dataClient[IDPhone].profesion, 'salario': dataClient[IDPhone].salario,'historialCredito': dataClient[IDPhone].historialCredito,'frecuenciaPago': dataClient[IDPhone].frecuenciaPago,'meses_trabajo_actual': dataClient[IDPhone].meses_trabajo_actual})
         console.log('Saliendo de BD ==>', IDPhone, dataClient[IDPhone].prestamo_opciones)
 
         dataClient[IDPhone].Tracking = 'BOT-Opciones Disponibles'
@@ -603,19 +602,20 @@ const listenMessage = () => client.on('message', async msg => {
 
     // SOLO PARA PRUEBAS RAPIDAS 
     // if(step == 'STEP_3') {
-    //   console.log(dataClient[IDPhone])
-    //   opciones = await Opciones({
+    //   const opciones = await Opciones({
     //     jobSector: dataClient[IDPhone].sectorAb,
     //     sector: dataClient[IDPhone].sector,
     //     gender: 'male',
-    //     birthDate: '1994-01-19',
+    //     birthDate: '1994-04-12',
     //     profession: dataClient[IDPhone].profesion,
-    //     wage: 1250,
-    //     creditHistory: dataClient[IDPhone].historialCredito,
-    //     paymentFrecuency: parseInt(dataClient[IDPhone].frecuenciaPago),
-    //     currentJobMonths: parseInt(dataClient[IDPhone].meses_trabajo_actual)
+    //     wage: 1200,
+    //     creditHistory: true,
+    //     paymentFrecuency: '2',
+    //     currentJobMonths: 60
     //   })
     //   lastStep[IDPhone] = { "OUT": true }
+    //   console.log('Saliendo de BD ==>', IDPhone, opciones)
+
     //   message='Hola'
     // }
 

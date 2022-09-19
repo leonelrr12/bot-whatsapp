@@ -35,7 +35,7 @@ async function Opciones(data) {
       le.ruta != "100" && le.ruta != "810")
 
   let salario = wage + alloance + perDiem
-  // console.log(sectorLaboralEntity, salario, currentJobMonths)
+  console.log('sectorLaboralEntity', sectorLaboralEntity, salario, currentJobMonths)
 
   // LLRR cambiado para los calculos por cada entidad
   // Falta incluir filtro para la antiguedad minima en el empleo (meses) 22-nov-2021
@@ -44,7 +44,7 @@ async function Opciones(data) {
       le.min_antiguedad <= currentJobMonths
   )
   let laboralEntities = wrkLaboralEntities
-  // console.log('wrkLaboralEntities', wrkLaboralEntities)
+  console.log('wrkLaboralEntities', wrkLaboralEntities)
 
   const today = new Date(); //  Ver como traerla del servidor
   let birth = new Date();
@@ -460,10 +460,12 @@ async function Opciones(data) {
     return { wpp: i, wDic, fcot, fvencto, wPlazo, ffpay, mesOut, logg }
   }
 
+  Loans = []
+  tmpParams = []
   laboralEntities.forEach((entity) => {
     handleCapacity(entity, deudaTotal, letraTotal)
   })
-  console.log({ Loans, monto_max, term_max, cashOnHand_max, monthlyFee_max })
+  // console.log({ Loans, monto_max, term_max, cashOnHand_max, monthlyFee_max })
   return { Loans, monto_max, term_max, cashOnHand_max, monthlyFee_max }
 };
 
