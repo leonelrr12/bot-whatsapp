@@ -366,6 +366,7 @@ const listenMessage = () => client.on('message', async msg => {
           paymentFrecuency: parseInt(frecuenciaPago),
           currentJobMonths: parseInt(meses_trabajo_actual)
         })
+        console.log('Saliendo de BD ==>', IDPhone, dataClient[IDPhone].prestamo_opciones)
         
         dataClient[IDPhone].Tracking = 'BOT-Opciones Disponibles'
         trackClientify(dataClient[IDPhone])
@@ -607,8 +608,10 @@ const listenMessage = () => client.on('message', async msg => {
     // }
 
     let response = ''
-    if (step == 'STEP_10' || step == 'STEP_11')
+    if (step == 'STEP_10' || step == 'STEP_11') {
+      console.log(step, IDPhone, dataClient[IDPhone].prestamo_opciones)
       response = await responseMessages(step, dataClient[IDPhone].prestamo_opciones)
+    }
     else response = await responseMessages(step)
 
     await sendMessage(client, from, response.replyMessage, response.trigger)
