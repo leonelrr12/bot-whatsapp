@@ -353,8 +353,8 @@ const listenMessage = () => client.on('message', async msg => {
         dataClient[IDPhone].salario = respuesta
 
         const { sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito = 1, frecuenciaPago = 1, meses_trabajo_actual = 60 } = dataClient[IDPhone]
-        // console.log(sector, sectorAb, genero, fec_nac, profesion, salario, historialCredito, frecuenciaPago, meses_trabajo_actual)
 
+        dataClient[IDPhone].prestamo_opciones = {}
         dataClient[IDPhone].prestamo_opciones = await Opciones({
           jobSector: sectorAb,
           sector: sector,
@@ -366,8 +366,9 @@ const listenMessage = () => client.on('message', async msg => {
           paymentFrecuency: parseInt(frecuenciaPago),
           currentJobMonths: parseInt(meses_trabajo_actual)
         })
+        console.log({'sector': sector, 'sectorAb': sectorAb, 'genero': genero, 'fec_nac': fec_nac, 'profesion': profesion, 'salario':salario,'historialCredito': historialCredito,'frecuenciaPago': frecuenciaPago,'meses_trabajo_actual': meses_trabajo_actual})
         console.log('Saliendo de BD ==>', IDPhone, dataClient[IDPhone].prestamo_opciones)
-        
+
         dataClient[IDPhone].Tracking = 'BOT-Opciones Disponibles'
         trackClientify(dataClient[IDPhone])
         message = "Salario"
@@ -390,7 +391,7 @@ const listenMessage = () => client.on('message', async msg => {
       message = verifyResponse(LSTEP, LMSG)
     } else {
       const { Loans } = dataClient[IDPhone].prestamo_opciones
-      console.log(Loans)
+      //console.log(Loans)
       const resp = parseInt(respuesta)
       if (resp < 1 || resp > Loans.length) message = verifyResponse(LSTEP, LMSG)
       else {
@@ -409,12 +410,23 @@ const listenMessage = () => client.on('message', async msg => {
   }
 
   if (LSTEP == 'STEP_12') {
-    if (respuesta == 1) message = "Compra de Auto"
-    if (respuesta == 2) message = "Boda"
-    if (respuesta == 3) message = "Remodelación"
-    if (respuesta == 4) message = "Colegio"
-    if (respuesta == 5) message = "Viaje"
-    if (respuesta == 6) message = "Quince Año"
+    if (isNaN(respuesta)) {
+      message = verifyResponse(LSTEP, LMSG)
+    } else {
+      const resp = parseInt(respuesta)
+      if (resp < 1 || resp > 7) message = verifyResponse(LSTEP, LMSG)
+      else {
+        dataClient[IDPhone].proposito = respuesta - 1
+        message = ""
+        if (respuesta == 1) message = "Compra de Auto"
+        if (respuesta == 2) message = "Boda"
+        if (respuesta == 3) message = "Remodelación"
+        if (respuesta == 4) message = "Colegio"
+        if (respuesta == 5) message = "Viaje"
+        if (respuesta == 6) message = "Quince Año"
+        if (respuesta == 7) message = "Otros"
+      }
+    }
   }
 
   if (LSTEP == 'STEP_13') {
@@ -425,7 +437,7 @@ const listenMessage = () => client.on('message', async msg => {
       if (resp < 1 || resp > 5) message = verifyResponse(LSTEP, LMSG)
       else {
         dataClient[IDPhone].estadoCivil = respuesta
-        message = "EstadoCivil"
+        message = ""
         if (respuesta == 1) message = "Casado"
         if (respuesta == 2) message = "Soltero"
         if (respuesta == 3) message = "Unido"
