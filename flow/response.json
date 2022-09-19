@@ -195,6 +195,14 @@
         "media": null,
         "trigger": null
     },
+    "STEP_10a": {
+        "replyMessage": [
+            "Sus ingresos no califican en este momento. \n\n",
+            "  🆗 para continuar"
+        ],
+        "media": null,
+        "trigger": null
+    },
     "STEP_11": {
         "replyMessage": [
             "Opciones: \n\n",

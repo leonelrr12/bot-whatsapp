@@ -371,6 +371,9 @@ const listenMessage = () => client.on('message', async msg => {
         dataClient[IDPhone].Tracking = 'BOT-Opciones Disponibles'
         trackClientify(dataClient[IDPhone])
         message = "Salario"
+        const { Loans } = dataClient[IDPhone].prestamo_opciones
+        console.log(Loans)
+        if (!Loans.length) message = "No Cumple Salario"
       }
     }
   }
@@ -380,9 +383,11 @@ const listenMessage = () => client.on('message', async msg => {
     if (Loans.length) {
       message = "OpcionesLoan"
     } else {
-      lastStep[IDPhone] = {}
-      message = "Hola"
+      message = "No Cumple Salario"
     }
+  }
+  if (LSTEP == 'STEP_10a') {
+    message = "xIndependiente"
   }
 
   if (LSTEP == 'STEP_11') {

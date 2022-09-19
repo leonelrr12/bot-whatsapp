@@ -148,6 +148,12 @@
     },
     {
         "keywords": [
+            "No Cumple Salario"
+        ],
+        "key": "STEP_10a"
+    },
+    {
+        "keywords": [
             "OpcionesLoan"
         ],
         "key": "STEP_11"
