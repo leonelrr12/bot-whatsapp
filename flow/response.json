@@ -316,7 +316,7 @@
         "replyMessage": [
             "Teléfono celular: \n",
             "Ej. *(6599-5038)* \n",
-            "No olvide el ( *-* ) \n\n"
+            "No olvide escribir el ( *-* ) \n\n"
         ],
         "media": null,
         "trigger": null
@@ -340,7 +340,7 @@
         "replyMessage": [
             "Teléfono celular: \n",
             "Ej. *(6599-5038)* \n",
-            "No olvide colocar el (-) \n\n"
+            "No olvide escribir el ( *-* ) \n\n"
         ],
         "media": null,
         "trigger": null
