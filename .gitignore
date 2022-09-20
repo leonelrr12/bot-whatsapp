@@ -4,8 +4,9 @@ session.json
 chats/*
 !chats/.gitkeep
 media/*
-pdfs/*
 !media/.gitkeep
+pdfs/*
 .env
 .wwebjs_auth
 mediaSend/*
+!mediaSend/.gitkeep
