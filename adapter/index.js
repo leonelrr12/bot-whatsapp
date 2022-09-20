@@ -58,7 +58,7 @@ const reply = (step, data = '') => new Promise((resolve, reject) => {
         idx++
         text += arrNum[idx] + ' ' + p.bank + ' | ' + separator(p.loan) + ' | ' + separator(p.monthlyFee) + '\n'
       })
-      text += '\nEscoge una opcion:'
+      text += '\n*Escriba un Número*:'
       responseFind.replyMessage = [text]
     }
 

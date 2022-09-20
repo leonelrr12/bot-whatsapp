@@ -33,7 +33,7 @@
             "2️⃣ Público \n",
             "3️⃣ Jubilado \n",
             "4️⃣ Otros \n\n",
-            "Escoge una opcion: "
+            "*Escriba un Número*: "
         ],
         "media": null,
         "trigger": null
@@ -56,7 +56,7 @@
             "3️⃣ Administrativo \n",
             "4️⃣ ACP \n",
             "5️⃣ Seguridad Publica \n\n",
-            "Escoge una opcion: "
+            "*Escriba un Número*: "
         ],
         "media": null,
         "trigger": null
@@ -67,7 +67,7 @@
             "1️⃣ Medico/Enfermera \n",
             "2️⃣ Educador \n",
             "3️⃣ Empresa Privada \n\n",
-            "Escoge una opcion: "
+            "*Escriba un Número*: "
         ],
         "media": null,
         "trigger": null
@@ -78,7 +78,7 @@
             "1️⃣ Temporal \n",
             "2️⃣ Permanente \n",
             "3️⃣ Servicio Profesional \n\n",
-            "Escoge una opcion: "
+            "*Escriba un Número*: "
         ],
         "media": null,
         "trigger": null
@@ -86,7 +86,7 @@
     "STEP_4": {
         "replyMessage": [
             "Meses en tu trabajo Actual: \n\n",
-            "Escribe cantidad de meses: "
+            "*Escriba cantidad de MESES:* "
         ],
         "media": null,
         "trigger": null
@@ -102,7 +102,7 @@
     "STEP_4_2": {
         "replyMessage": [
             "Meses en tu trabajo (Anterior): \n\n",
-            "Escribe cantidad de meses: "
+            "*Escriba cantidad de MESES:* "
         ],
         "media": null,
         "trigger": null
@@ -112,7 +112,7 @@
             "¿Acepta nuestra politica de privacidad? \n\n",
             "1️⃣. Si \n",
             "2️⃣. No \n\n",
-            "Escoge una opcion: "
+            "*Escriba un Número*: "
         ],
         "media": "Politica de Privacidad.png",
         "trigger": null
@@ -129,7 +129,7 @@
         "replyMessage": [
             "Datos personales: \n\n",
             "Ej.(7-245-7356) \n",
-            "Escribe tu Cédula o ID: \n"
+            "Escriba su Cédula o ID: \n"
         ],
         "media": null,
         "trigger": null
@@ -161,7 +161,7 @@
             "Genero: \n\n",
             "1️⃣ Mujer \n",
             "2️⃣ Hombre \n\n",
-            "Escoge una opcion: "
+            "*Escriba un Número*: "
         ],
         "media": null,
         "trigger": null
@@ -209,7 +209,7 @@
             "1. Financomer \n",
             "2. Panacredit \n",
             "3. Banisi \n\n",
-            "Escoge una opcion: "
+            "*Escriba un Número*: "
         ],
         "media": null,
         "trigger": null
@@ -224,7 +224,7 @@
             "5️⃣ Viaje \n",
             "6️⃣ Quince Año \n",
             "7️⃣ Otros \n\n",
-            "Escoge una opcion: "
+            "*Escriba un Número*: "
         ],
         "media": null,
         "trigger": null
@@ -237,7 +237,7 @@
             "3️⃣ Unido \n",
             "4️⃣ Divorciado \n",
             "5️⃣ Viudo \n\n",
-            "Escoge una opcion: "
+            "*Escriba un Número*: "
         ],
         "media": null,
         "trigger": null
@@ -245,7 +245,7 @@
     "STEP_14": {
         "replyMessage": [
             "Subir Documento Personal: \n",
-            "(Foto o Archivo) \n\n",
+            "*(Foto o Archivo)* \n\n",
             "📸 Cédula o ID \n"
         ],
         "media": null,
@@ -254,7 +254,7 @@
     "STEP_14_1": {
         "replyMessage": [
             "Subir Documento Personal: \n",
-            "(Foto o Archivo) \n\n",
+            "*(Foto o Archivo)* \n\n",
             "📸 Comprobante de Pago \n"
         ],
         "media": null,
@@ -263,7 +263,7 @@
     "STEP_14_2": {
         "replyMessage": [
             "Subir Documento Personal: \n",
-            "(Foto o Archivo) \n\n",
+            "*(Foto o Archivo)* \n\n",
             "📸 Ficha de Seguros Social \n"
         ],
         "media": null,
@@ -272,7 +272,7 @@
     "STEP_14_3": {
         "replyMessage": [
             "Subir Documento Personal: \n",
-            "(Foto o Archivo) \n\n",
+            "*(Foto o Archivo)* \n\n",
             "📸 Recibo de Servicio \n",
             "Luz, Agua, Teléfono \n",
             "❌ No lo tengo a mano \n"
@@ -283,7 +283,7 @@
     "STEP_14_4": {
         "replyMessage": [
             "Subir Documento Personal: \n",
-            "(Foto o Archivo) \n\n",
+            "*(Foto o Archivo)* \n\n",
             "📸 Carta de Trabajo \n",
             "❌ No lo tengo a mano \n"
         ],
@@ -315,7 +315,7 @@
     "STEP_17_3": {
         "replyMessage": [
             "Teléfono celular: \n",
-            "Ej. (6599-5038) \n\n"
+            "Ej. *(6599-5038)* \n\n"
         ],
         "media": null,
         "trigger": null
@@ -338,7 +338,7 @@
     "STEP_18_2": {
         "replyMessage": [
             "Teléfono celular: \n",
-            "Ej. (6599-5038) \n\n"
+            "Ej. *(6599-5038)* \n\n"
         ],
         "media": null,
         "trigger": null
@@ -348,7 +348,7 @@
             "Referencias de APC: \n\n",
             "Leer documento \n\n",
             "=> Firme ✍🏻 en papel blanco y \n",
-            "=> Mande solo foto 📸 de su firma \n"
+            "=> *Mande solo foto 📸 de su firma* \n"
         ],
         "media": "Autorizacion APC ACsoraT.jpg",
         "trigger": null
@@ -367,7 +367,7 @@
             "Muy pronto uno de nuestros \n",
             "Ejecutivos lo estará \n",
             "Contactando 📞. \n\n",
-            "Muchas gracias, hasta luego. 😃\n"
+            "Muchas *gracias*, hasta luego. 😃\n"
         ],
         "media": null,
         "trigger": null
