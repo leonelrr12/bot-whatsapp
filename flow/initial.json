@@ -75,17 +75,23 @@
     },
     {
         "keywords": [
+            "Temporal",
+            "Servicio Profesional"
+        ],
+        "key": "STEP_4_1"
+    },
+    {
+        "keywords": [
             "Meses Trabajo Anterior"
         ],
         "key": "STEP_4_2"
     },
     {
         "keywords": [
-            "Temporal",
-            "Servicio Profesional"
+            "No Cumple tiempo"
         ],
-        "key": "STEP_4_1"
-    },
+        "key": "STEP_4_2a"
+    }, 
     {
         "keywords": [
             "Meses Laborando"

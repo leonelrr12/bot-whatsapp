@@ -77,7 +77,7 @@ const listenMessage = () => client.on('message', async msg => {
   await readChat(numero, message)
   IDPhone = numero.split('@')[0] //.slice(3)
 
-  const { LSTEP = "", LMSG = "", OUT = false } = lastStep[IDPhone] || ""
+  let { LSTEP = "", LMSG = "", OUT = false } = lastStep[IDPhone] || ""
   if (OUT) {
     return // Corta comunicacion con el Bot
   }
@@ -247,10 +247,10 @@ const listenMessage = () => client.on('message', async msg => {
       if (meses <= 0) message = verifyResponse(LSTEP, LMSG)
       else {
         if (dataClient[IDPhone].sectorAb == 'P' && meses < 24) {
-          dataClient[IDPhone].meses_trabajo_actual = respuesta
+          dataClient[IDPhone].meses_trabajo_actual = meses
           message = "Meses Trabajo Anterior"
         } else {
-          dataClient[IDPhone].meses_trabajo_actual = respuesta
+          dataClient[IDPhone].meses_trabajo_actual = meses
           message = "Meses Laborando"
         }
       }
@@ -263,12 +263,16 @@ const listenMessage = () => client.on('message', async msg => {
       const meses = parseInt(respuesta)
       if (meses < 0) message = verifyResponse(LSTEP, LMSG)
       else {
-        dataClient[IDPhone].meses_trabajo_anterior = respuesta
         message = "Meses Laborando"
+        if(dataClient[IDPhone].meses_trabajo_actual + meses < 24) message = "No Cumple tiempo"
+        dataClient[IDPhone].meses_trabajo_anterior = meses
       }
     }
   }
-
+  if (LSTEP == 'STEP_4_2a') {
+    LSTEP = 'STEP_1_1'
+    lastStep[IDPhone] = {}
+  }
   if (LSTEP == 'STEP_8a') {
     if (isNaN(respuesta)) {
       message = verifyResponse(LSTEP, LMSG)
@@ -290,7 +294,7 @@ const listenMessage = () => client.on('message', async msg => {
   }
   if (LSTEP == 'STEP_8b') {
     // Reinicia dialogo
-    message = "Hola"
+    message = "Hola@@@@@@@"
     lastStep[IDPhone] = {}
   }
   if (LSTEP == 'STEP_8') {

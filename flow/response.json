@@ -107,6 +107,15 @@
         "media": null,
         "trigger": null
     },
+    "STEP_4_2a": {
+        "replyMessage": [
+            "Lo sentimos.  Se requiere una continuidad laboral de 24 meses mínimo. \n",
+            "Visite: https://finanservs.com \n\n",
+            "Muchas *gracias* por su tiempo. 😃\n"
+        ],
+        "media": null,
+        "trigger": null
+    },
     "STEP_8a": {
         "replyMessage": [
             "¿Acepta nuestra politica de privacidad? \n\n",
